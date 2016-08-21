@@ -3,10 +3,12 @@ defmodule PrometheusEx.Mixfile do
 
   def project do
     [app: :prometheus_ex,
-     version: "0.1.0",
+     version: "0.0.1",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     description: description,
+     package: package,
      deps: deps()]
   end
 
@@ -14,8 +16,26 @@ defmodule PrometheusEx.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :prometheus]]
   end
+
+  defp description do
+    """
+    Elixir-friendly Prometheus monitoring system client.
+    """
+  end
+
+  defp package do
+    [maintainers: ["Ilya Khaprov"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/deadtrickster/prometheus.ex",
+              "Prometheus.erl" => "https://hex.pm/packages/prometheus",
+              "Plugs Instrumenter/Exporter" => "https://hex.pm/packages/prometheus_plugs",
+              "Ecto Instrumenter" => "https://hex.pm/packages/prometheus_ecto",
+              "Phoenix Instrumenter" => "https://hex.pm/packages/prometheus_phoenix",
+              "Process info Collector" => "https://hex.pm/packages/prometheus_process_collector"}]
+  end
+
 
   # Dependencies can be Hex packages:
   #
