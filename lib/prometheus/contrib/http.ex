@@ -4,8 +4,11 @@ defmodule Prometheus.Contrib.HTTP do
   end
 
   defmacro status_class(code) do
-    quote do
-      :prometheus_http.status_class(unquote(code))
+    quote do      
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+	:prometheus_http.status_class(unquote(code))
+      )
     end
   end
 end

@@ -1,11 +1,16 @@
 defmodule Prometheus.Metric.Summary do
+
   alias Prometheus.Metric
+  require Prometheus.Error
 
   defmacro new(spec) do
     {registry, _, _} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.new(unquote(spec), unquote(registry))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.new(unquote(spec), unquote(registry))
+      )
     end
   end
 
@@ -13,7 +18,10 @@ defmodule Prometheus.Metric.Summary do
     {registry, _, _} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.declare(unquote(spec), unquote(registry))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.declare(unquote(spec), unquote(registry))
+      )
     end
   end
 
@@ -21,8 +29,11 @@ defmodule Prometheus.Metric.Summary do
     {registry, name, labels} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.observe(unquote(registry),
-        unquote(name), unquote(labels),  unquote(value))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.observe(unquote(registry),
+          unquote(name), unquote(labels),  unquote(value))
+      )
     end
   end
 
@@ -30,8 +41,11 @@ defmodule Prometheus.Metric.Summary do
     {registry, name, labels} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.dobserve(unquote(registry),
-        unquote(name), unquote(labels), unquote(value))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.dobserve(unquote(registry),
+          unquote(name), unquote(labels), unquote(value))
+      )
     end
   end
 
@@ -39,8 +53,11 @@ defmodule Prometheus.Metric.Summary do
     {registry, name, labels} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.observe_duration(unquote(name),
-        unquote(registry), unquote(labels), unquote(fun))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.observe_duration(unquote(name),
+          unquote(registry), unquote(labels), unquote(fun))
+      )
     end
   end
 
@@ -48,8 +65,11 @@ defmodule Prometheus.Metric.Summary do
     {registry, name, labels} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.reset(unquote(registry),
-        unquote(name), unquote(labels))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.reset(unquote(registry),
+          unquote(name), unquote(labels))
+      )
     end
   end
 
@@ -57,8 +77,11 @@ defmodule Prometheus.Metric.Summary do
     {registry, name, labels} = Metric.parse_spec(spec)
 
     quote do
-      :prometheus_summary.value(unquote(registry),
-        unquote(name), unquote(labels))
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error(
+        :prometheus_summary.value(unquote(registry),
+          unquote(name), unquote(labels))
+      )
     end
   end
 end

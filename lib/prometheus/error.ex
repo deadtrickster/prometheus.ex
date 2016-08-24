@@ -59,7 +59,7 @@ defmodule Prometheus.Error do
 
   def normalize(erlang_error) do
     case erlang_error do
-      %{original: original} ->
+      %ErlangError{original: original} ->
         case original do
           {:invalid_value, value, message} ->
             %InvalidValue{value: value, message: message}
@@ -100,7 +100,7 @@ defmodule Prometheus.Error do
       try do
         unquote(block)
       rescue
-        e in ErlangError -> raise Prometheus.Error.normalize(e)
+        e in ErlangError -> reraise Prometheus.Error.normalize(e), System.stacktrace
       end
     end
   end
