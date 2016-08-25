@@ -20,7 +20,7 @@ defmodule Prometheus.Collector do
     end
   end
 
-  defmacro collecto_mf(collector, callback, registry \\ :default) do
+  defmacro collect_mf(collector, callback, registry \\ :default) do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
