@@ -29,6 +29,18 @@ defmodule Prometheus.Registry do
     end
   end
 
+  defmacro register_collectors(collectors, registry \\ :default) do
+    quote do
+      require Prometheus.Error
+      Prometheus.Error.with_prometheus_error do
+        for collector <- unquote(collectors) do
+          :prometheus_registry.register_collector(unquote(registry), collector)
+        end
+      end
+      :ok
+    end
+  end
+
   defmacro deregister_collector(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
