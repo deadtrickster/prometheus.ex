@@ -33,11 +33,8 @@ defmodule Prometheus.Registry do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error do
-        for collector <- unquote(collectors) do
-          :prometheus_registry.register_collector(unquote(registry), collector)
-        end
+        :prometheus_registry.register_collectors(unquote(registry), unquote(collectors))
       end
-      :ok
     end
   end
 
