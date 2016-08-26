@@ -3,6 +3,8 @@ defmodule Prometheus.Config do
 
     quote do
       defmodule Config do
+        @moduledoc false
+
         def config(key) do
           Application.get_env(:prometheus, key, unquote(default_config))
         end
