@@ -1,1 +1,1 @@
-%{"prometheus": {:hex, :prometheus, "2.1.0", "c224c2c52c48d0e933ba1021fac80bc13339467c667c9a9e5943337da1c82d43", [:rebar3], []}}
+%{"prometheus": {:hex, :prometheus, "2.2.0", "f58f6f168d2d83afacd010b440c28ac897b5fcc81281845b218ce48b2fe21bd0", [:rebar3], []}}
