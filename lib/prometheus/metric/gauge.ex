@@ -4,23 +4,19 @@ defmodule Prometheus.Metric.Gauge do
   require Prometheus.Error
 
   defmacro new(spec) do
-    {registry, _, _} = Metric.parse_spec(spec)
-
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.new(unquote(spec), unquote(registry))
+        :prometheus_gauge.new(unquote(spec))
       )
     end
   end
 
   defmacro declare(spec) do
-    {registry, _, _} = Metric.parse_spec(spec)
-
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.declare(unquote(spec), unquote(registry))
+        :prometheus_gauge.declare(unquote(spec))
       )
     end
   end

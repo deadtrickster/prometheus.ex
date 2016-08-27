@@ -4,23 +4,19 @@ defmodule Prometheus.Metric.Histogram do
   require Prometheus.Error
 
   defmacro new(spec) do
-    {registry, _, _} = Metric.parse_spec(spec)
-
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.new(unquote(spec), unquote(registry))
+        :prometheus_histogram.new(unquote(spec))
       )
     end
   end
 
   defmacro declare(spec) do
-    {registry, _, _} = Metric.parse_spec(spec)
-
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.declare(unquote(spec), unquote(registry))
+        :prometheus_histogram.declare(unquote(spec))
       )
     end
   end
