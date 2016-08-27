@@ -3,7 +3,7 @@ defmodule PrometheusEx.Mixfile do
 
   def project do
     [app: :prometheus_ex,
-     version: "0.0.3",
+     version: "1.0.0-alpha1",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -35,6 +35,6 @@ defmodule PrometheusEx.Mixfile do
   end
 
   defp deps do
-    [{:prometheus, "~> 2.2.0"}]
+    [{:prometheus, "~> 3.0.0-alpha1"}]
   end
 end
