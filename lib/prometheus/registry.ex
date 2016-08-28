@@ -1,7 +1,18 @@
 defmodule Prometheus.Registry do
+  @moduledoc """
+  A registry of Collectors.
 
+  The majority of users should use the `:default`, rather than their own.
+
+  Creating a registry other than the default is primarily useful for
+  unit tests, or pushing a subset of metrics to the
+  [Pushgateway](https://github.com/prometheus/pushgateway) from batch jobs.
+  """
   require Prometheus.Error
 
+  @doc """
+  Calls `callback` for each collector with two arguments: `registry` and `collector`.
+  """
   defmacro collect(callback, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -11,6 +22,9 @@ defmodule Prometheus.Registry do
     end
   end
 
+  @doc """
+  Returns collectors registered in `registry`.
+  """
   defmacro collectors(registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -20,6 +34,9 @@ defmodule Prometheus.Registry do
     end
   end
 
+  @doc """
+  Register a collector.
+  """
   defmacro register_collector(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -29,6 +46,9 @@ defmodule Prometheus.Registry do
     end
   end
 
+  @doc """
+  Register collectors list.
+  """
   defmacro register_collectors(collectors, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -38,6 +58,9 @@ defmodule Prometheus.Registry do
     end
   end
 
+  @doc """
+  Unregister a collector.
+  """
   defmacro deregister_collector(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -47,6 +70,9 @@ defmodule Prometheus.Registry do
     end
   end
 
+  @doc """
+  Unregister all collectors.
+  """
   defmacro clear(registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -56,6 +82,9 @@ defmodule Prometheus.Registry do
     end
   end
 
+  @doc """
+  Check whether `collector` is registered.
+  """
   defmacro collector_registred?(collector, registry \\ :default) do
     quote do
       require Prometheus.Error

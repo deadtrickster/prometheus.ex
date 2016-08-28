@@ -1,6 +1,30 @@
 defmodule Prometheus.Config do
 
+  @moduledoc """
+
+  Configuration templates for custom collectors/exporters.
+
+  When `use`ed, generates accessor for each configuration option:
+
+      iex(4)> defmodule MyInstrumenter do
+      ...(4)>   use Prometheus.Config, [:required_option,
+      ...(4)>                           registry: :default]
+      ...(4)> end
+      iex(5)> MyInstrumenter.Config.registry(MyInstrumenter)
+      :default
+      iex(6)> MyInstrumenter.Config.required_option!(MyInstrumenter)
+      ** (Prometheus.Config.KeyNotFoundError) mandatory option :required_option not found in PrometheusExTest.MyInstrumenter instrumenter/collector config
+      iex(7)> Application.put_env(:prometheus, MyInstrumenter, [required_option: "Hello world!"])
+      :ok
+      iex(8)> MyInstrumenter.Config.required_option!(MyInstrumenter)
+      "Hello world!"
+
+  """
+
   defmodule KeyNotFoundError do
+    @moduledoc """
+    Raised when mandatory configuration option not found in app env.
+    """
     defexception [:option, :key]
 
     def message(%{option: option, key: key}) do

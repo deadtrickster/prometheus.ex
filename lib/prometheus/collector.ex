@@ -1,4 +1,15 @@
 defmodule Prometheus.Collector do
+  @moduledoc """
+  A collector for a set of metrics.
+
+  Normal users should use `Prometheus.Metric.Gauge`, `Prometheus.Metric.Counter`, `Prometheus.Metric.Summary`
+  and `Prometheus.Metric.Histogram`.
+
+  Implementing `:prometheus_collector` behaviour is for advanced uses, such as proxying metrics from another monitoring system.
+  It is it the responsibility of the implementer to ensure produced metrics are valid.
+
+  You will be working with Prometheus data model directly (see `Prometheus.Model` ).
+  """
 
   require Prometheus.Error
 
@@ -15,11 +26,14 @@ defmodule Prometheus.Collector do
       end
 
       defoverridable [deregister_cleanup: 1]
-      
+
     end
-    
+
   end
 
+  @doc """
+  Equivalent to `Prometheus.Registry.register_collector/2`.
+  """
   defmacro register(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -29,6 +43,9 @@ defmodule Prometheus.Collector do
     end
   end
 
+  @doc """
+  Equivalent to `Prometheus.Registry.deregister_collector/2`.
+  """
   defmacro deregister(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -38,6 +55,9 @@ defmodule Prometheus.Collector do
     end
   end
 
+  @doc """
+  Calls `callback` for each MetricFamily of this collector.
+  """
   defmacro collect_mf(collector, callback, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -47,8 +67,4 @@ defmodule Prometheus.Collector do
     end
   end
 
-end
-
-defmodule MyCollector do
-  use Prometheus.Collector
 end

@@ -11,6 +11,7 @@ defmodule PrometheusEx.Mixfile do
      start_permanent: Mix.env == :prod,
      description: description,
      package: package,
+     name: "Prometheus.ex",
      deps: deps(),
      docs: [main: Prometheus,
             source_ref: "v#{@version}",
