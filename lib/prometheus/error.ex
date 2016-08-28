@@ -13,10 +13,10 @@ defmodule Prometheus.Error do
   end
 
   defmodule InvalidMetricArity do
-    defexception [:arity]
+    defexception [:present, :expected]
 
-    def message(%{arity: arity}) do
-      "invalid metric arity: #{arity}"
+    def message(%{present: present, expected: expected}) do
+      "invalid metric arity: got #{present}, expected #{expected}."
     end
   end
 
@@ -67,8 +67,8 @@ defmodule Prometheus.Error do
             %InvalidMetricName{name: name, message: message}
           {:invalid_metric_help, help, message} ->
             %InvalidMetricHelp{help: help, message: message}
-          {:invalid_metric_arity, arity} ->
-            %InvalidMetricArity{arity: arity}
+          {:invalid_metric_arity, present, expected} ->
+            %InvalidMetricArity{present: present, expected: expected}
           {:unknown_metric, registry, name} ->
             %UnknownMetric{registry: registry, name: name}
           {:invalid_metric_labels, labels, message} ->
