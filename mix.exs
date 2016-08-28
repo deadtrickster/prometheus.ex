@@ -12,7 +12,7 @@ defmodule PrometheusEx.Mixfile do
      description: description,
      package: package,
      deps: deps(),
-     docs: [main: PrometheusEx,
+     docs: [main: Prometheus,
             source_ref: "v#{@version}",
             source_url: "https://github.com/deadtrickster/prometheus.ex"]]
   end

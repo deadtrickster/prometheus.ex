@@ -1,2 +1,2 @@
-defmodule PrometheusEx do
+defmodule Prometheus do
 end
