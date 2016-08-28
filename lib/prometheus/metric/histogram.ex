@@ -51,8 +51,8 @@ defmodule Prometheus.Metric.Histogram do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.observe_duration(unquote(name),
-          unquote(registry), unquote(labels), unquote(fun))
+        :prometheus_histogram.observe_duration(unquote(registry),
+          unquote(name), unquote(labels), unquote(fun))
       )
     end
   end
