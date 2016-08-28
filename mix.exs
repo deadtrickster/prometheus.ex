@@ -1,15 +1,20 @@
 defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
+  @version "1.0.0-alpha3"
+
   def project do
     [app: :prometheus_ex,
-     version: "1.0.0-alpha3",
+     version: @version,
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      description: description,
      package: package,
-     deps: deps()]
+     deps: deps(),
+     docs: [main: PrometheusEx,
+            source_ref: "v#{@version}",
+            source_url: "https://github.com/deadtrickster/prometheus.ex"]]
   end
 
   def application do
@@ -35,6 +40,8 @@ defmodule PrometheusEx.Mixfile do
   end
 
   defp deps do
-    [{:prometheus, "~> 3.0.0-alpha1"}]
+    [{:prometheus, "~> 3.0.0-alpha1"},
+     {:ex_doc, "~> 0.11", only: :dev},
+     {:earmark, ">= 0.0.0", only: :dev}]
   end
 end
