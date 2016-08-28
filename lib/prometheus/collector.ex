@@ -1,7 +1,25 @@
 defmodule Prometheus.Collector do
 
-  require Prometheus.Error  
-  
+  require Prometheus.Error
+
+  defmacro __using__(_opts) do
+
+    quote location: :keep do
+      @behaviour :prometheus_collector
+
+      require Prometheus.Error
+      require Prometheus.Model
+
+      def deregister_cleanup(_registry) do
+        :ok
+      end
+
+      defoverridable [deregister_cleanup: 1]
+      
+    end
+    
+  end
+
   defmacro register(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
@@ -29,4 +47,8 @@ defmodule Prometheus.Collector do
     end
   end
 
+end
+
+defmodule MyCollector do
+  use Prometheus.Collector
 end
