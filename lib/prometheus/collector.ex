@@ -38,7 +38,7 @@ defmodule Prometheus.Collector do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.register_collector(unquote(collector), unquote(registry))
+        :prometheus_registry.register_collector(unquote(registry), unquote(collector))
       )
     end
   end
@@ -50,7 +50,7 @@ defmodule Prometheus.Collector do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.deregister_collector(unquote(collector), unquote(registry))
+        :prometheus_registry.deregister_collector(unquote(registry), unquote(collector))
       )
     end
   end
