@@ -1,4 +1,4 @@
-defmodule PrometheusExTest do
+defmodule PrometheusTest do
   use ExUnit.Case
   doctest Prometheus.Buckets
   doctest Prometheus.Contrib.HTTP

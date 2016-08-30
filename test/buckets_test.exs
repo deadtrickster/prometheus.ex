@@ -1,4 +1,4 @@
-defmodule PrometheusEx.BucketsTest do
+defmodule Prometheus.BucketsTest do
   use ExUnit.Case
   alias Prometheus.Error
   require Prometheus.Buckets

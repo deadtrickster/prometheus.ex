@@ -13,7 +13,7 @@ defmodule Prometheus.Config do
       iex(5)> MyInstrumenter.Config.registry(MyInstrumenter)
       :default
       iex(6)> MyInstrumenter.Config.required_option!(MyInstrumenter)
-      ** (Prometheus.Config.KeyNotFoundError) mandatory option :required_option not found in PrometheusExTest.MyInstrumenter instrumenter/collector config
+      ** (Prometheus.Config.KeyNotFoundError) mandatory option :required_option not found in PrometheusTest.MyInstrumenter instrumenter/collector config
       iex(7)> Application.put_env(:prometheus, MyInstrumenter, [required_option: "Hello world!"])
       :ok
       iex(8)> MyInstrumenter.Config.required_option!(MyInstrumenter)
