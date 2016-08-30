@@ -85,7 +85,7 @@ defmodule Prometheus.Registry do
   @doc """
   Check whether `collector` is registered.
   """
-  defmacro collector_registred?(collector, registry \\ :default) do
+  defmacro collector_registered?(collector, registry \\ :default) do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
