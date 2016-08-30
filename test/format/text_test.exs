@@ -1,9 +1,8 @@
 defmodule Prometheus.Format.TextTest do
   use ExUnit.Case
 
+  use Prometheus
   require Prometheus.Format.Text
-  require Prometheus.Registry
-  use Prometheus.Metric
 
   setup do
     collectors = Prometheus.Registry.collectors()

@@ -1,12 +1,8 @@
 defmodule Prometheus.CollectorTest do
   use ExUnit.Case
-
-  require Prometheus.Collector
-  require Prometheus.Registry
-
-  use Prometheus.Metric
-
   import ExUnit.CaptureIO
+
+  use Prometheus
 
   setup do
     collectors = Prometheus.Registry.collectors()

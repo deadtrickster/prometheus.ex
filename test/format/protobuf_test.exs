@@ -1,9 +1,8 @@
 defmodule Prometheus.Format.ProtobufTest do
   use ExUnit.Case
 
+  use Prometheus
   require Prometheus.Format.Protobuf
-  require Prometheus.Registry
-  use Prometheus.Metric
 
   setup do
     collectors = Prometheus.Registry.collectors()

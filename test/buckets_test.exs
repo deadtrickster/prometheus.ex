@@ -1,7 +1,8 @@
 defmodule Prometheus.BucketsTest do
   use ExUnit.Case
+
+  use Prometheus
   alias Prometheus.Error
-  require Prometheus.Buckets
 
 
   test "linear buckets generator tests" do

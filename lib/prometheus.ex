@@ -13,7 +13,7 @@ defmodule Prometheus do
 
   ```elixir
   defmodule ExampleInstrumenter do
-    use Prometheus.Metric
+    use Prometheus ## require common Prometheus modules, also alias metrics.
 
     def setup do
       Histogram.new([name: :http_request_duration_milliseconds,
@@ -86,5 +86,16 @@ defmodule Prometheus do
 
   """
 
+  defmacro __using__(_opts) do
+
+    quote do
+      require Prometheus.Collector
+      require Prometheus.Registry
+      require Prometheus.Buckets
+      require Prometheus.Error
+      use Prometheus.Metric
+      require Prometheus.Contrib.HTTP
+    end
+  end
 
 end
