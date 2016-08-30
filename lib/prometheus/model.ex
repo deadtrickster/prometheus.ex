@@ -136,22 +136,4 @@ defmodule Prometheus.Model do
     end
   end
 
-  defmacro label_pairs(labels) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.label_pairs(unquote(labels))
-      )
-    end
-  end
-
-  defmacro label_pair(name, value) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.label_pair({unquote(name), unquote(value)})
-      )
-    end
-  end
-
 end
