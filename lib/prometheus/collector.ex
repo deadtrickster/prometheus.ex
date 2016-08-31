@@ -62,7 +62,7 @@ defmodule Prometheus.Collector do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-        :prometheus_collector.collect_mf(unquote(collector), unquote(callback), unquote(registry))
+        :prometheus_collector.collect_mf(unquote(registry), unquote(collector), unquote(callback))
       )
     end
   end
