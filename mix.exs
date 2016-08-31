@@ -13,6 +13,8 @@ defmodule PrometheusEx.Mixfile do
      package: package,
      name: "Prometheus.ex",
      deps: deps(),
+     test_coverage: [tool: ExCoveralls],
+     preferred_cli_env: ["coveralls": :test, "coveralls.html": :test],
      docs: [main: Prometheus,
             source_ref: "v#{@version}",
             source_url: "https://github.com/deadtrickster/prometheus.ex"]]
@@ -42,6 +44,7 @@ defmodule PrometheusEx.Mixfile do
 
   defp deps do
     [{:prometheus, "~> 3.0.0-alpha5"},
+     {:excoveralls, "~> 0.5.6"},
      {:ex_doc, "~> 0.11", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev}]
   end
