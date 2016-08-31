@@ -4,7 +4,6 @@ defmodule Prometheus.BucketsTest do
   use Prometheus
   alias Prometheus.Error
 
-
   test "linear buckets generator tests" do
     assert_raise Error.InvalidValue, fn ->
       Prometheus.Buckets.linear(-15, 5, 0)

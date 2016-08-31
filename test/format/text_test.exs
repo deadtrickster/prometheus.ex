@@ -1,18 +1,7 @@
 defmodule Prometheus.Format.TextTest do
-  use ExUnit.Case
+  use Prometheus.Case
 
-  use Prometheus
   require Prometheus.Format.Text
-
-  setup do
-    collectors = Prometheus.Registry.collectors()
-    Prometheus.Registry.clear()
-
-    on_exit fn ->
-      Prometheus.Registry.clear()
-      Prometheus.Registry.register_collectors(collectors)
-    end
-  end
 
   test "content_type" do
     assert "text/plain; version=0.0.4" == Prometheus.Format.Text.content_type

@@ -1,18 +1,7 @@
 defmodule Prometheus.Format.ProtobufTest do
-  use ExUnit.Case
+  use Prometheus.Case
 
-  use Prometheus
   require Prometheus.Format.Protobuf
-
-  setup do
-    collectors = Prometheus.Registry.collectors()
-    Prometheus.Registry.clear()
-
-    on_exit fn ->
-      Prometheus.Registry.clear()
-      Prometheus.Registry.register_collectors(collectors)
-    end
-  end
 
   test "content_type" do
     assert "application/vnd.google.protobuf; " <>

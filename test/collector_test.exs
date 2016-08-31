@@ -1,19 +1,8 @@
 defmodule Prometheus.CollectorTest do
-  use ExUnit.Case
+
+  use Prometheus.Case
+
   import ExUnit.CaptureIO
-
-  use Prometheus
-
-  setup do
-    collectors = Prometheus.Registry.collectors()
-    Prometheus.Registry.clear()
-    Prometheus.Registry.clear(:qwe)
-
-    on_exit fn ->
-      Prometheus.Registry.clear()
-      Prometheus.Registry.register_collectors(collectors)
-    end
-  end
 
   def deregister_cleanup(_), do: :ok
 
