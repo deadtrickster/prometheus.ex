@@ -8,90 +8,56 @@ defmodule Prometheus.Registry do
   unit tests, or pushing a subset of metrics to the
   [Pushgateway](https://github.com/prometheus/pushgateway) from batch jobs.
   """
-  require Prometheus.Error
+
+  use Prometheus.Erlang, :prometheus_registry
 
   @doc """
   Calls `callback` for each collector with two arguments: `registry` and `collector`.
   """
   defmacro collect(callback, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.collect(unquote(registry), unquote(callback))
-      )
-    end
+    Erlang.call([registry, callback])
   end
 
   @doc """
   Returns collectors registered in `registry`.
   """
   defmacro collectors(registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.collectors(unquote(registry))
-      )
-    end
+    Erlang.call([registry])
   end
 
   @doc """
   Register a collector.
   """
   defmacro register_collector(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.register_collector(unquote(registry), unquote(collector))
-      )
-    end
+    Erlang.call([registry, collector])
   end
 
   @doc """
   Register collectors list.
   """
   defmacro register_collectors(collectors, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error do
-        :prometheus_registry.register_collectors(unquote(registry), unquote(collectors))
-      end
-    end
+    Erlang.call([registry, collectors])
   end
 
   @doc """
   Unregister a collector.
   """
   defmacro deregister_collector(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.deregister_collector(unquote(registry), unquote(collector))
-      )
-    end
+    Erlang.call([registry, collector])
   end
 
   @doc """
   Unregister all collectors.
   """
   defmacro clear(registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.clear(unquote(registry))
-      )
-    end
+    Erlang.call([registry])
   end
 
   @doc """
   Check whether `collector` is registered.
   """
   defmacro collector_registered?(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.collector_registeredp(unquote(registry), unquote(collector))
-      )
-    end
+    Erlang.call([registry, collector])
   end
 
 end

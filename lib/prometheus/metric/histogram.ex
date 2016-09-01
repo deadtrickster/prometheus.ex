@@ -17,13 +17,13 @@ defmodule Prometheus.Metric.Histogram do
   Example:
 
   ```
-  
+
   defmodule ExampleInstrumenter do
     use Prometheus.Metric
 
     ## to be called at app/supervisor startup.
     ## to tolerate restarts use declare.
-    def setup do    
+    def setup do
       Histogram.new([name: :http_request_duration_milliseconds,
                      labels: [:method],
                      buckets: [100, 300, 500, 750, 1000],
@@ -34,18 +34,17 @@ defmodule Prometheus.Metric.Histogram do
       Histogram.observe([name: :http_request_duration_milliseconds, labels: [method]], time)
     end
   end
-  
+
   ```
-  
+
   """
 
-  alias Prometheus.Metric
-  require Prometheus.Error
+  use Prometheus.Erlang, :prometheus_histogram
 
   @doc """
   Creates a histogram using `spec`.
   Histogram cannot have a label named "le".
-  
+
   Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
   Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
   Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
@@ -60,20 +59,15 @@ defmodule Prometheus.Metric.Histogram do
   Raises `Prometheus.Error.HistogramInvalidBound` if bucket bound isn't a number.
   """
   defmacro new(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.new(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
   Creates a histogram using `spec`.
   Histogram cannot have a label named "le".
-  
-  If a histogram with the same `spec` exists returns `false`.  
-  
+
+  If a histogram with the same `spec` exists returns `false`.
+
   Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
   Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
   Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
@@ -87,105 +81,60 @@ defmodule Prometheus.Metric.Histogram do
   Raises `Prometheus.Error.HistogramInvalidBound` if bucket bound isn't a number.
   """
   defmacro declare(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.declare(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
   Observes the given amount.
-  
+
   Raises `Prometheus.Error.InvalidValue` exception if `amount` isn't a positive integer.<br>
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro observe(spec, amount \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.observe(unquote(registry),
-          unquote(name), unquote(labels),  unquote(amount))
-      )
-    end
+    Erlang.metric_call(spec, [amount])
   end
 
   @doc """
   Observes the given amount.
   If `amount` happened to be a float number even one time(!) you shouldn't use `observe/2` after dobserve.
-  
+
   Raises `Prometheus.Error.InvalidValue` exception if `amount` isn't a positive integer.<br>
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro dobserve(spec, amount \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.dobserve(unquote(registry),
-          unquote(name), unquote(labels), unquote(amount))
-      )
-    end
+    Erlang.metric_call(spec, [amount])
   end
 
   @doc """
   Observes the amount of microseconds spent executing `fun`.
-  
+
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro observe_duration(spec, fun) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.observe_duration(unquote(registry),
-          unquote(name), unquote(labels), unquote(fun))
-      )
-    end
+    Erlang.metric_call(spec, [fun])
   end
 
   @doc """
   Resets the value of the histogram identified by `spec`.
-  
+
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro reset(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.reset(unquote(registry),
-          unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 
   @doc """
   Returns the value of the histogram identified by `spec`. If there is no histogram for
   given labels combination, returns `:undefined`.
-  
+
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro value(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_histogram.value(unquote(registry),
-          unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 end

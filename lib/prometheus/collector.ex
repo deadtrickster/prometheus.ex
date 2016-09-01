@@ -11,8 +11,6 @@ defmodule Prometheus.Collector do
   You will be working with Prometheus data model directly (see `Prometheus.Model` ).
   """
 
-  require Prometheus.Error
-
   defmacro __using__(_opts) do
 
     quote location: :keep do
@@ -31,40 +29,13 @@ defmodule Prometheus.Collector do
 
   end
 
-  @doc """
-  Equivalent to `Prometheus.Registry.register_collector/2`.
-  """
-  defmacro register(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.register_collector(unquote(registry), unquote(collector))
-      )
-    end
-  end
-
-  @doc """
-  Equivalent to `Prometheus.Registry.deregister_collector/2`.
-  """
-  defmacro deregister(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.deregister_collector(unquote(registry), unquote(collector))
-      )
-    end
-  end
+  use Prometheus.Erlang, :prometheus_collector
 
   @doc """
   Calls `callback` for each MetricFamily of this collector.
   """
   defmacro collect_mf(collector, callback, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_collector.collect_mf(unquote(registry), unquote(collector), unquote(callback))
-      )
-    end
+    Erlang.call([registry, collector, callback])
   end
 
 end

@@ -36,8 +36,7 @@ defmodule Prometheus.Metric.Summary do
 
   """
 
-  alias Prometheus.Metric
-  require Prometheus.Error
+  use Prometheus.Erlang, :prometheus_summary
 
   @doc """
   Creates a summary using `spec`.
@@ -51,12 +50,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.MFAlreadyExists` if a summary with the same `spec` already exists.
   """
   defmacro new(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.new(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
@@ -72,12 +66,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
   """
   defmacro declare(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.declare(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
@@ -88,15 +77,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro observe(spec, amount \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.observe(unquote(registry),
-          unquote(name), unquote(labels),  unquote(amount))
-      )
-    end
+    Erlang.metric_call(spec, [amount])
   end
 
   @doc """
@@ -108,15 +89,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro dobserve(spec, amount \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.dobserve(unquote(registry),
-          unquote(name), unquote(labels), unquote(amount))
-      )
-    end
+    Erlang.metric_call(spec, [amount])
   end
 
   @doc """
@@ -126,15 +99,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro observe_duration(spec, fun) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.observe_duration(unquote(registry),
-          unquote(name), unquote(labels), unquote(fun))
-      )
-    end
+    Erlang.metric_call(spec, [fun])
   end
 
   @doc """
@@ -144,15 +109,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro reset(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.reset(unquote(registry),
-          unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 
   @doc """
@@ -163,14 +120,6 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro value(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_summary.value(unquote(registry),
-          unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 end

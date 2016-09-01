@@ -7,21 +7,21 @@ defmodule Prometheus.CollectorTest do
   def deregister_cleanup(_), do: :ok
 
   test "Collector tests" do
-    ## test registration in default registry
-    Prometheus.Collector.register(Prometheus.CollectorTest)
-    assert true == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest)
+    # ## test registration in default registry
+    # Prometheus.Collector.register(Prometheus.CollectorTest)
+    # assert true == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest)
 
-    ## test registration in custom registry
-    Prometheus.Collector.register(Prometheus.CollectorTest, :qwe)
-    assert true == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest, :qwe)
+    # ## test registration in custom registry
+    # Prometheus.Collector.register(Prometheus.CollectorTest, :qwe)
+    # assert true == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest, :qwe)
 
-    ## test deregistration in default registry
-    Prometheus.Collector.deregister(Prometheus.CollectorTest)
-    assert false == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest)
+    # ## test deregistration in default registry
+    # Prometheus.Collector.deregister(Prometheus.CollectorTest)
+    # assert false == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest)
 
-    ## test deregistration in custom registry
-    Prometheus.Collector.deregister(Prometheus.CollectorTest, :qwe)
-    assert false == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest, :qwe)
+    # ## test deregistration in custom registry
+    # Prometheus.Collector.deregister(Prometheus.CollectorTest, :qwe)
+    # assert false == Prometheus.Registry.collector_registered?(Prometheus.CollectorTest, :qwe)
 
     ## test collecting metrics from collector in default registry
     Counter.declare([name: :test_counter,

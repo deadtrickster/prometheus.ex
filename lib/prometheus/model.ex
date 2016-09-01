@@ -4,7 +4,7 @@ defmodule Prometheus.Model do
   Probably will be used with `Prometheus.Collector`.
   """
 
-  require Prometheus.Error
+  use Prometheus.Erlang, :prometheus_model_helpers
 
   @doc """
   Create Metric Family of `type`, `name` and `help`.
@@ -12,12 +12,7 @@ defmodule Prometheus.Model do
   return individual metrics list.
   """
   defmacro create_mf(name, help, type, collector, collector_data) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.create_mf(unquote(name), unquote(help), unquote(type), unquote(collector), unquote(collector_data))
-      )
-    end
+    Erlang.call([name, help, type, collector, collector_data])
   end
 
   @doc """
@@ -29,12 +24,7 @@ defmodule Prometheus.Model do
 
   """
   defmacro gauge_metrics(mdata) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.gauge_metrics(unquote(mdata))
-      )
-    end
+    Erlang.call([mdata])
   end
 
   @doc """
@@ -46,12 +36,7 @@ defmodule Prometheus.Model do
 
   """
   defmacro gauge_metric(value, labels \\ []) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.gauge_metric(unquote(labels), unquote(value))
-      )
-    end
+    Erlang.call([labels, value])
   end
 
   @doc """
@@ -63,12 +48,7 @@ defmodule Prometheus.Model do
 
   """
   defmacro counter_metrics(mdata) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.counter_metrics(unquote(mdata))
-      )
-    end
+    Erlang.call([mdata])
   end
 
   @doc """
@@ -80,60 +60,35 @@ defmodule Prometheus.Model do
 
   """
   defmacro counter_metric(value, labels \\ []) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.counter_metric(unquote(labels), unquote(value))
-      )
-    end
+    Erlang.call([labels, value])
   end
 
   @doc """
   Creates summary metrics from `mdata` {labels, count, sum} tuple list.
   """
   defmacro summary_metrics(mdata) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.summary_metrics(unquote(mdata))
-      )
-    end
+    Erlang.call([mdata])
   end
 
   @doc """
   Creates summary metric with `count`, `sum` and `labels`.
   """
   defmacro summary_metric(count, sum, labels \\ []) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.summary_metric(unquote(labels), unquote(count), unquote(sum))
-      )
-    end
+    Erlang.call([labels, count, sum])
   end
 
   @doc """
   Creates histogram metrics from `mdata` {labels, buckets, count, sum} tuple list.
   """
   defmacro histogram_metrics(mdata) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.histogram_metrics(unquote(mdata))
-      )
-    end
+    Erlang.call([mdata])
   end
 
   @doc """
   Creates histogram metric with `buckets`, `count`, `sum`, and `labels`.
   """
   defmacro histogram_metric(buckets, count, sum, labels \\ []) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_model_helpers.histogram_metric(unquote(labels), unquote(buckets), unquote(count), unquote(sum))
-      )
-    end
+    Erlang.call([labels, buckets, count, sum])
   end
 
 end

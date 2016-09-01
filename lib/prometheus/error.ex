@@ -5,7 +5,11 @@ defmodule Prometheus.Error do
     @moduledoc """
     Raised when given `value` is invalid i.e. when you pass a negative number to `Prometheus.Metric.Counter.inc/2`.
     """
-    defexception [:value, :message]
+    defexception [:value, :orig_message]
+
+    def message(%{value: value, orig_message: message}) do
+      "Invalid value: #{value} (#{message})."
+    end
   end
 
   defmodule InvalidMetricName do
@@ -13,14 +17,33 @@ defmodule Prometheus.Error do
     Raised when given metric `name` is invalid i.e. can't be represented as printable utf-8 string that matches
     `^[a-zA-Z_:][a-zA-Z0-9_:]*$` regular expression.
     """
-    defexception [:name, :message]
+    defexception [:name]
+
+    def message(%{name: name}) do
+      "Invalid metric name: #{name}."
+    end
+  end
+
+  defmodule InvalidMetricLabels do
+    @moduledoc """
+    Raised when `labels` isn't a list.
+    """
+    defexception [:labels]
+
+    def message(%{labels: labels}) do
+      "Invalid metric labels: #{labels}."
+    end
   end
 
   defmodule InvalidMetricHelp do
     @moduledoc """
     Raised when given metric `help` is invalid i.e. isn't a printable utf-8 string.
     """
-    defexception [:help, :message]
+    defexception [:help]
+
+    def message(%{help: help}) do
+      "Invalid metric help: #{help}."
+    end
   end
 
   defmodule InvalidMetricArity do
@@ -44,13 +67,6 @@ defmodule Prometheus.Error do
     end
   end
 
-  defmodule InvalidMetricLabels do
-    @moduledoc """
-    Raised when `labels` isn't a list.
-    """
-    defexception [:labels, :message]
-  end
-
   defmodule InvalidLabelName do
     @moduledoc """
     Raised when label `name` is invalid i.e. can't be represented as printable utf-8 string that matches
@@ -65,7 +81,11 @@ defmodule Prometheus.Error do
     @moduledoc """
     Raised when one tries to create metric in `registry` with `name` it already exists.
     """
-    defexception [:registry, :name, :message]
+    defexception [:registry, :name]
+
+    def message(%{registry: registry, name: name}) do
+      "Metric #{registry}:#{name} already exists."
+    end
   end
 
   defmodule HistogramNoBuckets do
@@ -106,21 +126,21 @@ defmodule Prometheus.Error do
       %ErlangError{original: original} ->
         case original do
           {:invalid_value, value, message} ->
-            %InvalidValue{value: value, message: message}
-          {:invalid_metric_name, name, message} ->
-            %InvalidMetricName{name: name, message: message}
-          {:invalid_metric_help, help, message} ->
-            %InvalidMetricHelp{help: help, message: message}
+            %InvalidValue{value: value, orig_message: message}
+          {:invalid_metric_name, name, _message} ->
+            %InvalidMetricName{name: name}
+          {:invalid_metric_help, help, _message} ->
+            %InvalidMetricHelp{help: help}
           {:invalid_metric_arity, present, expected} ->
             %InvalidMetricArity{present: present, expected: expected}
           {:unknown_metric, registry, name} ->
             %UnknownMetric{registry: registry, name: name}
-          {:invalid_metric_labels, labels, message} ->
-            %InvalidMetricLabels{labels: labels, message: message}
-          {:invalid_metric_label_name, name, message} ->
-            %InvalidLabelName{name: name, message: message}
-          {:mf_already_exists, {registry, name}, message} ->
-            %MFAlreadyExists{registry: registry, name: name, message: message}
+          {:invalid_metric_labels, labels, _message} ->
+            %InvalidMetricLabels{labels: labels}
+          {:invalid_metric_label_name, name, _message} ->
+            %InvalidLabelName{name: name}
+          {:mf_already_exists, {registry, name}, _message} ->
+            %MFAlreadyExists{registry: registry, name: name}
           {:histogram_no_buckets, buckets} ->
             %HistogramNoBuckets{buckets: buckets}
           {:histogram_invalid_buckets, buckets} ->

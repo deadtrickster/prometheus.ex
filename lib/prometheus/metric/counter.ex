@@ -9,9 +9,9 @@ defmodule Prometheus.Metric.Counter do
   occurred, etc.
 
   Example use cases for Counters:
-    - Number of requests processed;
-    - Number of items that were inserted into a queue;
-    - Total amount of data that a system has processed.
+  - Number of requests processed;
+  - Number of items that were inserted into a queue;
+  - Total amount of data that a system has processed.
 
   Use the [`rate()`](https://prometheus.io/docs/querying/functions/#rate())/
   [`irate()`](https://prometheus.io/docs/querying/functions/#irate())
@@ -45,7 +45,7 @@ defmodule Prometheus.Metric.Counter do
 
     def inc(caller) do
       Counter.inc([name: :my_service_total_requests,
-                   labels: [caller]])
+                  labels: [caller]])
     end
 
   end
@@ -54,8 +54,7 @@ defmodule Prometheus.Metric.Counter do
 
   """
 
-  alias Prometheus.Metric
-  require Prometheus.Error
+  use Prometheus.Erlang, :prometheus_counter
 
   @doc """
   Creates a counter using `spec`.
@@ -68,12 +67,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.Error.MFAlreadyExists` if a counter with the same `spec` already exists.
   """
   defmacro new(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.new(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
@@ -87,12 +81,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
   """
   defmacro declare(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.declare(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
@@ -103,14 +92,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro inc(spec, value \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.inc(unquote(registry), unquote(name), unquote(labels),  unquote(value))
-      )
-    end
+    Erlang.metric_call(:inc, spec, [value])
   end
 
   @doc """
@@ -122,14 +104,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro dinc(spec, value \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.dinc(unquote(registry), unquote(name), unquote(labels),  unquote(value))
-      )
-    end
+    Erlang.metric_call({:prometheus_counter, :dinc}, spec, [value])
   end
 
   @doc """
@@ -139,14 +114,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro reset(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.reset(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 
   @doc """
@@ -157,13 +125,6 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro value(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.value(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call({:prometheus_counter, :value}, spec)
   end
 end

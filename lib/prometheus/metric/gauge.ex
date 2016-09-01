@@ -47,8 +47,7 @@ defmodule Prometheus.Metric.Gauge do
 
   """
 
-  alias Prometheus.Metric
-  require Prometheus.Error
+  use Prometheus.Erlang, :prometheus_gauge
 
   @doc """
   Creates a gauge using `spec`.
@@ -61,12 +60,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.MFAlreadyExists` if a gauge with the same `spec` exists.
   """
   defmacro new(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.new(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
@@ -80,12 +74,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
   """
   defmacro declare(spec) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.declare(unquote(spec))
-      )
-    end
+    Erlang.call([spec])
   end
 
   @doc """
@@ -96,14 +85,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro set(spec, value) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.set(unquote(registry), unquote(name), unquote(labels),  unquote(value))
-      )
-    end
+    Erlang.metric_call(spec, [value])
   end
 
   @doc """
@@ -113,14 +95,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro set_to_current_time(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.set_to_current_time(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 
   @doc """
@@ -130,14 +105,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro track_inprogress(spec, fun) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.track_inprogress(unquote(registry), unquote(name), unquote(labels), unquote(fun))
-      )
-    end
+    Erlang.metric_call(spec, [fun])
   end
 
   @doc """
@@ -147,14 +115,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro reset(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.reset(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 
   @doc """
@@ -164,14 +125,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro value(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_gauge.value(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 end
 

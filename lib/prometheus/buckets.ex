@@ -3,7 +3,7 @@ defmodule Prometheus.Buckets do
   Histogram buckets generators.
   """
 
-  require Prometheus.Error
+  use Prometheus.Erlang, :prometheus_buckets
 
   @doc """
   Default histogram buckets:
@@ -15,7 +15,7 @@ defmodule Prometheus.Buckets do
 
   """
   defmacro default do
-    :prometheus_buckets.default()
+    Erlang.call()
   end
 
   @doc """
@@ -29,12 +29,7 @@ defmodule Prometheus.Buckets do
   The function raises `Prometheus.Error.InvalidValue` exception if `count` is zero or negative.
   """
   defmacro linear(start, step, count) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_buckets.linear(unquote(start), unquote(step), unquote(count))
-      )
-    end
+    Erlang.call([start, step, count])
   end
 
   @doc """
@@ -47,12 +42,7 @@ defmodule Prometheus.Buckets do
   if `start` is 0 or negative, or if `factor` is less than or equal 1.
   """
   defmacro exponential(start, factor, count) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_buckets.exponential(unquote(start), unquote(factor), unquote(count))
-      )
-    end
+     Erlang.call([start, factor, count])
   end
 
 end
