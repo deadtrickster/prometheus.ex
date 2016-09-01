@@ -41,7 +41,7 @@ defmodule PrometheusEx.Mixfile do
   end
 
   defp deps do
-    [{:prometheus, "~> 3.0.0-alpha2"},
+    [{:prometheus, "~> 3.0.0-alpha4"},
      {:ex_doc, "~> 0.11", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev}]
   end
