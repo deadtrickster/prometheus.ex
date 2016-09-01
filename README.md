@@ -1,4 +1,5 @@
-# Prometheus.ex [![Build Status](https://travis-ci.org/deadtrickster/prometheus.ex.svg?branch=master)](https://travis-ci.org/deadtrickster/prometheus.ex) [![Hex.pm](https://img.shields.io/hexpm/v/prometheus_ex.svg?maxAge=2592000)](https://hex.pm/packages/prometheus_ex)
+# Prometheus.ex
+[![Build Status](https://travis-ci.org/deadtrickster/prometheus.ex.svg?branch=version-1)](https://travis-ci.org/deadtrickster/prometheus.ex) [![Hex.pm](https://img.shields.io/hexpm/v/prometheus_ex.svg?maxAge=2592000)](https://hex.pm/packages/prometheus_ex) [![Documentation](https://img.shields.io/badge/documentation-on%20hexdocs-green.svg)](https://hexdocs.pm/prometheus_ex/1.0.0-alpha4/)
 
 Elixir [Prometheus.io](https://prometheus.io) client based on [Prometheus.erl](https://github.com/deadtrickster/prometheus.erl).
 
@@ -23,7 +24,7 @@ end
 
 ## Integrations / Collectors / Instrumenters
  - [Ecto collector](https://github.com/deadtrickster/prometheus-ecto)
- - [Elixir plugs](https://github.com/deadtrickster/prometheus-plugs)
+ - [Plugs Instrumenter/Exporter](https://github.com/deadtrickster/prometheus-plugs)
  - [Elli middleware](https://github.com/elli-lib/elli_prometheus)
  - [Fuse plugin](https://github.com/jlouis/fuse#fuse_stats_prometheus)
  - [Phoenix instrumenter](https://github.com/deadtrickster/prometheus-phoenix)
@@ -38,7 +39,7 @@ end
 
     ```elixir
     def deps do
-      [{:prometheus_ex, "~> 0.0.2"}]
+      [{:prometheus_ex, "~> 1.0.0-alpha4"}]
     end
     ```
 
