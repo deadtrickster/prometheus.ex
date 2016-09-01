@@ -36,9 +36,9 @@ defmodule Prometheus.CounterTest do
     fn ->
       Counter.inc(spec, -1)
     end
-    assert_raise Prometheus.Error.InvalidValue, "Invalid value: -1 (inc accepts only non-negative integers).",
+    assert_raise Prometheus.Error.InvalidValue, "Invalid value: 1.5 (inc accepts only non-negative integers).",
     fn ->
-      Counter.inc(spec, -1.5)
+      Counter.inc(spec, 1.5)
     end
   end
 
