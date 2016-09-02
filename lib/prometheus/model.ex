@@ -40,6 +40,30 @@ defmodule Prometheus.Model do
   end
 
   @doc """
+  Creates untyped metrics from `mdata` {label, value} tuple list.
+
+      iex(11)> Prometheus.Model.untyped_metrics([{[host: "example.com"], 100}])
+      [{:Metric, [{:LabelPair, "host", "example.com"}], :undefined,
+      :undefined, :undefined, {:Untyped, 100}, :undefined, :undefined}]
+
+  """
+  defmacro untyped_metrics(mdata) do
+    Erlang.call([mdata])
+  end
+
+  @doc """
+  Creates untyped metric with `value` and `labels`
+
+      iex(13)> Prometheus.Model.untyped_metric(100, [host: "example.com"])
+      {:Metric, [{:LabelPair, "host", "example.com"}], :undefined,
+       :undefined, :undefined, {:Untyped, 100}, :undefined, :undefined}
+
+  """
+  defmacro untyped_metric(value, labels \\ []) do
+    Erlang.call([labels, value])
+  end
+
+  @doc """
   Creates counter metrics from `mdata` {labels, value} tuple list.
 
       iex(14)> Prometheus.Model.counter_metrics([{[host: "example.com"], 100}])

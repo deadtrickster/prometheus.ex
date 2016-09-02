@@ -118,6 +118,16 @@ defmodule Prometheus.Metric.Histogram do
   end
 
   @doc """
+  Removes histogram series identified by spec.
+
+  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro remove(spec) do
+    Erlang.metric_call(spec)
+  end
+
+  @doc """
   Resets the value of the histogram identified by `spec`.
 
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>

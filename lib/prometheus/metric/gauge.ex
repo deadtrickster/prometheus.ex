@@ -89,6 +89,52 @@ defmodule Prometheus.Metric.Gauge do
   end
 
   @doc """
+  Increments the gauge identified by `spec` by `value`.
+
+  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't an integer.<br>
+  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro inc(spec, value \\ 1) do
+    Erlang.metric_call(spec, [value])
+  end
+
+  @doc """
+  Decrements the gauge identified by `spec` by `value`.
+
+  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't an integer.<br>
+  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro dec(spec, value \\ 1) do
+    Erlang.metric_call(spec, [value])
+  end
+
+  @doc """
+  Increments the gauge identified by `spec` by `value`.
+  If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` or `dec/2` after dinc.
+
+  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a number.<br>
+  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro dinc(spec, value \\ 1) do
+    Erlang.metric_call(spec, [value])
+  end
+
+  @doc """
+  Decrements the gauge identified by `spec` by `value`.
+  If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` or `dec/2` after ddec.
+
+  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a number.<br>
+  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro ddec(spec, value \\ 1) do
+    Erlang.metric_call(spec, [value])
+  end
+
+  @doc """
   Sets the gauge identified by `spec` to the current unixtime.
 
   Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
@@ -99,13 +145,33 @@ defmodule Prometheus.Metric.Gauge do
   end
 
   @doc """
-  Track inprogress functions.
+  Tracks inprogress functions.
 
   Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
   """
   defmacro track_inprogress(spec, fun) do
     Erlang.metric_call(spec, [fun])
+  end
+
+  @doc """
+  Tracks function execution duration.
+
+  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro set_duration(spec, fun) do
+    Erlang.metric_call(spec, [fun])
+  end
+
+  @doc """
+  Removes gauge series identified by spec.
+
+  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro remove(spec) do
+    Erlang.metric_call(spec)
   end
 
   @doc """

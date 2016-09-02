@@ -108,6 +108,16 @@ defmodule Prometheus.Metric.Counter do
   end
 
   @doc """
+  Removes counter series identified by spec.
+
+  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro remove(spec) do
+    Erlang.metric_call(spec)
+  end
+
+  @doc """
   Resets the value of the counter identified by `spec`.
 
   Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>

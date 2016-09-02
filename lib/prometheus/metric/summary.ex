@@ -103,6 +103,16 @@ defmodule Prometheus.Metric.Summary do
   end
 
   @doc """
+  Removes summary series identified by spec.
+
+  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  """
+  defmacro remove(spec) do
+    Erlang.metric_call(spec)
+  end
+
+  @doc """
   Resets the value of the summary identified by `spec`.
 
   Raises `Prometheus.Error.UnknownMetric` exception if a summary for `spec` can't be found.<br>
