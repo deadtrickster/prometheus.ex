@@ -3,6 +3,8 @@ defmodule Prometheus.BucketsTest do
 
   use Prometheus
   alias Prometheus.Error
+  
+  doctest Prometheus.Buckets
 
   test "linear buckets generator tests" do
     assert_raise Error.InvalidValue, fn ->
