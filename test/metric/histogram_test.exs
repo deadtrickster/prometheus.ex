@@ -211,7 +211,7 @@ defmodule Prometheus.HistogramTest do
     assert {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0} == Histogram.value(spec)
   end
 
-  test "observe_duration" do
+  test "observe_duration fn" do
     spec = [name: :http_requests_total,
             labels: [:method],
             help: ""]
@@ -232,6 +232,33 @@ defmodule Prometheus.HistogramTest do
       Histogram.observe_duration(spec, fn ->
         :erlang.error({:qwe})
       end)
+    end
+
+    ## observe_duration is async so lets make sure gen_server processed our increment request
+    Process.sleep(10)
+    {buckets, sum} = Histogram.value(spec)
+    assert [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] == buckets
+    assert 1 < sum and sum < 1.2
+  end
+
+  test "observe_duration block" do
+    spec = [name: :http_requests_total,
+            labels: [:method],
+            help: ""]
+    Histogram.new(spec)
+
+    assert :ok == Histogram.observe_duration(spec, do: Process.sleep(1000))
+
+    ## observe_duration is async so lets make sure gen_server processed our increment request
+    Process.sleep(10)
+    {buckets, sum} = Histogram.value(spec)
+    assert [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] == buckets
+    assert 1 < sum and sum < 1.2
+
+    assert_raise ErlangError, fn ->
+      Histogram.observe_duration spec do
+        :erlang.error({:qwe})
+      end
     end
 
     ## observe_duration is async so lets make sure gen_server processed our increment request

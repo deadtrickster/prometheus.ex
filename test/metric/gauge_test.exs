@@ -41,14 +41,14 @@ defmodule Prometheus.GaugeTest do
   test "gauge specific errors" do
     spec = [name: :http_requests_total,
             help: ""]
-    
+
     ## set
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (set accepts only numbers).",
     fn ->
       Gauge.set(spec, "qwe")
     end
-    
+
     ## inc
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (inc accepts only integers).",
@@ -60,7 +60,7 @@ defmodule Prometheus.GaugeTest do
     fn ->
       Gauge.inc(spec, -1.5)
     end
-    
+
     ## dec
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (dec accepts only integers).",
@@ -72,28 +72,28 @@ defmodule Prometheus.GaugeTest do
     fn ->
       Gauge.dec(spec, -1.5)
     end
-    
+
     ## dinc
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (dinc accepts only numbers).",
     fn ->
       Gauge.dinc(spec, "qwe")
     end
-    
+
     ## ddec
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (ddec accepts only numbers).",
     fn ->
       Gauge.ddec(spec, "qwe")
     end
-    
+
     ## track_inprogress
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (track_inprogress accepts only functions).",
     fn ->
       Gauge.track_inprogress(spec, "qwe")
     end
-    
+
     ## set_duration
     assert_raise Prometheus.Error.InvalidValue,
       "Invalid value: qwe (set_duration accepts only functions).",
@@ -333,7 +333,7 @@ defmodule Prometheus.GaugeTest do
     assert :os.system_time(:seconds) == Gauge.value(spec)
   end
 
-  test "test_track_inprogress" do
+  test "test_track_inprogress fn" do
     spec = [name: :http_requests_total,
             labels: [:method],
             help: ""]
@@ -352,7 +352,25 @@ defmodule Prometheus.GaugeTest do
     assert 0 = Gauge.value(spec)
   end
 
-  test "set_duration" do
+  test "test_track_inprogress block" do
+    spec = [name: :http_requests_total,
+            labels: [:method],
+            help: ""]
+    Gauge.new(spec)
+
+    assert 1 == Gauge.track_inprogress(spec, do: Gauge.value(spec))
+
+
+    assert_raise ErlangError, fn ->
+      Gauge.track_inprogress spec do
+        :erlang.error({:qwe})
+      end
+    end
+
+    assert 0 = Gauge.value(spec)
+  end
+
+  test "set_duration fn" do
     spec = [name: :http_requests_total,
             labels: [:method],
             help: ""]
@@ -372,6 +390,31 @@ defmodule Prometheus.GaugeTest do
       Gauge.set_duration(spec, fn ->
         :erlang.error({:qwe})
       end)
+    end
+
+    ## set_duration is async so lets make sure gen_server processed our increment request
+    Process.sleep(10)
+
+    assert 0.0 < Gauge.value(spec) and Gauge.value(spec) < 0.2
+  end
+
+  test "set_duration block" do
+    spec = [name: :http_requests_total,
+            labels: [:method],
+            help: ""]
+    Gauge.new(spec)
+
+    assert :ok == Gauge.set_duration(spec, do: Process.sleep(1000))
+
+    ## set_duration is async so lets make sure gen_server processed our increment request
+    Process.sleep(10)
+
+    assert 1 < Gauge.value(spec) and Gauge.value(spec) < 1.2
+
+    assert_raise ErlangError, fn ->
+      Gauge.set_duration spec do
+        :erlang.error({:qwe})
+      end
     end
 
     ## set_duration is async so lets make sure gen_server processed our increment request

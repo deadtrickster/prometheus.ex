@@ -112,4 +112,19 @@ defmodule Prometheus.Erlang do
     {module, function, arguments}
   end
 
+  def ensure_fn(var) do
+    case var do
+      [do: block] ->
+        quote do
+          fn ->
+            unquote(block)
+          end
+        end
+      fun ->
+        quote do
+          unquote(fun)
+        end
+    end
+  end
+
 end

@@ -185,7 +185,7 @@ defmodule Prometheus.SummaryTest do
     assert {0, 0} == Summary.value(spec)
   end
 
-  test "observe_duration" do
+  test "observe_duration fn" do
     spec = [name: :http_requests_total,
             labels: [:method],
             help: ""]
@@ -206,6 +206,33 @@ defmodule Prometheus.SummaryTest do
       Summary.observe_duration(spec, fn ->
         :erlang.error({:qwe})
       end)
+    end
+
+    ## observe_duration is async so lets make sure gen_server processed our increment request
+    Process.sleep(10)
+    {count, sum} = Summary.value(spec)
+    assert 2 == count
+    assert 1 < sum and sum < 1.2
+  end
+
+  test "observe_duration block" do
+    spec = [name: :http_requests_total,
+            labels: [:method],
+            help: ""]
+    Summary.new(spec)
+
+    assert :ok == Summary.observe_duration(spec, do: Process.sleep(1000))
+
+    ## observe_duration is async so lets make sure gen_server processed our increment request
+    Process.sleep(10)
+    {count, sum} = Summary.value(spec)
+    assert 1 == count
+    assert 1 < sum and sum < 1.2
+
+    assert_raise ErlangError, fn ->
+      Summary.observe_duration spec do
+        :erlang.error({:qwe})
+      end
     end
 
     ## observe_duration is async so lets make sure gen_server processed our increment request

@@ -112,9 +112,10 @@ defmodule Prometheus.Metric.Histogram do
 
   Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.Error.InvalidValue` exception if fun isn't a function or block.
   """
   defmacro observe_duration(spec, fun) do
-    Erlang.metric_call(spec, [fun])
+    Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
   end
 
   @doc """
