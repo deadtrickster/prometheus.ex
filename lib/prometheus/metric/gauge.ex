@@ -155,7 +155,7 @@ defmodule Prometheus.Metric.Gauge do
   end
 
   @doc """
-  Tracks function execution duration.
+  Tracks the amount of seconds spent executing `fun`.
 
   Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
