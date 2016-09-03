@@ -97,7 +97,11 @@ defmodule Prometheus.Error do
     Raised by histogram constructors when buckets can't be found in spec, or
     found value is empty list.
     """
-    defexception [:buckets, :message]
+    defexception [:buckets]
+
+    def message(%{buckets: buckets}) do
+      "Invalid histogram buckets: #{buckets}."
+    end
   end
 
   defmodule HistogramInvalidBuckets do
@@ -105,14 +109,23 @@ defmodule Prometheus.Error do
     Raised by histogram constructors when buckets are invalid i.e. not sorted in increasing
     order or generator spec is unknown.
     """
-    defexception [:buckets, :message]
+    defexception [:buckets, :orig_message]
+
+    def message(%{buckets: buckets, orig_message: message}) do
+      buckets = :io_lib.format("~p", [buckets])
+      "Invalid histogram buckets: #{buckets} (#{message})."
+    end
   end
 
   defmodule HistogramInvalidBound do
     @moduledoc """
     Raised by histogram constructors when bucket bound isn't a number.
     """
-    defexception [:bound, :message]
+    defexception [:bound]
+
+    def message(%{bound: bound}) do
+      "Invalid histogram bound: #{bound}."
+    end
   end
 
   defmodule MissingMetricSpecKey do
@@ -122,7 +135,11 @@ defmodule Prometheus.Error do
 
     Metrics can have their specific required keys.
     """
-    defexception [:key, :spec, :message]
+    defexception [:key, :spec]
+
+    def message(%{key: key}) do
+      "Required key #{key} is missing from metric spec."
+    end
   end
 
   def normalize(erlang_error) do
@@ -147,12 +164,12 @@ defmodule Prometheus.Error do
             %MFAlreadyExists{registry: registry, name: name}
           {:histogram_no_buckets, buckets} ->
             %HistogramNoBuckets{buckets: buckets}
-          {:histogram_invalid_buckets, buckets} ->
-            %HistogramInvalidBuckets{buckets: buckets, message: "buckets are invalid"}
           {:histogram_invalid_buckets, buckets, message} ->
-            %HistogramInvalidBuckets{buckets: buckets, message: message}
+            %HistogramInvalidBuckets{buckets: buckets, orig_message: message}
+          {:histogram_invalid_buckets, buckets} ->
+            %HistogramInvalidBuckets{buckets: buckets, orig_message: "not a list"}
           {:histogram_invalid_bound, bound} ->
-            %HistogramInvalidBound{bound: bound, message: "bound is invalid"}
+            %HistogramInvalidBound{bound: bound}
           {:missing_metric_spec_key, key, spec} ->
             %MissingMetricSpecKey{key: key, spec: spec}
           _ ->
