@@ -1,5 +1,7 @@
 # Prometheus.ex
-[![Build Status](https://travis-ci.org/deadtrickster/prometheus.ex.svg?branch=version-1)](https://travis-ci.org/deadtrickster/prometheus.ex) [![Hex.pm](https://img.shields.io/hexpm/v/prometheus_ex.svg?maxAge=2592000)](https://hex.pm/packages/prometheus_ex) [![Coverage Status](https://coveralls.io/repos/github/deadtrickster/prometheus.ex/badge.svg?branch=version-1)](https://coveralls.io/github/deadtrickster/prometheus.ex?branch=version-1) [![Documentation](https://img.shields.io/badge/documentation-on%20hexdocs-green.svg)](https://hexdocs.pm/prometheus_ex/1.0.0-alpha4/)
+[![Build Status](https://travis-ci.org/deadtrickster/prometheus.ex.svg?branch=version-1)](https://travis-ci.org/deadtrickster/prometheus.ex) 
+[![Coverage Status](https://coveralls.io/repos/github/deadtrickster/prometheus.ex/badge.svg?branch=version-1)](https://coveralls.io/github/deadtrickster/prometheus.ex?branch=version-1) 
+[![Hex.pm](https://img.shields.io/hexpm/v/prometheus_ex.svg?maxAge=2592000)](https://hex.pm/packages/prometheus_ex)  [![Documentation](https://img.shields.io/badge/documentation-on%20hexdocs-green.svg)](https://hexdocs.pm/prometheus_ex/1.0.0-alpha4/)
 
 Elixir [Prometheus.io](https://prometheus.io) client based on [Prometheus.erl](https://github.com/deadtrickster/prometheus.erl).
 
