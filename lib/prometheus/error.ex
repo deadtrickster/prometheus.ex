@@ -54,7 +54,7 @@ defmodule Prometheus.Error do
     defexception [:present, :expected]
 
     def message(%{present: present, expected: expected}) do
-      "invalid metric arity: got #{present}, expected #{expected}."
+      "Invalid metric arity: got #{present}, expected #{expected}."
     end
   end
 
@@ -63,7 +63,7 @@ defmodule Prometheus.Error do
 
 
     def message(%{registry: registry, name: name}) do
-      "unknown metric {registry: #{registry}, name: #{name}}"
+      "Unknown metric {registry: #{registry}, name: #{name}}."
     end
   end
 
