@@ -19,7 +19,7 @@ defmodule Prometheus.Metric.Counter do
   By convention, the names of Counters are suffixed by `_total`.
 
   To create a counter use either `new/1` or `declare/`, the difference is that
-  `new/` will raise `Prometheus.Error.MFAlreadyExists` exception if counter with
+  `new/` will raise `Prometheus.MFAlreadyExistsError` exception if counter with
   the same `registry`, `name` and `labels` combination already exists.
   Both accept `spec` `Keyword` with the same set of keys:
 
@@ -59,12 +59,12 @@ defmodule Prometheus.Metric.Counter do
   @doc """
   Creates a counter using `spec`.
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.<br>
-  Raises `Prometheus.Error.MFAlreadyExists` if a counter with the same `spec` already exists.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.MFAlreadyExistsError` if a counter with the same `spec` already exists.
   """
   defmacro new(spec) do
     Erlang.call([spec])
@@ -74,11 +74,11 @@ defmodule Prometheus.Metric.Counter do
   Creates a counter using `spec`.
   If a counter with the same `spec` exists returns `false`.
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
@@ -87,9 +87,9 @@ defmodule Prometheus.Metric.Counter do
   @doc """
   Increments the counter identified by `spec` by `value`.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a positive integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro inc(spec, value \\ 1) do
     Erlang.metric_call(:inc, spec, [value])
@@ -99,9 +99,9 @@ defmodule Prometheus.Metric.Counter do
   Increments the counter identified by `spec` by `value`.
   If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` after dinc.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a positive number.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive number.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dinc(spec, value \\ 1) do
     Erlang.metric_call({:prometheus_counter, :dinc}, spec, [value])
@@ -110,8 +110,8 @@ defmodule Prometheus.Metric.Counter do
   @doc """
   Removes counter series identified by spec.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro remove(spec) do
     Erlang.metric_call(spec)
@@ -120,8 +120,8 @@ defmodule Prometheus.Metric.Counter do
   @doc """
   Resets the value of the counter identified by `spec`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro reset(spec) do
     Erlang.metric_call(spec)
@@ -131,8 +131,8 @@ defmodule Prometheus.Metric.Counter do
   Returns the value of the counter identified by `spec`. If there is no counter for
   given labels combination, returns `:undefined`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do
     Erlang.metric_call({:prometheus_counter, :value}, spec)

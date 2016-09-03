@@ -8,7 +8,7 @@ defmodule Prometheus.HistogramTest do
 
     assert true == Histogram.declare(spec)
     assert false == Histogram.declare(spec)
-    assert_raise Prometheus.Error.MFAlreadyExists,
+    assert_raise Prometheus.MFAlreadyExistsError,
       "Metric qwe:name already exists.",
     fn ->
       Histogram.new(spec)
@@ -16,53 +16,53 @@ defmodule Prometheus.HistogramTest do
   end
 
   test "spec errors" do
-    assert_raise Prometheus.Error.MissingMetricSpecKey,
+    assert_raise Prometheus.MissingMetricSpecKeyError,
       "Required key name is missing from metric spec.",
     fn ->
       Histogram.new([help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricName,
+    assert_raise Prometheus.InvalidMetricNameError,
       "Invalid metric name: 12.",
     fn ->
       Histogram.new([name: 12, help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricLabels,
+    assert_raise Prometheus.InvalidMetricLabelsError,
       "Invalid metric labels: 12.",
     fn ->
       Histogram.new([name: "qwe", labels: 12, help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricHelp,
+    assert_raise Prometheus.InvalidMetricHelpError,
       "Invalid metric help: 12.",
     fn ->
       Histogram.new([name: "qwe", help: 12])
     end
-    assert_raise Prometheus.Error.InvalidLabelName,
+    assert_raise Prometheus.InvalidLabelNameError,
       "Invalid label name: le (histogram cannot have a label named \"le\").",
     fn ->
       Histogram.new([name: "qwe", help: "", labels: ["le"]])
     end
     ## buckets
-    assert_raise Prometheus.Error.HistogramNoBuckets,
+    assert_raise Prometheus.HistogramNoBucketsError,
       "Invalid histogram buckets: .",
     fn ->
       Histogram.new([name: "qwe", help: "", buckets: []])
     end
-    assert_raise Prometheus.Error.HistogramNoBuckets,
+    assert_raise Prometheus.HistogramNoBucketsError,
       "Invalid histogram buckets: undefined.",
     fn ->
       Histogram.new([name: "qwe", help: "", buckets: :undefined])
     end
-    assert_raise Prometheus.Error.HistogramInvalidBuckets,
+    assert_raise Prometheus.HistogramInvalidBucketsError,
       "Invalid histogram buckets: 1 (not a list).",
     fn ->
       Histogram.new([name: "qwe", help: "", buckets: 1])
     end
-    assert_raise Prometheus.Error.HistogramInvalidBuckets,
+    assert_raise Prometheus.HistogramInvalidBucketsError,
       "Invalid histogram buckets: [1,3,2] (buckets not sorted).",
     fn ->
       Histogram.new([name: "qwe", help: "", buckets: [1, 3, 2]])
     end
-    assert_raise Prometheus.Error.HistogramInvalidBound,
+    assert_raise Prometheus.HistogramInvalidBoundError,
       "Invalid histogram bound: qwe.",
     fn ->
       Histogram.new([name: "qwe", help: "", buckets: ["qwe"]])
@@ -74,26 +74,26 @@ defmodule Prometheus.HistogramTest do
             help: ""]
 
     ## observe
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (observe accepts only integers).",
     fn ->
       Histogram.observe(spec, "qwe")
     end
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: 1.5 (observe accepts only integers).",
     fn ->
       Histogram.observe(spec, 1.5)
     end
 
     ## dobserve
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (dobserve accepts only numbers).",
     fn ->
       Histogram.dobserve(spec, "qwe")
     end
 
     ## observe_duration
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (observe_duration accepts only functions).",
     fn ->
       Histogram.observe_duration(spec, "qwe")
@@ -107,72 +107,72 @@ defmodule Prometheus.HistogramTest do
     Histogram.declare(spec)
 
     ## observe
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Histogram.observe(:unknown_metric, 1)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.observe([name: :metric_with_label, labels: [:l1, :l2]], 1)
     end
 
     ## dobserve
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Histogram.dobserve(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.dobserve([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## observe_duration
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Histogram.observe_duration(:unknown_metric, fn -> 1 end)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.observe_duration([name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
     end
 
     ## remove
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Histogram.remove(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.remove([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## reset
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Histogram.reset(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.reset([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## value
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Histogram.value(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.value([name: :metric_with_label, labels: [:l1, :l2]])

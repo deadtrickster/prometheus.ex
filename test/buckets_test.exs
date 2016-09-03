@@ -2,12 +2,11 @@ defmodule Prometheus.BucketsTest do
   use ExUnit.Case
 
   use Prometheus
-  alias Prometheus.Error
   
   doctest Prometheus.Buckets
 
   test "linear buckets generator tests" do
-    assert_raise Error.InvalidValue, fn ->
+    assert_raise Prometheus.InvalidValueError, fn ->
       Prometheus.Buckets.linear(-15, 5, 0)
     end
 
@@ -15,13 +14,13 @@ defmodule Prometheus.BucketsTest do
   end
 
   test "exponential buckets generator tests" do
-    assert_raise Error.InvalidValue, fn ->
+    assert_raise Prometheus.InvalidValueError, fn ->
       Prometheus.Buckets.exponential(-15, 5, 0)
     end
-    assert_raise Error.InvalidValue, fn ->
+    assert_raise Prometheus.InvalidValueError, fn ->
       Prometheus.Buckets.exponential(-15, 5, 2)
     end
-    assert_raise Error.InvalidValue, fn ->
+    assert_raise Prometheus.InvalidValueError, fn ->
       Prometheus.Buckets.exponential(15, 0.5, 3)
     end
 

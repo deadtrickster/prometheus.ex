@@ -8,7 +8,7 @@ defmodule Prometheus.SummaryTest do
 
     assert true == Summary.declare(spec)
     assert false == Summary.declare(spec)
-    assert_raise Prometheus.Error.MFAlreadyExists,
+    assert_raise Prometheus.MFAlreadyExistsError,
       "Metric qwe:name already exists.",
     fn ->
       Summary.new(spec)
@@ -16,27 +16,27 @@ defmodule Prometheus.SummaryTest do
   end
 
   test "spec errors" do
-    assert_raise Prometheus.Error.MissingMetricSpecKey,
+    assert_raise Prometheus.MissingMetricSpecKeyError,
       "Required key name is missing from metric spec.",
     fn ->
       Summary.new([help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricName,
+    assert_raise Prometheus.InvalidMetricNameError,
       "Invalid metric name: 12.",
     fn ->
       Summary.new([name: 12, help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricLabels,
+    assert_raise Prometheus.InvalidMetricLabelsError,
       "Invalid metric labels: 12.",
     fn ->
       Summary.new([name: "qwe", labels: 12, help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricHelp,
+    assert_raise Prometheus.InvalidMetricHelpError,
       "Invalid metric help: 12.",
     fn ->
       Summary.new([name: "qwe", help: 12])
     end
-    assert_raise Prometheus.Error.InvalidLabelName,
+    assert_raise Prometheus.InvalidLabelNameError,
       "Invalid label name: quantile (summary cannot have a label named \"quantile\").",
     fn ->
       Summary.new([name: "qwe", help: "", labels: ["quantile"]])
@@ -48,26 +48,26 @@ defmodule Prometheus.SummaryTest do
             help: ""]
 
     ## observe
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (observe accepts only integers).",
     fn ->
       Summary.observe(spec, "qwe")
     end
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: 1.5 (observe accepts only integers).",
     fn ->
       Summary.observe(spec, 1.5)
     end
 
     ## dobserve
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (dobserve accepts only numbers).",
     fn ->
       Summary.dobserve(spec, "qwe")
     end
 
     ## observe_duration
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (observe_duration accepts only functions).",
     fn ->
       Summary.observe_duration(spec, "qwe")
@@ -81,72 +81,72 @@ defmodule Prometheus.SummaryTest do
     Summary.declare(spec)
 
     ## observe
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Summary.observe(:unknown_metric, 1)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Summary.observe([name: :metric_with_label, labels: [:l1, :l2]], 1)
     end
 
     ## dobserve
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Summary.dobserve(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Summary.dobserve([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## observe_duration
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Summary.observe_duration(:unknown_metric, fn -> 1 end)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Summary.observe_duration([name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
     end
 
     ## remove
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Summary.remove(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Summary.remove([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## reset
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Summary.reset(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Summary.reset([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## value
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Summary.value(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Summary.value([name: :metric_with_label, labels: [:l1, :l2]])

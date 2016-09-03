@@ -52,12 +52,12 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Creates a gauge using `spec`.
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.<br>
-  Raises `Prometheus.Error.MFAlreadyExists` if a gauge with the same `spec` exists.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.MFAlreadyExistsError` if a gauge with the same `spec` exists.
   """
   defmacro new(spec) do
     Erlang.call([spec])
@@ -67,11 +67,11 @@ defmodule Prometheus.Metric.Gauge do
   Creates a gauge using `spec`.
   If a gauge with the same `spec` exists returns `false`.
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
@@ -80,9 +80,9 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Sets the gauge identified by `spec` to `value`.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a number.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro set(spec, value) do
     Erlang.metric_call(spec, [value])
@@ -91,9 +91,9 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Increments the gauge identified by `spec` by `value`.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't an integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't an integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro inc(spec, value \\ 1) do
     Erlang.metric_call(spec, [value])
@@ -102,9 +102,9 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Decrements the gauge identified by `spec` by `value`.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't an integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't an integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dec(spec, value \\ 1) do
     Erlang.metric_call(spec, [value])
@@ -114,9 +114,9 @@ defmodule Prometheus.Metric.Gauge do
   Increments the gauge identified by `spec` by `value`.
   If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` or `dec/2` after dinc.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a number.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dinc(spec, value \\ 1) do
     Erlang.metric_call(spec, [value])
@@ -126,9 +126,9 @@ defmodule Prometheus.Metric.Gauge do
   Decrements the gauge identified by `spec` by `value`.
   If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` or `dec/2` after ddec.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `value` isn't a number.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a counter for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro ddec(spec, value \\ 1) do
     Erlang.metric_call(spec, [value])
@@ -137,8 +137,8 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Sets the gauge identified by `spec` to the current unixtime.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro set_to_current_time(spec) do
     Erlang.metric_call(spec)
@@ -147,9 +147,9 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Tracks inprogress functions.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
-  Raises `Prometheus.Error.InvalidValue` exception if fun isn't a function or block.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if fun isn't a function or block.
   """
   defmacro track_inprogress(spec, fun) do
     Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
@@ -158,9 +158,9 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Tracks the amount of seconds spent executing `fun`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
-  Raises `Prometheus.Error.InvalidValue` exception if fun isn't a function or block.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if fun isn't a function or block.
   """
   defmacro set_duration(spec, fun) do
     Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
@@ -169,8 +169,8 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Removes gauge series identified by spec.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro remove(spec) do
     Erlang.metric_call(spec)
@@ -179,8 +179,8 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Resets the value of the gauge identified by `spec`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro reset(spec) do
     Erlang.metric_call(spec)
@@ -189,8 +189,8 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Returns the value of the gauge identified by `spec`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do
     Erlang.metric_call(spec)

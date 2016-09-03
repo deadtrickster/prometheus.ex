@@ -8,7 +8,7 @@ defmodule Prometheus.GaugeTest do
 
     assert true == Gauge.declare(spec)
     assert false == Gauge.declare(spec)
-    assert_raise Prometheus.Error.MFAlreadyExists,
+    assert_raise Prometheus.MFAlreadyExistsError,
       "Metric qwe:name already exists.",
     fn ->
       Gauge.new(spec)
@@ -16,22 +16,22 @@ defmodule Prometheus.GaugeTest do
   end
 
   test "spec errors" do
-    assert_raise Prometheus.Error.MissingMetricSpecKey,
+    assert_raise Prometheus.MissingMetricSpecKeyError,
       "Required key name is missing from metric spec.",
     fn ->
       Gauge.new([help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricName,
+    assert_raise Prometheus.InvalidMetricNameError,
       "Invalid metric name: 12.",
     fn ->
       Gauge.new([name: 12, help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricLabels,
+    assert_raise Prometheus.InvalidMetricLabelsError,
       "Invalid metric labels: 12.",
     fn ->
       Gauge.new([name: "qwe", labels: 12, help: ""])
     end
-    assert_raise Prometheus.Error.InvalidMetricHelp,
+    assert_raise Prometheus.InvalidMetricHelpError,
       "Invalid metric help: 12.",
     fn ->
       Gauge.new([name: "qwe", help: 12])
@@ -43,59 +43,59 @@ defmodule Prometheus.GaugeTest do
             help: ""]
 
     ## set
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (set accepts only numbers).",
     fn ->
       Gauge.set(spec, "qwe")
     end
 
     ## inc
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (inc accepts only integers).",
     fn ->
       Gauge.inc(spec, "qwe")
     end
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: -1.5 (inc accepts only integers).",
     fn ->
       Gauge.inc(spec, -1.5)
     end
 
     ## dec
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (dec accepts only integers).",
     fn ->
       Gauge.dec(spec, "qwe")
     end
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: -1.5 (dec accepts only integers).",
     fn ->
       Gauge.dec(spec, -1.5)
     end
 
     ## dinc
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (dinc accepts only numbers).",
     fn ->
       Gauge.dinc(spec, "qwe")
     end
 
     ## ddec
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (ddec accepts only numbers).",
     fn ->
       Gauge.ddec(spec, "qwe")
     end
 
     ## track_inprogress
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (track_inprogress accepts only functions).",
     fn ->
       Gauge.track_inprogress(spec, "qwe")
     end
 
     ## set_duration
-    assert_raise Prometheus.Error.InvalidValue,
+    assert_raise Prometheus.InvalidValueError,
       "Invalid value: qwe (set_duration accepts only functions).",
     fn ->
       Gauge.set_duration(spec, "qwe")
@@ -109,132 +109,132 @@ defmodule Prometheus.GaugeTest do
     Gauge.declare(spec)
 
     ## set
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.set(:unknown_metric, 1)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.set([name: :metric_with_label, labels: [:l1, :l2]], 1)
     end
 
     ## inc
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.inc(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.inc([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## dinc
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.dinc(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.dinc([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## dec
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.dec(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.dec([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## ddec
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.ddec(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.ddec([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## set_to_current_time
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.set_to_current_time(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.set_to_current_time([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## track_inprogress
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.track_inprogress(:unknown_metric, fn -> 1 end)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.track_inprogress([name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
     end
 
     ## set_duration
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.set_duration(:unknown_metric, fn -> 1 end)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.set_duration([name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
     end
 
     ## remove
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.remove(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.remove([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## reset
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.reset(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.reset([name: :metric_with_label, labels: [:l1, :l2]])
     end
 
     ## value
-    assert_raise Prometheus.Error.UnknownMetric,
+    assert_raise Prometheus.UnknownMetricError,
       "Unknown metric {registry: default, name: unknown_metric}.",
     fn ->
       Gauge.value(:unknown_metric)
     end
-    assert_raise Prometheus.Error.InvalidMetricArity,
+    assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Gauge.value([name: :metric_with_label, labels: [:l1, :l2]])

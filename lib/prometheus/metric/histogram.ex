@@ -45,18 +45,18 @@ defmodule Prometheus.Metric.Histogram do
   Creates a histogram using `spec`.
   Histogram cannot have a label named "le".
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
-  Raises `Prometheus.Error.MFAlreadyExists` if a histogram with the same `spec` exists.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
+  Raises `Prometheus.MFAlreadyExistsError` if a histogram with the same `spec` exists.
 
   Histogram Specific exceptions:
 
-  Raises `Prometheus.Error.HistogramNoBuckets` if buckets are missing, not a list, empty list or not known buckets spec.<br>
-  Raises `Prometheus.Error.HistogramInvalidBuckets` if buckets aren't in increasing order.<br>
-  Raises `Prometheus.Error.HistogramInvalidBound` if bucket bound isn't a number.
+  Raises `Prometheus.HistogramNoBucketsError` if buckets are missing, not a list, empty list or not known buckets spec.<br>
+  Raises `Prometheus.HistogramInvalidBucketsError` if buckets aren't in increasing order.<br>
+  Raises `Prometheus.HistogramInvalidBoundError` if bucket bound isn't a number.
   """
   defmacro new(spec) do
     Erlang.call([spec])
@@ -68,17 +68,17 @@ defmodule Prometheus.Metric.Histogram do
 
   If a histogram with the same `spec` exists returns `false`.
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
 
   Histogram Specific exceptions:
 
-  Raises `Prometheus.Error.HistogramNoBuckets` if buckets are missing, not a list, empty list or not known buckets spec.<br>
-  Raises `Prometheus.Error.HistogramInvalidBuckets` if buckets aren't in increasing order.<br>
-  Raises `Prometheus.Error.HistogramInvalidBound` if bucket bound isn't a number.
+  Raises `Prometheus.HistogramNoBucketsError` if buckets are missing, not a list, empty list or not known buckets spec.<br>
+  Raises `Prometheus.HistogramInvalidBucketsError` if buckets aren't in increasing order.<br>
+  Raises `Prometheus.HistogramInvalidBoundError` if bucket bound isn't a number.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
@@ -87,9 +87,9 @@ defmodule Prometheus.Metric.Histogram do
   @doc """
   Observes the given amount.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `amount` isn't a positive integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `amount` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a histogram for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro observe(spec, amount \\ 1) do
     Erlang.metric_call(spec, [amount])
@@ -99,9 +99,9 @@ defmodule Prometheus.Metric.Histogram do
   Observes the given amount.
   If `amount` happened to be a float number even one time(!) you shouldn't use `observe/2` after dobserve.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `amount` isn't a positive integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `amount` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a histogram for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dobserve(spec, amount \\ 1) do
     Erlang.metric_call(spec, [amount])
@@ -110,9 +110,9 @@ defmodule Prometheus.Metric.Histogram do
   @doc """
   Observes the amount of seconds spent executing `fun`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
-  Raises `Prometheus.Error.InvalidValue` exception if fun isn't a function or block.
+  Raises `Prometheus.UnknownMetricError` exception if a histogram for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if fun isn't a function or block.
   """
   defmacro observe_duration(spec, fun) do
     Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
@@ -121,8 +121,8 @@ defmodule Prometheus.Metric.Histogram do
   @doc """
   Removes histogram series identified by spec.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro remove(spec) do
     Erlang.metric_call(spec)
@@ -131,8 +131,8 @@ defmodule Prometheus.Metric.Histogram do
   @doc """
   Resets the value of the histogram identified by `spec`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a histogram for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro reset(spec) do
     Erlang.metric_call(spec)
@@ -142,8 +142,8 @@ defmodule Prometheus.Metric.Histogram do
   Returns the value of the histogram identified by `spec`. If there is no histogram for
   given labels combination, returns `:undefined`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a histogram for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a histogram for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do
     Erlang.metric_call(spec)

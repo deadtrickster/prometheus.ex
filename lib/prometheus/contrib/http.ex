@@ -21,7 +21,7 @@ defmodule Prometheus.Contrib.HTTP do
       iex(7)> Prometheus.Contrib.HTTP.status_class(202)
       'success'
 
-  The function raises `Prometheus.Error.InvalidValue` exception if `code` is not a positive integer.
+  The function raises `Prometheus.InvalidValueError` exception if `code` is not a positive integer.
   """
   defmacro status_class(code) do
     quote do

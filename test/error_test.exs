@@ -1,6 +1,7 @@
 defmodule Prometheus.ErrorTest do
 
   use Prometheus.Case
+  require Prometheus.Error
 
   def erlang_error do
     raise ErlangError

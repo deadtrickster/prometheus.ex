@@ -42,12 +42,12 @@ defmodule Prometheus.Metric.Summary do
   Creates a summary using `spec`.
   Summary cannot have a label named "quantile".
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.<br>
-  Raises `Prometheus.Error.MFAlreadyExists` if a summary with the same `spec` already exists.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.MFAlreadyExistsError` if a summary with the same `spec` already exists.
   """
   defmacro new(spec) do
     Erlang.call([spec])
@@ -59,11 +59,11 @@ defmodule Prometheus.Metric.Summary do
 
   If a summary with the same `spec` exists returns `false`.
 
-  Raises `Prometheus.Error.MissingMetricSpecKey` if required `spec` key is missing.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if metric name is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricHelp` if help is invalid.<br>
-  Raises `Prometheus.Error.InvalidMetricLabels` if labels isn't a list.<br>
-  Raises `Prometheus.Error.InvalidMetricName` if label name is invalid.
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
@@ -72,9 +72,9 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Observes the given amount.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `amount` isn't a positive integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a summary for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `amount` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro observe(spec, amount \\ 1) do
     Erlang.metric_call(spec, [amount])
@@ -84,9 +84,9 @@ defmodule Prometheus.Metric.Summary do
   Observes the given amount.
   If `amount` happened to be a float number even one time(!) you shouldn't use `observe/2` after dobserve.
 
-  Raises `Prometheus.Error.InvalidValue` exception if `amount` isn't a positive integer.<br>
-  Raises `Prometheus.Error.UnknownMetric` exception if a summary for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if `amount` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dobserve(spec, amount \\ 1) do
     Erlang.metric_call(spec, [amount])
@@ -95,9 +95,9 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Observes the amount of seconds spent executing `fun`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a summary for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
-  Raises `Prometheus.Error.InvalidValue` exception if fun isn't a function or block.
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  Raises `Prometheus.InvalidValueError` exception if fun isn't a function or block.
   """
   defmacro observe_duration(spec, fun) do
     Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
@@ -106,8 +106,8 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Removes summary series identified by spec.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a gauge for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro remove(spec) do
     Erlang.metric_call(spec)
@@ -116,8 +116,8 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Resets the value of the summary identified by `spec`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a summary for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro reset(spec) do
     Erlang.metric_call(spec)
@@ -127,8 +127,8 @@ defmodule Prometheus.Metric.Summary do
   Returns the value of the summary identified by `spec`. If there is no summary for
   given labels combination, returns `:undefined`.
 
-  Raises `Prometheus.Error.UnknownMetric` exception if a summary for `spec` can't be found.<br>
-  Raises `Prometheus.Error.InvalidMetricArity` exception if labels count mismatch.
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do
     Erlang.metric_call(spec)

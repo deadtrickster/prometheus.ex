@@ -26,7 +26,7 @@ defmodule Prometheus.Buckets do
       iex(2)> Prometheus.Buckets.linear(10, 5, 6)
       [10, 15, 20, 25, 30, 35]
 
-  The function raises `Prometheus.Error.InvalidValue` exception if `count` is zero or negative.
+  The function raises `Prometheus.InvalidValueError` exception if `count` is zero or negative.
   """
   defmacro linear(start, step, count) do
     Erlang.call([start, step, count])
@@ -38,7 +38,7 @@ defmodule Prometheus.Buckets do
   times the previous bucket's upper bound. The returned list is meant to be
   used for the `:buckets` key of histogram constructors options.
 
-  The function raises `Prometheus.Error.InvalidValue` if `count` is 0 or negative,
+  The function raises `Prometheus.InvalidValueError` if `count` is 0 or negative,
   if `start` is 0 or negative, or if `factor` is less than or equal 1.
   """
   defmacro exponential(start, factor, count) do
