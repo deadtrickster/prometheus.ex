@@ -39,7 +39,7 @@ end
 
     ```elixir
     def deps do
-      [{:prometheus_ex, "~> 1.0.0-alpha4"}]
+      [{:prometheus_ex, "~> 1.0.0-alpha5"}]
     end
     ```
 
