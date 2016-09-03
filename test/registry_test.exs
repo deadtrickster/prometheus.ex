@@ -21,17 +21,17 @@ defmodule Prometheus.RegistryTest do
     assert false == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest)
 
     ## custom registry
-    assert :ok == Prometheus.Registry.register_collector(Prometheus.RegistryTest, :custom_collector)
+    assert :ok == Prometheus.Registry.register_collector(:custom_collector, Prometheus.RegistryTest)
     assert [Prometheus.RegistryTest] == Prometheus.Registry.collectors(:custom_collector)
-    assert true == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest, :custom_collector)
+    assert true == Prometheus.Registry.collector_registered?(:custom_collector, Prometheus.RegistryTest)
     Prometheus.Registry.clear(:custom_collector)
     assert [] == Prometheus.Registry.collectors(:custom_collector)
-    assert false == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest, :custom_collector)
+    assert false == Prometheus.Registry.collector_registered?(:custom_collector, Prometheus.RegistryTest)
 
-    assert :ok == Prometheus.Registry.register_collector(Prometheus.RegistryTest, :custom_collector)
-    Prometheus.Registry.deregister_collector(Prometheus.RegistryTest, :custom_collector)
+    assert :ok == Prometheus.Registry.register_collector(:custom_collector, Prometheus.RegistryTest)
+    Prometheus.Registry.deregister_collector(:custom_collector, Prometheus.RegistryTest)
     assert [] == Prometheus.Registry.collectors(:custom_collector)
-    assert false == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest, :custom_collector)
+    assert false == Prometheus.Registry.collector_registered?(:custom_collector, Prometheus.RegistryTest)
 
     ## register_collectors && collect; default registry
     assert :ok == Prometheus.Registry.register_collectors([Prometheus.RegistryTest])
@@ -44,7 +44,7 @@ defmodule Prometheus.RegistryTest do
     end)
 
     ## register_collectors && collect; custom registry
-    assert :ok == Prometheus.Registry.register_collectors([Prometheus.RegistryTest], :custom_collector)
+    assert :ok == Prometheus.Registry.register_collectors(:custom_collector, [Prometheus.RegistryTest])
     assert [Prometheus.RegistryTest] == Prometheus.Registry.collectors(:custom_collector)
     assert capture_io(fn ->
       Prometheus.Registry.collect(fn (:custom_collector, collector) ->

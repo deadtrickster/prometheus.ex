@@ -28,14 +28,14 @@ defmodule Prometheus.Model do
   end
 
   @doc """
-  Creates gauge metric with `value` and `labels`
+  Creates gauge metric with `labels` and `value`.
 
-      iex(13)> Prometheus.Model.gauge_metric(100, [host: "example.com"])
+      iex(13)> Prometheus.Model.gauge_metric([host: "example.com"], 100)
       {:Metric, [{:LabelPair, "host", "example.com"}], {:Gauge, 100}, :undefined,
        :undefined, :undefined, :undefined, :undefined}
 
   """
-  defmacro gauge_metric(value, labels \\ []) do
+  defmacro gauge_metric(labels \\ [], value) do
     Erlang.call([labels, value])
   end
 
@@ -52,14 +52,14 @@ defmodule Prometheus.Model do
   end
 
   @doc """
-  Creates untyped metric with `value` and `labels`
+  Creates untyped metric with `labels` and `value`.
 
-      iex(13)> Prometheus.Model.untyped_metric(100, [host: "example.com"])
+      iex(13)> Prometheus.Model.untyped_metric([host: "example.com"], 100)
       {:Metric, [{:LabelPair, "host", "example.com"}], :undefined,
        :undefined, :undefined, {:Untyped, 100}, :undefined, :undefined}
 
   """
-  defmacro untyped_metric(value, labels \\ []) do
+  defmacro untyped_metric(labels \\ [], value) do
     Erlang.call([labels, value])
   end
 
@@ -76,14 +76,14 @@ defmodule Prometheus.Model do
   end
 
   @doc """
-  Creates counter metric with `value` and `labels`.
+  Creates counter metric with `labels` and `value`.
 
-      iex(15)> Prometheus.Model.counter_metric(100, [host: "example.com"])
+      iex(15)> Prometheus.Model.counter_metric([host: "example.com"], 100)
       {:Metric, [{:LabelPair, "host", "example.com"}], :undefined, {:Counter, 100},
       :undefined, :undefined, :undefined, :undefined}
 
   """
-  defmacro counter_metric(value, labels \\ []) do
+  defmacro counter_metric(labels \\ [], value) do
     Erlang.call([labels, value])
   end
 
@@ -100,14 +100,14 @@ defmodule Prometheus.Model do
   end
 
   @doc """
-  Creates summary metric with `count`, `sum` and `labels`.
+  Creates summary metric with `labels`, `count`, and `sum`.
 
-      iex(3)> Prometheus.Model.summary_metric(2, 10.5, [{:method, :get}])
+      iex(3)> Prometheus.Model.summary_metric([{:method, :get}], 2, 10.5)
       {:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined,
         {:Summary, 2, 10.5, []}, :undefined, :undefined, :undefined}
 
   """
-  defmacro summary_metric(count, sum, labels \\ []) do
+  defmacro summary_metric(labels \\ [], count, sum) do
     Erlang.call([labels, count, sum])
   end
 
@@ -126,9 +126,9 @@ defmodule Prometheus.Model do
   end
 
   @doc """
-  Creates histogram metric with `buckets`, `count`, `sum`, and `labels`.
+  Creates histogram metric with `labels`, `buckets`, `count`, and `sum`.
 
-      iex(4)> Prometheus.Model.histogram_metric([{2, 1}, {5, 1}, {:infinity, 2}], 2, 10.5, [{:method, :get}])
+      iex(4)> Prometheus.Model.histogram_metric([{:method, :get}], [{2, 1}, {5, 1}, {:infinity, 2}], 2, 10.5)
       {:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined, :undefined,
       :undefined,
       {:Histogram, 2, 10.5,
@@ -138,7 +138,7 @@ defmodule Prometheus.Model do
   Cumulative count is a sum of all cumulative_counts of previous buckets + counter of current bucket.
 
   """
-  defmacro histogram_metric(buckets, count, sum, labels \\ []) do
+  defmacro histogram_metric(labels \\ [], buckets, count, sum) do
     Erlang.call([labels, buckets, count, sum])
   end
 

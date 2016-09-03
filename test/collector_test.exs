@@ -32,9 +32,9 @@ defmodule Prometheus.CollectorTest do
                  registry: :qwe])
 
     assert capture_io(fn ->
-      Prometheus.Collector.collect_mf(:prometheus_counter, fn(mf) ->
+      Prometheus.Collector.collect_mf(:qwe, :prometheus_counter, fn(mf) ->
         :io.format("~p", [mf])
-      end, :qwe)
+      end)
     end) ==
 "{'MetricFamily',<<\"test_counter_qwe\">>,\"qwe_qwe\",'COUNTER',
                 [{'Metric',[],undefined,
