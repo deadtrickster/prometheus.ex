@@ -74,7 +74,11 @@ defmodule Prometheus.Error do
 
     Metric can impose further restrictions on label names.
     """
-    defexception [:name, :message]
+    defexception [:name, :orig_message]
+
+    def message(%{name: name, orig_message: message}) do
+      "Invalid label name: #{name} (#{message})."
+    end
   end
 
   defmodule MFAlreadyExists do
@@ -137,8 +141,8 @@ defmodule Prometheus.Error do
             %UnknownMetric{registry: registry, name: name}
           {:invalid_metric_labels, labels, _message} ->
             %InvalidMetricLabels{labels: labels}
-          {:invalid_metric_label_name, name, _message} ->
-            %InvalidLabelName{name: name}
+          {:invalid_metric_label_name, name, message} ->
+            %InvalidLabelName{name: name, orig_message: message}
           {:mf_already_exists, {registry, name}, _message} ->
             %MFAlreadyExists{registry: registry, name: name}
           {:histogram_no_buckets, buckets} ->
