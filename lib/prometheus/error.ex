@@ -166,8 +166,6 @@ defmodule Prometheus.Error do
             %HistogramNoBuckets{buckets: buckets}
           {:histogram_invalid_buckets, buckets, message} ->
             %HistogramInvalidBuckets{buckets: buckets, orig_message: message}
-          {:histogram_invalid_buckets, buckets} ->
-            %HistogramInvalidBuckets{buckets: buckets, orig_message: "not a list"}
           {:histogram_invalid_bound, bound} ->
             %HistogramInvalidBound{bound: bound}
           {:missing_metric_spec_key, key, spec} ->

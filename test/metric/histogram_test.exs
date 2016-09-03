@@ -58,7 +58,7 @@ defmodule Prometheus.HistogramTest do
       Histogram.new([name: "qwe", help: "", buckets: 1])
     end
     assert_raise Prometheus.Error.HistogramInvalidBuckets,
-      "Invalid histogram buckets: [1,3,2] (Buckets not sorted).",
+      "Invalid histogram buckets: [1,3,2] (buckets not sorted).",
     fn ->
       Histogram.new([name: "qwe", help: "", buckets: [1, 3, 2]])
     end
