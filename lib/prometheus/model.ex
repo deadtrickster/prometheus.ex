@@ -89,6 +89,11 @@ defmodule Prometheus.Model do
 
   @doc """
   Creates summary metrics from `mdata` {labels, count, sum} tuple list.
+
+      iex(7)> Prometheus.Model.summary_metrics([{[{:method, :get}], 2, 10.5}])
+      [{:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined,
+        {:Summary, 2, 10.5, []}, :undefined, :undefined, :undefined}]
+
   """
   defmacro summary_metrics(mdata) do
     Erlang.call([mdata])
@@ -96,6 +101,11 @@ defmodule Prometheus.Model do
 
   @doc """
   Creates summary metric with `count`, `sum` and `labels`.
+
+      iex(3)> Prometheus.Model.summary_metric(2, 10.5, [{:method, :get}])
+      {:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined,
+        {:Summary, 2, 10.5, []}, :undefined, :undefined, :undefined}
+
   """
   defmacro summary_metric(count, sum, labels \\ []) do
     Erlang.call([labels, count, sum])
@@ -103,6 +113,13 @@ defmodule Prometheus.Model do
 
   @doc """
   Creates histogram metrics from `mdata` {labels, buckets, count, sum} tuple list.
+
+      iex(2)> Prometheus.Model.histogram_metrics([{ [{:method, :get}], [{2, 1}, {5, 1}, {:infinity, 2}], 2, 10.5}])
+      [{:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined, :undefined,
+        :undefined,
+        {:Histogram, 2, 10.5,
+         [{:Bucket, 1, 2}, {:Bucket, 1, 5}, {:Bucket, 2, :infinity}]}, :undefined}]
+
   """
   defmacro histogram_metrics(mdata) do
     Erlang.call([mdata])
@@ -110,6 +127,16 @@ defmodule Prometheus.Model do
 
   @doc """
   Creates histogram metric with `buckets`, `count`, `sum`, and `labels`.
+
+      iex(4)> Prometheus.Model.histogram_metric([{2, 1}, {5, 1}, {:infinity, 2}], 2, 10.5, [{:method, :get}])
+      {:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined, :undefined,
+      :undefined,
+      {:Histogram, 2, 10.5,
+      [{:Bucket, 1, 2}, {:Bucket, 1, 5}, {:Bucket, 2, :infinity}]}, :undefined}
+
+  Buckets is a list of pairs {upper_bound, cumulative_count}.
+  Cumulative count is a sum of all cumulative_counts of previous buckets + counter of current bucket.
+
   """
   defmacro histogram_metric(buckets, count, sum, labels \\ []) do
     Erlang.call([labels, buckets, count, sum])
