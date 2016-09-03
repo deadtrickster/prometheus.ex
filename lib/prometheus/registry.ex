@@ -57,7 +57,7 @@ defmodule Prometheus.Registry do
   Check whether `collector` is registered.
   """
   defmacro collector_registered?(collector, registry \\ :default) do
-    Erlang.call([registry, collector])
+    Erlang.call(:collector_registeredp, [registry, collector])
   end
 
 end
