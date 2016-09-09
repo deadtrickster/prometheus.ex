@@ -212,7 +212,7 @@ defmodule Prometheus.HistogramTest do
   end
 
   test "observe_duration fn" do
-    spec = [name: :http_requests_total,
+    spec = [name: :duration_seconds,
             labels: [:method],
             help: ""]
     Histogram.new(spec)
@@ -242,7 +242,7 @@ defmodule Prometheus.HistogramTest do
   end
 
   test "observe_duration block" do
-    spec = [name: :http_requests_total,
+    spec = [name: :duration_seconds,
             labels: [:method],
             help: ""]
     Histogram.new(spec)

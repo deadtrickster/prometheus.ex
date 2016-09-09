@@ -60,7 +60,8 @@ defmodule Prometheus.Format.ProtobufTest do
     Histogram.new([name: :http_request_duration_milliseconds,
                    labels: [:method],
                    buckets: [100, 300, 500, 750, 1000],
-                   help: "Http Request execution time"])
+                   help: "Http Request execution time",
+                   duration_unit: false])
     Histogram.observe([name: :http_request_duration_milliseconds, labels: [:get]], 95)
     Histogram.observe([name: :http_request_duration_milliseconds, labels: [:get]], 100)
     Histogram.observe([name: :http_request_duration_milliseconds, labels: [:get]], 102)
@@ -88,7 +89,8 @@ defmodule Prometheus.Format.ProtobufTest do
     Histogram.new([name: :http_request_duration_milliseconds,
                    labels: [:method],
                    buckets: [100, 300, 500, 750, 1000],
-                   help: "Http Request execution time"])
+                   help: "Http Request execution time",
+                   duration_unit: false])
     Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 500.2)
     Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 150.4)
     Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 450.5)

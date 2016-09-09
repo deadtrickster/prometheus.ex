@@ -373,16 +373,14 @@ defmodule Prometheus.GaugeTest do
   test "set_duration fn" do
     spec = [name: :http_requests_total,
             labels: [:method],
-            help: ""]
+            help: "",
+            duration_unit: :seconds]
     Gauge.new(spec)
 
     assert 1 == Gauge.set_duration(spec, fn ->
       Process.sleep(1000)
       1
     end)
-
-    ## set_duration is async so lets make sure gen_server processed our increment request
-    Process.sleep(10)
 
     assert 1 < Gauge.value(spec) and Gauge.value(spec) < 1.2
 
@@ -391,23 +389,18 @@ defmodule Prometheus.GaugeTest do
         :erlang.error({:qwe})
       end)
     end
-
-    ## set_duration is async so lets make sure gen_server processed our increment request
-    Process.sleep(10)
-
+    
     assert 0.0 < Gauge.value(spec) and Gauge.value(spec) < 0.2
   end
 
   test "set_duration block" do
     spec = [name: :http_requests_total,
             labels: [:method],
-            help: ""]
+            help: "",
+            duration_unit: :seconds]
     Gauge.new(spec)
 
     assert :ok == Gauge.set_duration(spec, do: Process.sleep(1000))
-
-    ## set_duration is async so lets make sure gen_server processed our increment request
-    Process.sleep(10)
 
     assert 1 < Gauge.value(spec) and Gauge.value(spec) < 1.2
 
@@ -416,9 +409,6 @@ defmodule Prometheus.GaugeTest do
         :erlang.error({:qwe})
       end
     end
-
-    ## set_duration is async so lets make sure gen_server processed our increment request
-    Process.sleep(10)
 
     assert 0.0 < Gauge.value(spec) and Gauge.value(spec) < 0.2
   end

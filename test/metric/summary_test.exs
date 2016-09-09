@@ -186,7 +186,7 @@ defmodule Prometheus.SummaryTest do
   end
 
   test "observe_duration fn" do
-    spec = [name: :http_requests_total,
+    spec = [name: :duration_seconds,
             labels: [:method],
             help: ""]
     Summary.new(spec)
@@ -216,7 +216,7 @@ defmodule Prometheus.SummaryTest do
   end
 
   test "observe_duration block" do
-    spec = [name: :http_requests_total,
+    spec = [name: :duration_seconds,
             labels: [:method],
             help: ""]
     Summary.new(spec)
