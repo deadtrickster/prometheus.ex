@@ -1,7 +1,7 @@
 defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
-  @version "1.0.0-alpha8"
+  @version "1.0.0-alpha9"
 
   def project do
     [app: :prometheus_ex,
@@ -43,7 +43,7 @@ defmodule PrometheusEx.Mixfile do
   end
 
   defp deps do
-    [{:prometheus, "~> 3.0.0-alpha8"},
+    [{:prometheus, "~> 3.0.0-alpha9"},
      {:excoveralls, "~> 0.5.6", only: :test},
      {:ex_doc, "~> 0.11", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev}]
