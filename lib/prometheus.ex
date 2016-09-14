@@ -35,6 +35,11 @@ defmodule Prometheus do
    - [Phoenix Instrumenter](https://hex.pm/packages/prometheus_phoenix);
    - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector) (linux-only).
 
+  ## Erlang VM Collectors
+   - [Memory Collector](vm-memory-collector.html);
+   - [Statistics Collector](vm-statistics-collector.html);
+   - [System Information Collector](vm-system-info-collector.html).
+
   ## API
 
   API can be grouped like this:
@@ -68,7 +73,6 @@ defmodule Prometheus do
   ### Integration Helpers
 
    - `Prometheus.Config` - provides standard configuration mechanism for custom instrumenters/exporters.
-
 
   ### Exposition Formats
 

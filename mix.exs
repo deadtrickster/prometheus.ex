@@ -17,7 +17,10 @@ defmodule PrometheusEx.Mixfile do
      preferred_cli_env: ["coveralls": :test, "coveralls.html": :test],
      docs: [main: Prometheus,
             source_ref: "v#{@version}",
-            source_url: "https://github.com/deadtrickster/prometheus.ex"]]
+            source_url: "https://github.com/deadtrickster/prometheus.ex",
+            extras: ["pages/VM Memory Collector.md",
+                     "pages/VM Statistics Collector.md",
+                     "pages/VM System Info Collector.md"]]]
   end
 
   def application do
