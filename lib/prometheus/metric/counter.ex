@@ -18,7 +18,7 @@ defmodule Prometheus.Metric.Counter do
   functions in Prometheus to calculate the rate of increase of a Counter.
   By convention, the names of Counters are suffixed by `_total`.
 
-  To create a counter use either `new/1` or `declare/`, the difference is that
+  To create a counter use either `new/1` or `declare/1`, the difference is that
   `new/` will raise `Prometheus.MFAlreadyExistsError` exception if counter with
   the same `registry`, `name` and `labels` combination already exists.
   Both accept `spec` `Keyword` with the same set of keys:
@@ -38,13 +38,13 @@ defmodule Prometheus.Metric.Counter do
     ## to be called at app/supervisor startup.
     ## to tolerate restarts use declare.
     def setup() do
-      Counter.declare([name: :my_service_total_requests,
-                       help: "Total requests.",
+      Counter.declare([name: :my_service_requests_total,
+                       help: "Requests count.",
                        labels: [:caller]])
     end
 
     def inc(caller) do
-      Counter.inc([name: :my_service_total_requests,
+      Counter.inc([name: :my_service_requests_total,
                   labels: [caller]])
     end
 
@@ -63,7 +63,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
-  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.InvalidLabelNameError` if label name is invalid.<br>
   Raises `Prometheus.MFAlreadyExistsError` if a counter with the same `spec` already exists.
   """
   defmacro new(spec) do
@@ -78,7 +78,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
-  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
+  Raises `Prometheus.InvalidLabelNameError` if label name is invalid.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
