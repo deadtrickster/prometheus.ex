@@ -30,10 +30,13 @@ defmodule Prometheus do
   ```
 
   ## Integrations
-   - [Elixir plugs Instrumenters and Exporter](https://hex.pm/packages/prometheus_plugs);
    - [Ecto Instrumenter](https://hex.pm/packages/prometheus_ecto);
+   - [Elixir plugs Instrumenters and Exporter](https://hex.pm/packages/prometheus_plugs);
+   - [Fuse plugin](https://github.com/jlouis/fuse#fuse_stats_prometheus)
+   - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector) (linux-only);
    - [Phoenix Instrumenter](https://hex.pm/packages/prometheus_phoenix);
-   - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector) (linux-only).
+   - [RabbitMQ Exporter](https://github.com/deadtrickster/prometheus_rabbitmq_exporter).
+
 
   ## Erlang VM Collectors
    - [Memory Collector](vm-memory-collector.html);

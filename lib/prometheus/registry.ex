@@ -26,35 +26,35 @@ defmodule Prometheus.Registry do
   end
 
   @doc """
-  Register a collector.
+  Registers a collector.
   """
   defmacro register_collector(registry \\ :default, collector) do
     Erlang.call([registry, collector])
   end
 
   @doc """
-  Register collectors list.
+  Registers collectors list.
   """
   defmacro register_collectors(registry \\ :default, collectors) do
     Erlang.call([registry, collectors])
   end
 
   @doc """
-  Unregister a collector.
+  Unregisters a collector.
   """
   defmacro deregister_collector(registry \\ :default, collector) do
     Erlang.call([registry, collector])
   end
 
   @doc """
-  Unregister all collectors.
+  Unregisters all collectors.
   """
   defmacro clear(registry \\ :default) do
     Erlang.call([registry])
   end
 
   @doc """
-  Check whether `collector` is registered.
+  Checks whether `collector` is registered.
   """
   defmacro collector_registered?(registry \\ :default, collector) do
     Erlang.call(:collector_registeredp, [registry, collector])
