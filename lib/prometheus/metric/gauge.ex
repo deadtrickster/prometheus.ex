@@ -57,6 +57,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
   Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or doesn't match metric name.<br>
   Raises `Prometheus.MFAlreadyExistsError` if a gauge with the same `spec` exists.
   """
   defmacro new(spec) do
@@ -71,7 +72,8 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
-  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or doesn't match metric name.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
@@ -80,7 +82,7 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Sets the gauge identified by `spec` to `value`.
 
-  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number or `:undefined`.<br>
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
@@ -145,7 +147,7 @@ defmodule Prometheus.Metric.Gauge do
   end
 
   @doc """
-  Tracks inprogress functions.
+  Sets the gauge identified by `spec` to the number of currently executing `fun`s.
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
@@ -156,7 +158,7 @@ defmodule Prometheus.Metric.Gauge do
   end
 
   @doc """
-  Tracks the amount of seconds spent executing `fun`.
+  Tracks the amount of time spent executing `fun`.
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
@@ -188,6 +190,9 @@ defmodule Prometheus.Metric.Gauge do
 
   @doc """
   Returns the value of the gauge identified by `spec`.
+
+  If duration unit set, value will be converted to the duration unit.
+  [Read more here.](time.html)
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.

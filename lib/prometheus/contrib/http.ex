@@ -4,7 +4,7 @@ defmodule Prometheus.Contrib.HTTP do
   """
 
   @doc """
-  Default microseconds buckets for measuring http requests duration:
+  Returns default microseconds buckets for measuring http requests duration:
 
       iex(6)> Prometheus.Contrib.HTTP.microseconds_duration_buckets
       [10, 100, 1000, 10000, 100000, 300000, 500000, 750000, 1000000, 1500000,
@@ -16,12 +16,12 @@ defmodule Prometheus.Contrib.HTTP do
   end
 
   @doc """
-  Returns class of http status code:
+  Returns class of the http status code:
 
       iex(7)> Prometheus.Contrib.HTTP.status_class(202)
       'success'
 
-  The function raises `Prometheus.InvalidValueError` exception if `code` is not a positive integer.
+  Raises `Prometheus.InvalidValueError` exception if `code` is not a positive integer.
   """
   defmacro status_class(code) do
     quote do
