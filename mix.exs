@@ -20,7 +20,8 @@ defmodule PrometheusEx.Mixfile do
             source_url: "https://github.com/deadtrickster/prometheus.ex",
             extras: ["pages/VM Memory Collector.md",
                      "pages/VM Statistics Collector.md",
-                     "pages/VM System Info Collector.md"]]]
+                     "pages/VM System Info Collector.md",
+                     "pages/Time.md"]]]
   end
 
   def application do
