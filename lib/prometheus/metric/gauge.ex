@@ -162,7 +162,7 @@ defmodule Prometheus.Metric.Gauge do
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
-  Raises `Prometheus.InvalidValueError` exception if `fun' isn't a function or block.
+  Raises `Prometheus.InvalidValueError` exception if `fun` isn't a function or block.
   """
   defmacro set_duration(spec, fun) do
     Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
