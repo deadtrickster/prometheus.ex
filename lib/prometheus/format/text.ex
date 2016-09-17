@@ -1,6 +1,6 @@
 defmodule Prometheus.Format.Text do
   @moduledoc """
-  Serializes Prometheus registry using the latest text format.
+  Serializes Prometheus registry using the latest [text format](http://bit.ly/2cxSuJP).
 
   Example output:
   ```
@@ -19,7 +19,7 @@ defmodule Prometheus.Format.Text do
   require Prometheus.Error
 
   @doc """
-  Content type of the latest text format.
+  Returns content type of the latest text format.
   """
   def content_type do
     require Prometheus.Error
@@ -29,7 +29,7 @@ defmodule Prometheus.Format.Text do
   end
 
   @doc """
-  Format `registry` (default is `:default`) using the latest text format.
+  Formats `registry` (default is `:default`) using the latest text format.
   """
   def format(registry \\ :default) do
     require Prometheus.Error

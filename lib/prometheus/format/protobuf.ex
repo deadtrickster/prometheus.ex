@@ -1,12 +1,12 @@
 defmodule Prometheus.Format.Protobuf do
   @moduledoc """
-  Serializes Prometheus registry using Protocol buffer format.
+  Serializes Prometheus registry using [protocol buffer format](http://bit.ly/2cxSuJP).
   """
 
   require Prometheus.Error
 
   @doc """
-  Content type of Protocol buffer format.
+  Content type of protocol buffer format.
   """
   def content_type do
     require Prometheus.Error
@@ -16,7 +16,7 @@ defmodule Prometheus.Format.Protobuf do
   end
 
   @doc """
-  Format `registry` (default is `:default`) using Protocol buffer format.
+  Format `registry` (default is `:default`) using protocol buffer format.
   """
   def format(registry \\ :default) do
     require Prometheus.Error
