@@ -7,7 +7,7 @@ defmodule Prometheus.Model do
   use Prometheus.Erlang, :prometheus_model_helpers
 
   @doc """
-  Create Metric Family of `type`, `name` and `help`.
+  Creates Metric Family of `type`, `name` and `help`.
   `collector.collect_metrics/2` callback will be called and expected to
   return individual metrics list.
   """
