@@ -9,7 +9,7 @@ defmodule Prometheus.Metric.Histogram do
 
   Histogram expects `buckets` key in a metric spec. Buckets can be:
    - a list of numbers in increasing order;
-   - on of the generate specs (essentially shortcuts for `Prometheus.Buckets` macros)
+   - one of the generate specs (shortcuts for `Prometheus.Buckets` macros)
        - :default;
        - {:linear, start, step, count};
        - {:exponential, start, step, count}.
@@ -27,7 +27,7 @@ defmodule Prometheus.Metric.Histogram do
       Histogram.new([name: :http_request_duration_milliseconds,
                      labels: [:method],
                      buckets: [100, 300, 500, 750, 1000],
-                     help: "Http Request execution time"])
+                     help: "Http Request execution time."])
     end
 
     def instrument(%{time: time, method: method}) do
@@ -49,10 +49,11 @@ defmodule Prometheus.Metric.Histogram do
   Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
-  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or doesn't match metric name.<br>
   Raises `Prometheus.MFAlreadyExistsError` if a histogram with the same `spec` exists.
 
-  Histogram Specific exceptions:
+  Histogram-specific exceptions:
 
   Raises `Prometheus.HistogramNoBucketsError` if buckets are missing, not a list, empty list or not known buckets spec.<br>
   Raises `Prometheus.HistogramInvalidBucketsError` if buckets aren't in increasing order.<br>
@@ -72,9 +73,10 @@ defmodule Prometheus.Metric.Histogram do
   Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
-  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
+  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or doesn't match metric name.
 
-  Histogram Specific exceptions:
+  Histogram-specific exceptions:
 
   Raises `Prometheus.HistogramNoBucketsError` if buckets are missing, not a list, empty list or not known buckets spec.<br>
   Raises `Prometheus.HistogramInvalidBucketsError` if buckets aren't in increasing order.<br>
