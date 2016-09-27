@@ -1,68 +1,63 @@
 defmodule Prometheus.Registry do
+  @moduledoc """
+  A registry of Collectors.
 
-  require Prometheus.Error
+  The majority of users should use the `:default`, rather than their own.
 
+  Creating a registry other than the default is primarily useful for
+  unit tests, or pushing a subset of metrics to the
+  [Pushgateway](https://github.com/prometheus/pushgateway) from batch jobs.
+  """
+
+  use Prometheus.Erlang, :prometheus_registry
+
+  @doc """
+  Calls `callback` for each collector with two arguments: `registry` and `collector`.
+  """
   defmacro collect(callback, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.collect(unquote(registry), unquote(callback))
-      )
-    end
+    Erlang.call([registry, callback])
   end
 
+  @doc """
+  Returns collectors registered in `registry`.
+  """
   defmacro collectors(registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.collectors(unquote(registry))
-      )
-    end
+    Erlang.call([registry])
   end
 
-  defmacro register_collector(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.register_collector(unquote(registry), unquote(collector))
-      )
-    end
+  @doc """
+  Registers a collector.
+  """
+  defmacro register_collector(registry \\ :default, collector) do
+    Erlang.call([registry, collector])
   end
 
-  defmacro register_collectors(collectors, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error do
-        :prometheus_registry.register_collectors(unquote(registry), unquote(collectors))
-      end
-    end
+  @doc """
+  Registers collectors list.
+  """
+  defmacro register_collectors(registry \\ :default, collectors) do
+    Erlang.call([registry, collectors])
   end
 
-  defmacro deregister_collector(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.deregister_collector(unquote(registry), unquote(collector))
-      )
-    end
+  @doc """
+  Unregisters a collector.
+  """
+  defmacro deregister_collector(registry \\ :default, collector) do
+    Erlang.call([registry, collector])
   end
 
+  @doc """
+  Unregisters all collectors.
+  """
   defmacro clear(registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.clear(unquote(registry))
-      )
-    end
+    Erlang.call([registry])
   end
 
-  defmacro collector_registred?(collector, registry \\ :default) do
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_registry.collector_registeredp(unquote(registry), unquote(collector))
-      )
-    end
+  @doc """
+  Checks whether `collector` is registered.
+  """
+  defmacro collector_registered?(registry \\ :default, collector) do
+    Erlang.call(:collector_registeredp, [registry, collector])
   end
 
 end

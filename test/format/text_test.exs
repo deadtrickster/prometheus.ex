@@ -1,19 +1,7 @@
 defmodule Prometheus.Format.TextTest do
-  use ExUnit.Case
+  use Prometheus.Case
 
   require Prometheus.Format.Text
-  require Prometheus.Registry
-  use Prometheus.Metric
-
-  setup do
-    collectors = Prometheus.Registry.collectors()
-    Prometheus.Registry.clear()
-
-    on_exit fn ->
-      Prometheus.Registry.clear()
-      Prometheus.Registry.register_collectors(collectors)
-    end
-  end
 
   test "content_type" do
     assert "text/plain; version=0.0.4" == Prometheus.Format.Text.content_type
@@ -87,7 +75,8 @@ defmodule Prometheus.Format.TextTest do
     Histogram.new([name: :http_request_duration_milliseconds,
                    labels: [:method],
                    buckets: [100, 300, 500, 750, 1000],
-                   help: "Http Request execution time"])
+                   help: "Http Request execution time",
+                   duration_unit: false])
     Histogram.observe([name: :http_request_duration_milliseconds, labels: [:get]], 95)
     Histogram.observe([name: :http_request_duration_milliseconds, labels: [:get]], 100)
     Histogram.observe([name: :http_request_duration_milliseconds, labels: [:get]], 102)
@@ -118,7 +107,8 @@ defmodule Prometheus.Format.TextTest do
     Histogram.new([name: :http_request_duration_milliseconds,
                    labels: [:method],
                    buckets: [100, 300, 500, 750, 1000],
-                   help: "Http Request execution time"])
+                   help: "Http Request execution time",
+                   duration_unit: false])
     Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 500.2)
     Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 150.4)
     Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 450.5)

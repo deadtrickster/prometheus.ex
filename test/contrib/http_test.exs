@@ -1,11 +1,13 @@
-defmodule PrometheusEx.Contrib.HTTPTest do
+defmodule Prometheus.Contrib.HTTPTest do
   use ExUnit.Case
   ## alias Prometheus.Error %% FIXME: status_class should throw invalid_value.
-  require Prometheus.Contrib.HTTP
+  use Prometheus
+  
+  doctest Prometheus.Contrib.HTTP
 
   test "microseconds_duration_buckets" do
-    assert [10, 100, 1000, 10000, 100000, 300000, 500000,
-            750000, 1000000, 1500000, 2000000, 3000000] == Prometheus.Contrib.HTTP.microseconds_duration_buckets
+    assert [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000,
+            100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000] == Prometheus.Contrib.HTTP.microseconds_duration_buckets
   end
 
   test "status_class" do

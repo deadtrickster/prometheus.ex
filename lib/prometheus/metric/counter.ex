@@ -1,71 +1,140 @@
 defmodule Prometheus.Metric.Counter do
+  @moduledoc """
+  Counter is a Metric that represents a single numerical value that only ever
+  goes up. That implies that it cannot be used to count items whose number can
+  also go down, e.g. the number of currently running processes. Those
+  "counters" are represented by `Prometheus.Metric.Gauge`.
 
-  alias Prometheus.Metric
-  require Prometheus.Error
+  A Counter is typically used to count requests served, tasks completed, errors
+  occurred, etc.
 
+  Example use cases for Counters:
+  - Number of requests processed;
+  - Number of items that were inserted into a queue;
+  - Total amount of data that a system has processed.
+
+  Use the [`rate()`](https://prometheus.io/docs/querying/functions/#rate())/
+  [`irate()`](https://prometheus.io/docs/querying/functions/#irate())
+  functions in Prometheus to calculate the rate of increase of a Counter.
+  By convention, the names of Counters are suffixed by `_total`.
+
+  To create a counter use either `new/1` or `declare/1`, the difference is that
+  `new/` will raise `Prometheus.MFAlreadyExistsError` exception if counter with
+  the same `registry`, `name` and `labels` combination already exists.
+  Both accept `spec` `Keyword` with the same set of keys:
+
+  - `:registry` - optional, default is `:default`;
+  - `:name` - required, can be an atom or a string;
+  - `:help` - required, must be a string;
+  - `:labels` - optional, default is `[]`.
+
+  Example:
+
+  ```
+  defmodule MyServiceInstrumenter do
+
+    use Prometheus.Metric
+
+    ## to be called at app/supervisor startup.
+    ## to tolerate restarts use declare.
+    def setup() do
+      Counter.declare([name: :my_service_requests_total,
+                       help: "Requests count.",
+                       labels: [:caller]])
+    end
+
+    def inc(caller) do
+      Counter.inc([name: :my_service_requests_total,
+                  labels: [caller]])
+    end
+
+  end
+
+  ```
+
+  """
+
+  use Prometheus.Erlang, :prometheus_counter
+
+  @doc """
+  Creates a counter using `spec`.
+
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidLabelNameError` if label name is invalid.<br>
+  Raises `Prometheus.MFAlreadyExistsError` if a counter with the same `spec` already exists.
+  """
   defmacro new(spec) do
-    {registry, _, _} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.new(unquote(spec), unquote(registry))
-      )
-    end
+    Erlang.call([spec])
   end
 
+  @doc """
+  Creates a counter using `spec`.
+  If a counter with the same `spec` exists returns `false`.
+
+  Raises `Prometheus.MissingMetricSpecKeyError` if required `spec` key is missing.<br>
+  Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
+  Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
+  Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
+  Raises `Prometheus.InvalidLabelNameError` if label name is invalid.
+  """
   defmacro declare(spec) do
-    {registry, _, _} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.declare(unquote(spec), unquote(registry))
-      )
-    end
+    Erlang.call([spec])
   end
 
+  @doc """
+  Increments the counter identified by `spec` by `value`.
+
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
   defmacro inc(spec, value \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.inc(unquote(registry), unquote(name), unquote(labels),  unquote(value))
-      )
-    end
+    Erlang.metric_call(:inc, spec, [value])
   end
 
+  @doc """
+  Increments the counter identified by `spec` by `value`.
+  If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` after dinc.
+
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive number.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
   defmacro dinc(spec, value \\ 1) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.dinc(unquote(registry), unquote(name), unquote(labels),  unquote(value))
-      )
-    end
+    Erlang.metric_call({:prometheus_counter, :dinc}, spec, [value])
   end
 
+  @doc """
+  Removes counter series identified by spec.
+
+  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
+  defmacro remove(spec) do
+    Erlang.metric_call(spec)
+  end
+
+  @doc """
+  Resets the value of the counter identified by `spec`.
+
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
   defmacro reset(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
-
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.reset(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+    Erlang.metric_call(spec)
   end
 
-  defmacro value(spec) do
-    {registry, name, labels} = Metric.parse_spec(spec)
+  @doc """
+  Returns the value of the counter identified by `spec`. If there is no counter for
+  given labels combination, returns `:undefined`.
 
-    quote do
-      require Prometheus.Error
-      Prometheus.Error.with_prometheus_error(
-        :prometheus_counter.value(unquote(registry), unquote(name), unquote(labels))
-      )
-    end
+  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
+  defmacro value(spec) do
+    Erlang.metric_call({:prometheus_counter, :value}, spec)
   end
 end

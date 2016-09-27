@@ -1,15 +1,28 @@
 defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
+  @version "1.0.0"
+
   def project do
     [app: :prometheus_ex,
-     version: "0.0.3",
+     version: @version,
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      description: description,
      package: package,
-     deps: deps()]
+     name: "Prometheus.ex",
+     deps: deps(),
+     test_coverage: [tool: ExCoveralls],
+     preferred_cli_env: ["coveralls": :test, "coveralls.html": :test],
+     docs: [main: Prometheus,
+            source_ref: "v#{@version}",
+            source_url: "https://github.com/deadtrickster/prometheus.ex",
+            extras: ["pages/Mnesia Collector.md",
+                     "pages/VM Memory Collector.md",
+                     "pages/VM Statistics Collector.md",
+                     "pages/VM System Info Collector.md",
+                     "pages/Time.md"]]]
   end
 
   def application do
@@ -35,6 +48,9 @@ defmodule PrometheusEx.Mixfile do
   end
 
   defp deps do
-    [{:prometheus, "~> 2.2.0"}]
+    [{:prometheus, "~> 3.0"},
+     {:excoveralls, "~> 0.5.6", only: :test},
+     {:ex_doc, "~> 0.11", only: :dev},
+     {:earmark, ">= 0.0.0", only: :dev}]
   end
 end

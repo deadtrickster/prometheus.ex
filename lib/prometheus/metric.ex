@@ -1,4 +1,5 @@
 defmodule Prometheus.Metric do
+  @moduledoc false
 
   defmacro __using__(_opts) do
     quote do
@@ -6,12 +7,21 @@ defmodule Prometheus.Metric do
       require Prometheus.Metric.{Counter,Gauge,Histogram,Summary}
     end
   end
-  
-  def parse_spec(spec) do
+
+  defmacro ct_parsable_spec?(spec) do
+    quote do
+      is_list(unquote(spec)) or is_atom(unquote(spec))
+    end
+  end
+
+  def parse_spec(spec) when is_list(spec) do
     registry = Keyword.get(spec, :registry, :default)
     name = Keyword.fetch!(spec, :name)
     labels = Keyword.get(spec, :labels, [])
     {registry, name, labels}
   end
-  
+  def parse_spec(spec) when is_atom(spec) do
+    {:default, spec, []}
+  end
+
 end
