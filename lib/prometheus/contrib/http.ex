@@ -7,8 +7,8 @@ defmodule Prometheus.Contrib.HTTP do
   Returns default microseconds buckets for measuring http requests duration:
 
       iex(6)> Prometheus.Contrib.HTTP.microseconds_duration_buckets
-      [10, 100, 1000, 10000, 100000, 300000, 500000, 750000, 1000000, 1500000,
-       2000000, 3000000]
+      [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000,
+       100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000]
 
   """
   defmacro microseconds_duration_buckets do

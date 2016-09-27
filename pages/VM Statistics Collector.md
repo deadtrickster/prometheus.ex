@@ -35,6 +35,11 @@ Collects Erlang VM metrics using
     The total number of words reclaimed by GC since the system started.
   </li>
   <li>
+    <pre>erlang_vm_statistics_garbage_collection_bytes_reclaimed</pre>
+	Type: counter.<br/>
+    The total number of bytes reclaimed by GC since the system started.
+  </li>
+  <li>
     <pre>erlang_vm_statistics_reductions_total</pre>
 	Type: counter.<br/>
     Total reductions count.
@@ -68,7 +73,8 @@ Options are the same as Item parameter values for
 [:erlang.statistics/1](http://erlang.org/doc/man/erlang.html#statistics-1):
  - `:context_switches` for `erlang_vm_statistics_context_switches`;
  - `:garbage_collection`
-    for `erlang_vm_statistics_garbage_collection_number_of_gcs` and
+   for `erlang_vm_statistics_garbage_collection_number_of_gcs`,
+   `:erlang_vm_statistics_garbage_collection_bytes_reclaimed`, and
    `:erlang_vm_statistics_garbage_collection_words_reclaimed`;
  - `:io` for `erlang_vm_statistics_bytes_output_total` and
     `erlang_vm_statistics_bytes_received_total`;

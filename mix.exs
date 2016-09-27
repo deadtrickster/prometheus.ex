@@ -1,7 +1,7 @@
 defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
-  @version "1.0.0-alpha9"
+  @version "1.0.0-rc1"
 
   def project do
     [app: :prometheus_ex,
@@ -18,7 +18,8 @@ defmodule PrometheusEx.Mixfile do
      docs: [main: Prometheus,
             source_ref: "v#{@version}",
             source_url: "https://github.com/deadtrickster/prometheus.ex",
-            extras: ["pages/VM Memory Collector.md",
+            extras: ["pages/Mnesia Collector.md",
+                     "pages/VM Memory Collector.md",
                      "pages/VM Statistics Collector.md",
                      "pages/VM System Info Collector.md",
                      "pages/Time.md"]]]
@@ -47,7 +48,7 @@ defmodule PrometheusEx.Mixfile do
   end
 
   defp deps do
-    [{:prometheus, "~> 3.0.0-alpha9"},
+    [{:prometheus, "~> 3.0"},
      {:excoveralls, "~> 0.5.6", only: :test},
      {:ex_doc, "~> 0.11", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev}]
