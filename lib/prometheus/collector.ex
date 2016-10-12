@@ -6,7 +6,7 @@ defmodule Prometheus.Collector do
   and `Prometheus.Metric.Histogram`.
 
   Implementing `:prometheus_collector` behaviour is for advanced uses such as proxying metrics from another monitoring system.
-  It is it the responsibility of the implementer to ensure produced metrics are valid.
+  It is the responsibility of the implementer to ensure produced metrics are valid.
 
   You will be working with Prometheus data model directly (see `Prometheus.Model` ).
 
