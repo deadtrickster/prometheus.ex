@@ -19,37 +19,46 @@ defmodule Prometheus.Collector do
   - `deregister_cleanup(registry)` - called when collector unregistered by
   `registry`. If collector is stateful you can put cleanup code here.
 
-  Example (simplified `:prometheus_vm_memory_collector`):
+  Example (simplified [`:prometheus_vm_memory_collector`](https://github.com/deadtrickster/prometheus.erl/blob/master/doc/prometheus_vm_memory_collector.md)):
 
   ```
-  defmodule Prometheus.VMMemoryCollector do
-    use Prometheus.Collector
-
-    def collect_mf(_registry, callback) do
-      memory = :erlang.memory()
-      callback.(create_gauge(
-            :erlang_vm_bytes_total,
-            '''
-            The total amount of memory currently allocated.
-            This is the same as the sum of the memory size
-            for processes and system."
-            ''',
-            memory))
-      :ok
-    end
-
-    def collect_metrics(:erlang_vm_bytes_total, memory) do
-      Prometheus.Model.gauge_metrics(
-        [
-          {[kind: :system], memory.system},
-          {[kind: :processes], memory.processes}
-        ])
-    end
-
-    defp create_gauge(name, help, data) do
-      Prometheus.Model.create_mf(name, help, :gauge, __MODULE__, data)
-    end
-  end
+  iex(3)> defmodule Prometheus.VMMemoryCollector do
+  ...(3)>   use Prometheus.Collector
+  ...(3)>   
+  ...(3)>   @labels [:processes, :atom, :binary, :code, :ets]
+  ...(3)>   
+  ...(3)>   def collect_mf(_registry, callback) do
+  ...(3)>     memory = :erlang.memory()
+  ...(3)>     callback.(create_gauge(
+  ...(3)>           :erlang_vm_bytes_total,
+  ...(3)>           "The total amount of memory currently allocated.",
+  ...(3)>           memory))
+  ...(3)>     :ok
+  ...(3)>   end
+  ...(3)>   
+  ...(3)>   def collect_metrics(:erlang_vm_bytes_total, memory) do
+  ...(3)>     Prometheus.Model.gauge_metrics(
+  ...(3)>       for label <- @labels do
+  ...(3)>         {[type: label], memory[label]}
+  ...(3)>       end)
+  ...(3)>   end
+  ...(3)>   
+  ...(3)>   defp create_gauge(name, help, data) do
+  ...(3)>     Prometheus.Model.create_mf(name, help, :gauge, __MODULE__, data)
+  ...(3)>   end
+  ...(3)> end
+  iex(4)> Prometheus.Registry.register_collector(Prometheus.VMMemoryCollector)
+  :ok
+  iex(5)> r = ~r/# TYPE erlang_vm_bytes_total gauge
+  ...(5)> # HELP erlang_vm_bytes_total 
+  ...(5)> The total amount of memory currently allocated.
+  ...(5)> erlang_vm_bytes_total{type=\"processes\"} [1-9]
+  ...(5)> erlang_vm_bytes_total{type=\"atom\"} [1-9]
+  ...(5)> erlang_vm_bytes_total{type=\"binary\"} [1-9]
+  ...(5)> erlang_vm_bytes_total{type=\"code\"} [1-9]
+  ...(5)> erlang_vm_bytes_total{type=\"ets\"} [1-9]/
+  iex(6)> Regex.match?(r, Prometheus.Format.Text.format)
+  true
   ```
   """
 

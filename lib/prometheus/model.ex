@@ -1,7 +1,8 @@
 defmodule Prometheus.Model do
   @moduledoc """
   Helpers for working with Prometheus data model. For advanced users.
-  Probably will be used with `Prometheus.Collector`.
+  
+  `Prometheus.Collector` example demonstrates how to use this module.
   """
 
   use Prometheus.Erlang, :prometheus_model_helpers
