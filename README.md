@@ -11,6 +11,9 @@ Elixir [Prometheus.io](https://prometheus.io) client based on [Prometheus.erl](h
 
 Dashboard from [Monitoring Elixir apps in 2016: Prometheus and Grafana](http://aldusleaf.org/monitoring-elixir-apps-in-2016-prometheus-and-grafana/) by [**@skosch**](https://github.com/skosch).
 
+ - IRC: #elixir-lang on Freenode;
+ - [Slack](https://elixir-slackin.herokuapp.com/): #prometheus channel - [Browser](https://elixir-lang.slack.com/messages/prometheus) or App(slack://elixir-lang.slack.com/messages/prometheus).
+
 ## Example
 
 ```elixir
