@@ -101,6 +101,7 @@ defmodule Prometheus do
       require Prometheus.Buckets
       use Prometheus.Metric
       require Prometheus.Contrib.HTTP
+      require Prometheus.Contrib.Mnesia
     end
   end
 
