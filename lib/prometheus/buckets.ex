@@ -11,8 +11,8 @@ defmodule Prometheus.Buckets do
       iex(2)> Prometheus.Buckets.default()
       [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
 
-  Please note these buckets are floats and represent seconds so you'll have to use `Prometheus.Metric.Histogram.dobserve/2` or
-  configure duration_unit as `:seconds`.
+  Please note these buckets are floats and represent seconds so you'll have to use
+  `Prometheus.Metric.Histogram.dobserve/2` or configure duration_unit as `:seconds`.
 
   """
   defmacro default do
@@ -43,7 +43,8 @@ defmodule Prometheus.Buckets do
       iex(2)> Prometheus.Buckets.linear(10, 5, 6)
       [10, 15, 20, 25, 30, 35]
 
-  The function raises `Prometheus.InvalidValueError` exception if `count` is zero or negative.
+  The function raises `Prometheus.InvalidValueError` exception
+  if `count` is zero or negative.
   """
   defmacro linear(start, step, count) do
     Erlang.call([start, step, count])

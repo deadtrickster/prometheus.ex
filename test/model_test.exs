@@ -15,6 +15,7 @@ defmodule Prometheus.ModelTest do
             [{:Metric,[],:undefined,:undefined,:undefined,
               {:Untyped,365},
               :undefined,:undefined}]} ==
-      Prometheus.Model.create_mf(:pool_size, "help", :untyped, Prometheus.ModelTest, :undefined)
+      Prometheus.Model.create_mf(
+        :pool_size, "help", :untyped, Prometheus.ModelTest, :undefined)
   end
 end

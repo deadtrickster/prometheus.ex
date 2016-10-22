@@ -162,7 +162,7 @@ defmodule Prometheus.CounterTest do
     Counter.dinc(spec)
     Counter.dinc(spec, 3.5)
 
-    ## dinc is async so lets make sure gen_server processed our increment request
+    ## dinc is async. let's make sure gen_server processed our request
     Process.sleep(10)
     assert 4.5 == Counter.value(spec)
 

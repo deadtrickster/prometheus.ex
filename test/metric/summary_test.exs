@@ -113,7 +113,8 @@ defmodule Prometheus.SummaryTest do
     assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
-      Summary.observe_duration([name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
+      Summary.observe_duration(
+        [name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
     end
 
     ## remove
@@ -176,7 +177,7 @@ defmodule Prometheus.SummaryTest do
     Summary.dobserve(spec)
     Summary.dobserve(spec, 3.5)
 
-    ## dobserve is async so lets make sure gen_server processed our increment request
+    ## dobserve is async. let's make sure gen_server processed our increment request
     Process.sleep(10)
     assert {2, 4.5} == Summary.value(spec)
 
@@ -196,7 +197,7 @@ defmodule Prometheus.SummaryTest do
       1
     end)
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {count, sum} = Summary.value(spec)
     assert 1 == count
@@ -208,7 +209,7 @@ defmodule Prometheus.SummaryTest do
       end)
     end
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {count, sum} = Summary.value(spec)
     assert 2 == count
@@ -223,7 +224,7 @@ defmodule Prometheus.SummaryTest do
 
     assert :ok == Summary.observe_duration(spec, do: Process.sleep(1000))
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {count, sum} = Summary.value(spec)
     assert 1 == count
@@ -235,7 +236,7 @@ defmodule Prometheus.SummaryTest do
       end
     end
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {count, sum} = Summary.value(spec)
     assert 2 == count

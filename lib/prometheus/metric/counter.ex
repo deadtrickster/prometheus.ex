@@ -64,7 +64,8 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
   Raises `Prometheus.InvalidLabelNameError` if label name is invalid.<br>
-  Raises `Prometheus.MFAlreadyExistsError` if a counter with the same `spec` already exists.
+  Raises `Prometheus.MFAlreadyExistsError` if a counter with
+  the same `spec` already exists.
   """
   defmacro new(spec) do
     Erlang.call([spec])
@@ -88,7 +89,8 @@ defmodule Prometheus.Metric.Counter do
   Increments the counter identified by `spec` by `value`.
 
   Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive integer.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro inc(spec, value \\ 1) do
@@ -97,10 +99,12 @@ defmodule Prometheus.Metric.Counter do
 
   @doc """
   Increments the counter identified by `spec` by `value`.
-  If `value` happened to be a float number even one time(!) you shouldn't use `inc/2` after dinc.
+  If `value` happened to be a float number even one time(!) you
+  shouldn't use `inc/2` after dinc.
 
   Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive number.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dinc(spec, value \\ 1) do
@@ -110,7 +114,8 @@ defmodule Prometheus.Metric.Counter do
   @doc """
   Removes counter series identified by spec.
 
-  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro remove(spec) do
@@ -120,7 +125,8 @@ defmodule Prometheus.Metric.Counter do
   @doc """
   Resets the value of the counter identified by `spec`.
 
-  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro reset(spec) do
@@ -131,7 +137,8 @@ defmodule Prometheus.Metric.Counter do
   Returns the value of the counter identified by `spec`. If there is no counter for
   given labels combination, returns `:undefined`.
 
-  Raises `Prometheus.UnknownMetricError` exception if a counter for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do

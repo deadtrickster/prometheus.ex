@@ -9,4 +9,4 @@ sudo: false
 before_script:
   - mix deps.get --only test
 script:
-  - "MIX_ENV=test mix coveralls.travis"
+  - "MIX_ENV=test mix credo --strict && MIX_ENV=test mix coveralls.travis"

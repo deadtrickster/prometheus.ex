@@ -281,7 +281,7 @@ defmodule Prometheus.GaugeTest do
     Gauge.dinc(spec)
     Gauge.dinc(spec, 3.5)
 
-    ## dinc is async so lets make sure gen_server processed our increment request
+    ## dinc is async. let's make sure gen_server processed our request
     Process.sleep(10)
     assert 4.5 == Gauge.value(spec)
 
@@ -313,7 +313,7 @@ defmodule Prometheus.GaugeTest do
     Gauge.ddec(spec)
     Gauge.ddec(spec, 3.5)
 
-    ## ddec is async so lets make sure gen_server processed our increment request
+    ## ddec is async. let's make sure gen_server processed our request
     Process.sleep(10)
     assert -4.5 == Gauge.value(spec)
 
@@ -389,7 +389,7 @@ defmodule Prometheus.GaugeTest do
         :erlang.error({:qwe})
       end)
     end
-    
+
     assert 0.0 < Gauge.value(spec) and Gauge.value(spec) < 0.2
   end
 

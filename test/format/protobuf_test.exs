@@ -44,7 +44,8 @@ defmodule Prometheus.Format.ProtobufTest do
     assert <<63,10,14,111,114,100,101,114,115,95,115,117,109,109,97,
       114,121,18,28,84,114,97,99,107,32,111,114,100,101,114,
       115,32,99,111,117,110,116,47,116,111,116,97,108,32,115,
-      117,109,24,2,34,13,34,11,8,2,17,0,0,0,0,0,0,57,64>> == Prometheus.Format.Protobuf.format()
+      117,109,24,2,34,13,34,11,8,2,17,0,0,0,0,0,0,57,64>> ==
+      Prometheus.Format.Protobuf.format()
   end
 
   test "dsummary" do
@@ -53,7 +54,8 @@ defmodule Prometheus.Format.ProtobufTest do
     Summary.dobserve([name: :dsummary], 2.7)
     :timer.sleep(10)
     assert <<32,10,8,100,115,117,109,109,97,114,121,18,3,113,119,101,
-      24,2,34,13,34,11,8,2,17,205,204,204,204,204,204,16,64>> == Prometheus.Format.Protobuf.format()
+      24,2,34,13,34,11,8,2,17,205,204,204,204,204,204,16,64>> ==
+      Prometheus.Format.Protobuf.format()
   end
 
   test "histogram" do
@@ -81,7 +83,8 @@ defmodule Prometheus.Format.ProtobufTest do
       0,0,0,0,124,164,64,26,11,8,3,17,0,0,0,0,0,0,89,64,26,11,
       8,6,17,0,0,0,0,0,192,114,64,26,11,8,7,17,0,0,0,0,0,64,
       127,64,26,11,8,8,17,0,0,0,0,0,112,135,64,26,11,8,9,17,0,
-      0,0,0,0,64,143,64,26,11,8,9,17,0,0,0,0,0,0,240,127>> == Prometheus.Format.Protobuf.format()
+      0,0,0,0,64,143,64,26,11,8,9,17,0,0,0,0,0,0,240,127>> ==
+      Prometheus.Format.Protobuf.format()
 
   end
 
@@ -91,12 +94,18 @@ defmodule Prometheus.Format.ProtobufTest do
                    buckets: [100, 300, 500, 750, 1000],
                    help: "Http Request execution time",
                    duration_unit: false])
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 500.2)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 150.4)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 450.5)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 850.3)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 750.9)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 1650.23)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 500.2)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 150.4)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 450.5)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 850.3)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 750.9)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 1650.23)
 
     :timer.sleep(10)
 

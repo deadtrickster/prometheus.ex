@@ -27,7 +27,7 @@ defmodule Prometheus.Contrib.HTTP do
     quote do
       require Prometheus.Error
       Prometheus.Error.with_prometheus_error(
-	:prometheus_http.status_class(unquote(code))
+        :prometheus_http.status_class(unquote(code))
       )
     end
   end

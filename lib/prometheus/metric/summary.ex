@@ -47,8 +47,10 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
   Raises `Prometheus.InvalidMetricNameError` if label name is invalid.<br>
-  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or doesn't match metric name.<br>
-  Raises `Prometheus.MFAlreadyExistsError` if a summary with the same `spec` already exists.
+  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or
+  doesn't match metric name.<br>
+  Raises `Prometheus.MFAlreadyExistsError` if a summary with the same `spec`
+  already exists.
   """
   defmacro new(spec) do
     Erlang.call([spec])
@@ -64,8 +66,9 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.InvalidMetricNameError` if metric name is invalid.<br>
   Raises `Prometheus.InvalidMetricHelpError` if help is invalid.<br>
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
-  Raises `Prometheus.InvalidMetricNameError` if label name is invalid;<br>  
-  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or doesn't match metric name.
+  Raises `Prometheus.InvalidMetricNameError` if label name is invalid;<br>
+  Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or
+  doesn't match metric name.
   """
   defmacro declare(spec) do
     Erlang.call([spec])
@@ -75,7 +78,8 @@ defmodule Prometheus.Metric.Summary do
   Observes the given amount.
 
   Raises `Prometheus.InvalidValueError` exception if `amount` isn't an integer.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
+  can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro observe(spec, amount \\ 1) do
@@ -84,10 +88,12 @@ defmodule Prometheus.Metric.Summary do
 
   @doc """
   Observes the given amount.
-  If `amount` happened to be a float number even one time(!) you shouldn't use `observe/2` after dobserve.
+  If `amount` happened to be a float number even one time(!) you shouldn't use `observe/2`
+  after dobserve.
 
   Raises `Prometheus.InvalidValueError` exception if `amount` isn't a number.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
+  can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dobserve(spec, amount \\ 1) do
@@ -97,7 +103,8 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Observes the amount of seconds spent executing `fun`.
 
-  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
+  can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   Raises `Prometheus.InvalidValueError` exception if `fun` isn't a function or block.
   """
@@ -108,7 +115,8 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Removes summary series identified by spec.
 
-  Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
+  can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro remove(spec) do
@@ -118,7 +126,8 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Resets the value of the summary identified by `spec`.
 
-  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
+  can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro reset(spec) do
@@ -132,7 +141,8 @@ defmodule Prometheus.Metric.Summary do
   If duration unit set, sum will be converted to the duration unit.
   [Read more here.](time.html)
 
-  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec` can't be found.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
+  can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do

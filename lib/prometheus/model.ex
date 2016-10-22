@@ -1,7 +1,7 @@
 defmodule Prometheus.Model do
   @moduledoc """
   Helpers for working with Prometheus data model. For advanced users.
-  
+
   `Prometheus.Collector` example demonstrates how to use this module.
   """
 
@@ -115,7 +115,9 @@ defmodule Prometheus.Model do
   @doc """
   Creates histogram metrics from `mdata` {labels, buckets, count, sum} tuple list.
 
-      iex(2)> Prometheus.Model.histogram_metrics([{ [{:method, :get}], [{2, 1}, {5, 1}, {:infinity, 2}], 2, 10.5}])
+      iex(2)> Prometheus.Model.histogram_metrics([{[{:method, :get}],
+      ...(2)>                                      [{2, 1}, {5, 1}, {:infinity, 2}],
+      ...(2)>                                      2, 10.5}])
       [{:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined, :undefined,
         :undefined,
         {:Histogram, 2, 10.5,
@@ -129,14 +131,17 @@ defmodule Prometheus.Model do
   @doc """
   Creates histogram metric with `labels`, `buckets`, `count`, and `sum`.
 
-      iex(4)> Prometheus.Model.histogram_metric([{:method, :get}], [{2, 1}, {5, 1}, {:infinity, 2}], 2, 10.5)
+      iex(4)> Prometheus.Model.histogram_metric([{:method, :get}],
+      ...(4)>                                    [{2, 1}, {5, 1}, {:infinity, 2}],
+      ...(4)>                                    2, 10.5)
       {:Metric, [{:LabelPair, "method", "get"}], :undefined, :undefined, :undefined,
       :undefined,
       {:Histogram, 2, 10.5,
       [{:Bucket, 1, 2}, {:Bucket, 1, 5}, {:Bucket, 2, :infinity}]}, :undefined}
 
   Buckets is a list of pairs {upper_bound, cumulative_count}.
-  Cumulative count is a sum of all cumulative_counts of previous buckets + counter of current bucket.
+  Cumulative count is a sum of all cumulative_counts of previous buckets + counter of
+  current bucket.
 
   """
   defmacro histogram_metric(labels \\ [], buckets, count, sum) do

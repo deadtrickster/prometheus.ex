@@ -1,6 +1,7 @@
 defmodule Prometheus.InvalidValueError do
   @moduledoc """
-  Raised when given `value` is invalid i.e. when you pass a negative number to `Prometheus.Metric.Counter.inc/2`.
+  Raised when given `value` is invalid i.e. when you pass a negative number to
+  `Prometheus.Metric.Counter.inc/2`.
   """
   defexception [:value, :orig_message]
 
@@ -11,8 +12,8 @@ end
 
 defmodule Prometheus.InvalidMetricNameError do
   @moduledoc """
-  Raised when given metric `name` is invalid i.e. can't be represented as printable utf-8 string that matches
-  `^[a-zA-Z_:][a-zA-Z0-9_:]*$` regular expression.
+  Raised when given metric `name` is invalid i.e. can't be represented as printable utf-8
+  string that matches `^[a-zA-Z_:][a-zA-Z0-9_:]*$` regular expression.
   """
   defexception [:name]
 
@@ -66,8 +67,8 @@ end
 
 defmodule Prometheus.InvalidLabelNameError do
   @moduledoc """
-  Raised when label `name` is invalid i.e. can't be represented as printable utf-8 string that matches
-  `^[a-zA-Z_][a-zA-Z0-9_]*$` regular expression or starts with `__`.
+  Raised when label `name` is invalid i.e. can't be represented as printable utf-8 string
+  that matches `^[a-zA-Z_][a-zA-Z0-9_]*$` regular expression or starts with `__`.
 
   Metric can impose further restrictions on label names.
   """
@@ -142,6 +143,8 @@ end
 defmodule Prometheus.Error do
   @moduledoc false
 
+  @lint [{Credo.Check.Refactor.ABCSize, false},
+         {Credo.Check.Refactor.CyclomaticComplexity, false}]
   def normalize(erlang_error) do
     case erlang_error do
       %ErlangError{original: original} ->
@@ -165,7 +168,8 @@ defmodule Prometheus.Error do
           {:histogram_no_buckets, buckets} ->
             %Prometheus.HistogramNoBucketsError{buckets: buckets}
           {:histogram_invalid_buckets, buckets, message} ->
-            %Prometheus.HistogramInvalidBucketsError{buckets: buckets, orig_message: message}
+            %Prometheus.HistogramInvalidBucketsError{buckets: buckets,
+                                                     orig_message: message}
           {:histogram_invalid_bound, bound} ->
             %Prometheus.HistogramInvalidBoundError{bound: bound}
           {:missing_metric_spec_key, key, spec} ->

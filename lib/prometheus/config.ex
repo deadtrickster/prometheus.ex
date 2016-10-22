@@ -14,7 +14,8 @@ defmodule Prometheus.Config do
       :default
       iex(6)> MyInstrumenter.Config.required_option!(MyInstrumenter)
       ** (Prometheus.Config.KeyNotFoundError) mandatory option :required_option not found in PrometheusTest.MyInstrumenter instrumenter/collector config
-      iex(7)> Application.put_env(:prometheus, MyInstrumenter, [required_option: "Hello world!"])
+      iex(7)> Application.put_env(:prometheus, MyInstrumenter,
+      ...(7)>                     [required_option: "Hello world!"])
       :ok
       iex(8)> MyInstrumenter.Config.required_option!(MyInstrumenter)
       "Hello world!"
@@ -29,7 +30,8 @@ defmodule Prometheus.Config do
 
     def message(%{option: option, key: key}) do
       friendly_key_name = String.replace_leading("#{key}", "Elixir.", "")
-      "mandatory option :#{option} not found in #{friendly_key_name} instrumenter/collector config"
+      "mandatory option :#{option} not found" <>
+        " in #{friendly_key_name} instrumenter/collector config"
     end
   end
 
@@ -51,13 +53,15 @@ defmodule Prometheus.Config do
         end
 
         defp config(key, option, default) do
-          config(key)
+          key
+          |> config()
           |> Keyword.get(option, default)
         end
 
         defp config(key, option) do
           try do
-            config(key)
+            key
+            |> config()
             |> Keyword.fetch!(option)
           rescue
             e in KeyError -> raise %KeyNotFoundError{key: key, option: option}

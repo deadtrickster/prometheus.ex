@@ -139,7 +139,8 @@ defmodule Prometheus.HistogramTest do
     assert_raise Prometheus.InvalidMetricArityError,
       "Invalid metric arity: got 2, expected 1.",
     fn ->
-      Histogram.observe_duration([name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
+      Histogram.observe_duration(
+        [name: :metric_with_label, labels: [:l1, :l2]], fn -> 1 end)
     end
 
     ## remove
@@ -202,7 +203,7 @@ defmodule Prometheus.HistogramTest do
     Histogram.dobserve(spec)
     Histogram.dobserve(spec, 3.5)
 
-    ## dobserve is async so lets make sure gen_server processed our increment request
+    ## dobserve is async. let's make sure gen_server processed our request
     Process.sleep(10)
     assert {[0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0], 4.5} == Histogram.value(spec)
 
@@ -222,7 +223,7 @@ defmodule Prometheus.HistogramTest do
       1
     end)
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {buckets, sum} = Histogram.value(spec)
     assert [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] == buckets
@@ -234,7 +235,7 @@ defmodule Prometheus.HistogramTest do
       end)
     end
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {buckets, sum} = Histogram.value(spec)
     assert [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] == buckets
@@ -249,7 +250,7 @@ defmodule Prometheus.HistogramTest do
 
     assert :ok == Histogram.observe_duration(spec, do: Process.sleep(1000))
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {buckets, sum} = Histogram.value(spec)
     assert [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] == buckets
@@ -261,7 +262,7 @@ defmodule Prometheus.HistogramTest do
       end
     end
 
-    ## observe_duration is async so lets make sure gen_server processed our increment request
+    ## observe_duration is async. let's make sure gen_server processed our request
     Process.sleep(10)
     {buckets, sum} = Histogram.value(spec)
     assert [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] == buckets

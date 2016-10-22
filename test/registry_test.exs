@@ -1,6 +1,8 @@
 defmodule Prometheus.RegistryTest do
 
   use Prometheus.Case
+  alias Prometheus.Registry
+  alias Prometheus.RegistryTest
 
   import ExUnit.CaptureIO
 
@@ -8,49 +10,49 @@ defmodule Prometheus.RegistryTest do
 
   test "default Registry" do
     # default registry
-    assert :ok == Prometheus.Registry.register_collector(Prometheus.RegistryTest)
-    assert [Prometheus.RegistryTest] == Prometheus.Registry.collectors()
-    assert true == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest)
-    Prometheus.Registry.clear()
-    assert [] == Prometheus.Registry.collectors()
-    assert false == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest)
+    assert :ok == Prometheus.Registry.register_collector(RegistryTest)
+    assert [RegistryTest] == Registry.collectors()
+    assert true == Registry.collector_registered?(RegistryTest)
+    Registry.clear()
+    assert [] == Registry.collectors()
+    assert false == Registry.collector_registered?(RegistryTest)
 
-    assert :ok == Prometheus.Registry.register_collector(Prometheus.RegistryTest)
-    Prometheus.Registry.deregister_collector(Prometheus.RegistryTest)
-    assert [] == Prometheus.Registry.collectors()
-    assert false == Prometheus.Registry.collector_registered?(Prometheus.RegistryTest)
+    assert :ok == Registry.register_collector(RegistryTest)
+    Registry.deregister_collector(RegistryTest)
+    assert [] == Registry.collectors()
+    assert false == Registry.collector_registered?(RegistryTest)
 
     ## custom registry
-    assert :ok == Prometheus.Registry.register_collector(:custom_collector, Prometheus.RegistryTest)
-    assert [Prometheus.RegistryTest] == Prometheus.Registry.collectors(:custom_collector)
-    assert true == Prometheus.Registry.collector_registered?(:custom_collector, Prometheus.RegistryTest)
-    Prometheus.Registry.clear(:custom_collector)
-    assert [] == Prometheus.Registry.collectors(:custom_collector)
-    assert false == Prometheus.Registry.collector_registered?(:custom_collector, Prometheus.RegistryTest)
+    assert :ok == Registry.register_collector(:custom_collector, RegistryTest)
+    assert [RegistryTest] == Registry.collectors(:custom_collector)
+    assert true == Registry.collector_registered?(:custom_collector, RegistryTest)
+    Registry.clear(:custom_collector)
+    assert [] == Registry.collectors(:custom_collector)
+    assert false == Registry.collector_registered?(:custom_collector, RegistryTest)
 
-    assert :ok == Prometheus.Registry.register_collector(:custom_collector, Prometheus.RegistryTest)
-    Prometheus.Registry.deregister_collector(:custom_collector, Prometheus.RegistryTest)
-    assert [] == Prometheus.Registry.collectors(:custom_collector)
-    assert false == Prometheus.Registry.collector_registered?(:custom_collector, Prometheus.RegistryTest)
+    assert :ok == Registry.register_collector(:custom_collector, RegistryTest)
+    Registry.deregister_collector(:custom_collector, RegistryTest)
+    assert [] == Registry.collectors(:custom_collector)
+    assert false == Registry.collector_registered?(:custom_collector, RegistryTest)
 
     ## register_collectors && collect; default registry
-    assert :ok == Prometheus.Registry.register_collectors([Prometheus.RegistryTest])
-    assert [Prometheus.RegistryTest] == Prometheus.Registry.collectors()
+    assert :ok == Registry.register_collectors([RegistryTest])
+    assert [RegistryTest] == Registry.collectors()
     assert capture_io(fn ->
-      Prometheus.Registry.collect(fn (:default, collector) ->
+      Registry.collect(fn (:default, collector) ->
         :io.format("~p", [collector])
       end) ==
-        "Elixir.Prometheus.RegistryTest"
+        "Elixir.RegistryTest"
     end)
 
     ## register_collectors && collect; custom registry
-    assert :ok == Prometheus.Registry.register_collectors(:custom_collector, [Prometheus.RegistryTest])
-    assert [Prometheus.RegistryTest] == Prometheus.Registry.collectors(:custom_collector)
+    assert :ok == Registry.register_collectors(:custom_collector, [RegistryTest])
+    assert [RegistryTest] == Registry.collectors(:custom_collector)
     assert capture_io(fn ->
-      Prometheus.Registry.collect(fn (:custom_collector, collector) ->
+      Registry.collect(fn (:custom_collector, collector) ->
         :io.format("~p", [collector])
       end, :custom_collector) ==
-        "Elixir.Prometheus.RegistryTest"
+        "Elixir.RegistryTest"
     end)
   end
 end

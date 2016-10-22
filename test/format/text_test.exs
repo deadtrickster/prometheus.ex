@@ -109,12 +109,18 @@ defmodule Prometheus.Format.TextTest do
                    buckets: [100, 300, 500, 750, 1000],
                    help: "Http Request execution time",
                    duration_unit: false])
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 500.2)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 150.4)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 450.5)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 850.3)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 750.9)
-    Histogram.dobserve([name: :http_request_duration_milliseconds, labels: [:post]], 1650.23)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 500.2)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 150.4)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 450.5)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 850.3)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 750.9)
+    Histogram.dobserve(
+      [name: :http_request_duration_milliseconds, labels: [:post]], 1650.23)
 
     :timer.sleep(10)
 

@@ -54,8 +54,8 @@ defmodule Prometheus.Erlang do
           require Prometheus.Error
 
           Prometheus.Error.with_prometheus_error(
-            unquote(module).unquote(function)(unquote(registry), unquote(name), unquote(labels),
-              unquote_splicing(arguments)))
+            unquote(module).unquote(function)(unquote(registry), unquote(name),
+              unquote(labels), unquote_splicing(arguments)))
 
         end
       _ ->
@@ -75,14 +75,19 @@ defmodule Prometheus.Erlang do
 
   defp parse_metric_call_args(mf_or_spec, spec, arguments) do
     case mf_or_spec do
-      {_,_} -> {mf_or_spec, spec, arguments} ## Erlang.metric_call({:prometheus_counter, :dinc}, spec, [value])
-      _ when is_atom(mf_or_spec) -> {mf_or_spec, spec, arguments} ## Erlang.metric_call(:inc, spec, [value])
+      ## Erlang.metric_call({:prometheus_counter, :dinc}, spec, [value])
+      {_,_} -> {mf_or_spec, spec, arguments}
+      ## Erlang.metric_call(:inc, spec, [value])
+      _ when is_atom(mf_or_spec) -> {mf_or_spec, spec, arguments}
       _ ->
-        [] = arguments ## args are 'shifted' to left
+        ## args are 'shifted' to left
+        [] = arguments
         if spec == false do
-          {false, mf_or_spec, []} ## only spec is needed, e.g. Erlang.metric_call(spec)
+          ## only spec is needed, e.g. Erlang.metric_call(spec)
+          {false, mf_or_spec, []}
         else
-          {false, mf_or_spec, spec} ## Erlang.metric_call(spec, [value])
+          ## Erlang.metric_call(spec, [value])
+          {false, mf_or_spec, spec}
         end
     end
   end
