@@ -1,7 +1,7 @@
 defmodule Prometheus do
   @moduledoc"""
 
-  [Prometheus.io](http://prometheus.io) client library powered by
+  [Prometheus.io](https://prometheus.io) client library powered by
   [prometheus.erl](https://hexdocs.pm/prometheus)
 
   Prometheus.ex is a thin, mostly macro-based wrapper around prometheus.erl.
