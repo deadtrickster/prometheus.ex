@@ -15,7 +15,7 @@ defmodule Prometheus.ErrorTest do
 
     assert_raise ErlangError,
     fn ->
-      Prometheus.Error.with_prometheus_error erlang_error
+      Prometheus.Error.with_prometheus_error erlang_error()
     end
   end
 end
