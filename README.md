@@ -35,12 +35,17 @@ end
 
 ## Integrations / Collectors / Instrumenters
  - [Ecto collector](https://github.com/deadtrickster/prometheus-ecto)
- - [Plugs Instrumenter/Exporter](https://github.com/deadtrickster/prometheus-plugs)
  - [Elli middleware](https://github.com/elli-lib/elli_prometheus)
+ - [Extatus - App to report metrics to Prometheus from Elixir GenServers](https://github.com/gmtprime/extatus)
+ - [Plugs Instrumenter/Exporter](https://github.com/deadtrickster/prometheus-plugs)
  - [Fuse plugin](https://github.com/jlouis/fuse#fuse_stats_prometheus)
+ - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector) (linux-only)
  - [Phoenix instrumenter](https://github.com/deadtrickster/prometheus-phoenix)
- - [Process Info Collector](https://github.com/deadtrickster/prometheus_process_collector.erl)
  - [RabbitMQ Exporter](https://github.com/deadtrickster/prometheus_rabbitmq_exporter)
+
+## Dashboards
+
+- [Beam Dashboards](https://github.com/deadtrickster/beam-dashboards).
 
 ## Installation
 
