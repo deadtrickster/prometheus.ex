@@ -41,6 +41,7 @@ defmodule PrometheusEx.Mixfile do
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/deadtrickster/prometheus.ex",
               "Prometheus.erl" => "https://hex.pm/packages/prometheus",
+              "Inets HTTPD Exporter" => "https://hex.pm/packages/prometheus_httpd",
               "Ecto Instrumenter" => "https://hex.pm/packages/prometheus_ecto",
               "Phoenix Instrumenter" => "https://hex.pm/packages/prometheus_phoenix",
               "Plugs Instrumenter/Exporter" => "https://hex.pm/packages/prometheus_plugs",
