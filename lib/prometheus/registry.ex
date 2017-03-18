@@ -12,6 +12,17 @@ defmodule Prometheus.Registry do
   use Prometheus.Erlang, :prometheus_registry
 
   @doc """
+  Tries to find registry with the `name`.
+  Assumes that registry name is always an atom.
+  If `Name` is an atom `ets:lookup/2` is used
+  If `Name` is an iolist performs safe search (to avoid interning
+  atoms) and returns atom or false. This operation is O(n).
+  """
+  defmacro exists(name) do
+    Erlang.call([name])
+  end
+
+  @doc """
   Calls `callback` for each collector with two arguments: `registry` and `collector`.
   """
   defmacro collect(callback, registry \\ :default) do

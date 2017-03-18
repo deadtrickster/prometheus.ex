@@ -8,6 +8,17 @@ defmodule Prometheus.RegistryTest do
 
   def deregister_cleanup(_), do: :ok
 
+  test "registry exists" do
+    Prometheus.Registry.register_collector(:test_registry, RegistryTest)
+
+    assert true == Registry.exists(:test_registry)
+
+    assert :test_registry == Registry.exists("test_registry")
+
+    assert false == Registry.exists(:qweqwe)
+    assert false == Registry.exists("qweqwe")
+  end
+
   test "default Registry" do
     # default registry
     assert :ok == Prometheus.Registry.register_collector(RegistryTest)

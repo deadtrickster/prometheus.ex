@@ -10,5 +10,5 @@
   "jsx": {:hex, :jsx, "2.8.0", "749bec6d205c694ae1786d62cea6cc45a390437e24835fd16d12d74f07097727", [:mix, :rebar], []},
   "metrics": {:hex, :metrics, "1.0.1", "25f094dea2cda98213cecc3aeff09e940299d950904393b2a29d191c346a8486", [:rebar3], []},
   "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [:rebar3], []},
-  "prometheus": {:hex, :prometheus, "3.1.0", "32a148a6c906d8d31113cad5cb07d4b61dec3f77c6f6fe2ce837d1ff62e9a049", [:rebar3], []},
+  "prometheus": {:hex, :prometheus, "3.2.2", "887a687855e171852be3e023aea9dbc1ea3ce0f327b95765896ebb2847fef7f9", [:mix, :rebar3], []},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.0", "edee20847c42e379bf91261db474ffbe373f8acb56e9079acb6038d4e0bf414f", [:rebar, :make], []}}
