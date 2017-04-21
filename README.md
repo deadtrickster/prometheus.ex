@@ -51,7 +51,7 @@ end
 
 [Available in Hex](https://hex.pm/packages/prometheus_ex), the package can be installed as:
 
-  1. Add `prometheus_ex` to your list of dependencies in `mix.exs`:
+1. Add `prometheus_ex` to your list of dependencies in `mix.exs`:
 
     ```elixir
     def deps do
@@ -59,7 +59,7 @@ end
     end
     ```
 
-  2. Ensure `prometheus_ex` is started before your application:
+2. Ensure `prometheus_ex` is started before your application:
 
     ```elixir
     def application do
