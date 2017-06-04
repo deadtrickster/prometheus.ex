@@ -6,7 +6,7 @@ defmodule Prometheus.InvalidValueError do
   defexception [:value, :orig_message]
 
   def message(%{value: value, orig_message: message}) do
-    "Invalid value: #{value} (#{message})."
+    "Invalid value: #{inspect value} (#{message})."
   end
 end
 
