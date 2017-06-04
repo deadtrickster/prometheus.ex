@@ -3,8 +3,8 @@ defmodule Prometheus.Metric do
 
   defmacro __using__(_opts) do
     quote do
-      alias Prometheus.Metric.{Counter,Gauge,Histogram,Summary}
-      require Prometheus.Metric.{Counter,Gauge,Histogram,Summary}
+      alias Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
+      require Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
     end
   end
 
