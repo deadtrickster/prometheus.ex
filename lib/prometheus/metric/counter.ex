@@ -142,6 +142,6 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro value(spec) do
-    Erlang.metric_call({:prometheus_counter, :value}, spec)
+    Erlang.metric_call(spec)
   end
 end

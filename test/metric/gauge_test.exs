@@ -44,14 +44,14 @@ defmodule Prometheus.GaugeTest do
 
     ## set
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (set accepts only numbers).",
+      "Invalid value: \"qwe\" (set accepts only numbers).",
     fn ->
       Gauge.set(spec, "qwe")
     end
 
     ## inc
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (inc accepts only integers).",
+      "Invalid value: \"qwe\" (inc accepts only integers).",
     fn ->
       Gauge.inc(spec, "qwe")
     end
@@ -63,7 +63,7 @@ defmodule Prometheus.GaugeTest do
 
     ## dec
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (dec accepts only integers).",
+      "Invalid value: \"qwe\" (dec accepts only integers).",
     fn ->
       Gauge.dec(spec, "qwe")
     end
@@ -75,28 +75,28 @@ defmodule Prometheus.GaugeTest do
 
     ## dinc
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (dinc accepts only numbers).",
+      "Invalid value: \"qwe\" (dinc accepts only numbers).",
     fn ->
       Gauge.dinc(spec, "qwe")
     end
 
     ## ddec
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (ddec accepts only numbers).",
+      "Invalid value: \"qwe\" (ddec accepts only numbers).",
     fn ->
       Gauge.ddec(spec, "qwe")
     end
 
     ## track_inprogress
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (track_inprogress accepts only functions).",
+      "Invalid value: \"qwe\" (track_inprogress accepts only functions).",
     fn ->
       Gauge.track_inprogress(spec, "qwe")
     end
 
     ## set_duration
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (set_duration accepts only functions).",
+      "Invalid value: \"qwe\" (set_duration accepts only functions).",
     fn ->
       Gauge.set_duration(spec, "qwe")
     end
@@ -413,15 +413,6 @@ defmodule Prometheus.GaugeTest do
     assert 0.0 < Gauge.value(spec) and Gauge.value(spec) < 0.2
   end
 
-  test "undefined value" do
-    spec = [name: :http_requests_total,
-            labels: [:method],
-            help: ""]
-    Gauge.new(spec)
-
-    assert :undefined == Gauge.value(spec)
-  end
-
   test "remove" do
     spec = [name: :http_requests_total,
             labels: [:method],
@@ -446,6 +437,22 @@ defmodule Prometheus.GaugeTest do
 
     assert false == Gauge.remove(spec)
     assert false == Gauge.remove(wl_spec)
+  end
+
+  test "default value" do
+    lspec = [name: :http_requests_gauge,
+             labels: [:method],
+             help: ""]
+    Gauge.new(lspec)
+
+    assert :undefined == Gauge.value(lspec)
+
+    spec = [name: :something_gauge,
+            labels: [],
+            help: ""]
+    Gauge.new(spec)
+
+    assert 0 == Gauge.value(spec)
   end
 
 end

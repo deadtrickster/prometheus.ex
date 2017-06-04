@@ -49,7 +49,7 @@ defmodule Prometheus.SummaryTest do
 
     ## observe
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (observe accepts only integers).",
+      "Invalid value: \"qwe\" (observe accepts only integers).",
     fn ->
       Summary.observe(spec, "qwe")
     end
@@ -61,14 +61,14 @@ defmodule Prometheus.SummaryTest do
 
     ## dobserve
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (dobserve accepts only numbers).",
+      "Invalid value: \"qwe\" (dobserve accepts only numbers).",
     fn ->
       Summary.dobserve(spec, "qwe")
     end
 
     ## observe_duration
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (observe_duration accepts only functions).",
+      "Invalid value: \"qwe\" (observe_duration accepts only functions).",
     fn ->
       Summary.observe_duration(spec, "qwe")
     end
@@ -243,15 +243,6 @@ defmodule Prometheus.SummaryTest do
     assert 1 < sum and sum < 1.2
   end
 
-  test "undefined value" do
-    spec = [name: :http_requests_total,
-            labels: [:method],
-            help: ""]
-    Summary.new(spec)
-
-    assert :undefined == Summary.value(spec)
-  end
-
   test "remove" do
     spec = [name: :http_requests_total,
             labels: [:method],
@@ -276,6 +267,22 @@ defmodule Prometheus.SummaryTest do
 
     assert false == Summary.remove(spec)
     assert false == Summary.remove(wl_spec)
+  end
+
+  test "undefined value" do
+    lspec = [name: :orders_summary,
+             labels: [:department],
+             help: ""]
+    Summary.new(lspec)
+
+    assert :undefined == Summary.value(lspec)
+
+    spec = [name: :something_summary,
+            labels: [],
+            help: ""]
+    Summary.new(spec)
+
+    assert {0, 0} == Summary.value(spec)
   end
 
 end

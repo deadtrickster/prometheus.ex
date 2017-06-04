@@ -75,7 +75,7 @@ defmodule Prometheus.HistogramTest do
 
     ## observe
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (observe accepts only integers).",
+      "Invalid value: \"qwe\" (observe accepts only integers).",
     fn ->
       Histogram.observe(spec, "qwe")
     end
@@ -87,14 +87,14 @@ defmodule Prometheus.HistogramTest do
 
     ## dobserve
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (dobserve accepts only numbers).",
+      "Invalid value: \"qwe\" (dobserve accepts only numbers).",
     fn ->
       Histogram.dobserve(spec, "qwe")
     end
 
     ## observe_duration
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (observe_duration accepts only functions).",
+      "Invalid value: \"qwe\" (observe_duration accepts only functions).",
     fn ->
       Histogram.observe_duration(spec, "qwe")
     end
@@ -269,15 +269,6 @@ defmodule Prometheus.HistogramTest do
     assert 1 < sum and sum < 1.2
   end
 
-  test "undefined value" do
-    spec = [name: :http_requests_total,
-            labels: [:method],
-            help: ""]
-    Histogram.new(spec)
-
-    assert :undefined == Histogram.value(spec)
-  end
-
   test "remove" do
     spec = [name: :http_requests_total,
             labels: [:method],
@@ -302,6 +293,24 @@ defmodule Prometheus.HistogramTest do
 
     assert false == Histogram.remove(spec)
     assert false == Histogram.remove(wl_spec)
+  end
+
+  test "undefined value" do
+    lspec = [name: :duraiton_histogram,
+             labels: [:method],
+             buckets: [5, 10],
+             help: ""]
+    Histogram.new(lspec)
+
+    assert :undefined == Histogram.value(lspec)
+
+    spec = [name: :something_histogram,
+            labels: [],
+            buckets: [5, 10],
+            help: ""]
+    Histogram.new(spec)
+
+    assert {[0, 0, 0], 0} == Histogram.value(spec)
   end
 
 end

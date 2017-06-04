@@ -54,7 +54,7 @@ defmodule Prometheus.CounterTest do
       Counter.inc(spec, 1.5)
     end
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (inc accepts only non-negative integers).",
+      "Invalid value: \"qwe\" (inc accepts only non-negative integers).",
     fn ->
       Counter.inc(spec, "qwe")
     end
@@ -66,7 +66,7 @@ defmodule Prometheus.CounterTest do
       Counter.dinc(spec, -1)
     end
     assert_raise Prometheus.InvalidValueError,
-      "Invalid value: qwe (dinc accepts only non-negative numbers).",
+      "Invalid value: \"qwe\" (dinc accepts only non-negative numbers).",
     fn ->
       Counter.dinc(spec, "qwe")
     end
@@ -171,15 +171,6 @@ defmodule Prometheus.CounterTest do
     assert 0 == Counter.value(spec)
   end
 
-  test "undefined value" do
-    spec = [name: :http_requests_total,
-            labels: [:method],
-            help: ""]
-    Counter.new(spec)
-
-    assert :undefined == Counter.value(spec)
-  end
-
   test "remove" do
     spec = [name: :http_requests_total,
             labels: [:method],
@@ -204,6 +195,22 @@ defmodule Prometheus.CounterTest do
 
     assert false == Counter.remove(spec)
     assert false == Counter.remove(wl_spec)
+  end
+
+  test "default value" do
+    lspec = [name: :http_requests_total,
+             labels: [:method],
+             help: ""]
+    Counter.new(lspec)
+
+    assert :undefined == Counter.value(lspec)
+
+    spec = [name: :something_total,
+            labels: [],
+            help: ""]
+    Counter.new(spec)
+
+    assert 0 == Counter.value(spec)
   end
 
 end
