@@ -33,6 +33,26 @@ defmodule ExampleInstrumenter do
 end
 ```
 
+or
+
+```elixir
+defmodule ExampleInstrumenter do
+  use Prometheus.Metric
+
+  @histogram [name: :http_request_duration_milliseconds,
+              labels: [:method],
+              buckets: [100, 300, 500, 750, 1000],
+              help: "Http Request execution time"]
+
+  def instrument(%{time: time, method: method}) do
+    Histogram.observe([name: :http_request_duration_milliseconds, labels: [method]], time)
+  end
+end
+```
+
+Here histogram will be declared in auto-generated `@on_load` callback, i.e.
+you don't have to call setup manually.
+
 ## Integrations / Collectors / Instrumenters
  - [Ecto collector](https://github.com/deadtrickster/prometheus-ecto)
  - [Elli middleware](https://github.com/elli-lib/elli_prometheus)
