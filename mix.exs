@@ -51,7 +51,7 @@ defmodule PrometheusEx.Mixfile do
   defp deps do
     [{:prometheus, "~> 3.3"},
      {:credo, "~> 0.8"},
-     {:excoveralls, "~> 0.5.6", only: :test},
+     {:excoveralls, "~> 0.7", only: :test},
      {:ex_doc, "~> 0.11", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev}]
   end
