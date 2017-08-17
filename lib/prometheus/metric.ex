@@ -1,10 +1,106 @@
 defmodule Prometheus.Metric do
   @moduledoc false
 
+  @metrics [:counter, :gauge, :boolean, :summary, :histogram]
+
   defmacro __using__(_opts) do
+    module_name = __CALLER__.module
+
     quote do
       alias Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
       require Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
+
+      unquote_splicing(
+        for metric <- @metrics do
+          quote do
+            Module.register_attribute unquote(module_name), unquote(metric), accumulate: true
+          end
+        end)
+
+      @before_compile unquote(__MODULE__)
+    end
+  end
+
+  defmacro __before_compile__(env) do
+    quote do
+      def __declare_prometheus_metrics__() do
+        unquote_splicing(
+          for metric <- @metrics do
+            declarations = Module.get_attribute(env.module, metric)
+            Module.delete_attribute(env.module, metric)
+            quote do
+              unquote_splicing(
+                for params <- declarations do
+                  emit_create_metric(metric, params)
+                end)
+              :ok
+            end
+          end)
+      end
+
+      unquote(
+        case get_on_load_attribute(env.module) do
+          nil ->
+            quote do
+              @on_load :__declare_prometheus_metrics__
+            end
+          on_load ->
+            Module.delete_attribute(env.module, :on_load)
+            Module.put_attribute(env.module, :on_load, :__prometheus_on_load_override__)
+            quote do
+              def __prometheus_on_load_override__() do
+                case unquote(on_load)() do
+                  :ok -> __declare_prometheus_metrics__()
+                  result -> result
+                end
+              end
+            end
+        end)
+    end
+  end
+
+  defp get_on_load_attribute(module) do
+    case Module.get_attribute(module, :on_load) do
+      [] ->
+        nil
+      nil ->
+        nil
+      atom when is_atom(atom) ->
+        atom
+      {atom, 0} when is_atom(atom) ->
+        atom
+      [{atom, 0}] when is_atom(atom) ->
+        atom
+      other ->
+        raise ArgumentError,
+          "expected the @on_load attribute to be an atom or a " <>
+          "{atom, 0} tuple, got: #{inspect(other)}"
+    end
+  end
+
+  defp emit_create_metric(:counter, params) do
+    quote do
+      Prometheus.Metric.Counter.declare(unquote(params))
+    end
+  end
+  defp emit_create_metric(:gauge, params) do
+    quote do
+      Prometheus.Metric.Gauge.declare(unquote(params))
+    end
+  end
+  defp emit_create_metric(:boolean, params) do
+    quote do
+      Prometheus.Metric.Boolean.declare(unquote(params))
+    end
+  end
+  defp emit_create_metric(:summary, params) do
+    quote do
+      Prometheus.Metric.Summary.declare(unquote(params))
+    end
+  end
+  defp emit_create_metric(:histogram, params) do
+    quote do
+      Prometheus.Metric.Histogram.declare(unquote(params))
     end
   end
 
