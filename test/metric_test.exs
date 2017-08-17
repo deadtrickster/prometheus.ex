@@ -1,6 +1,8 @@
 defmodule Prometheus.MetricTest do
   use Prometheus.Case
 
+  doctest Prometheus.Metric
+
   defmacro __before_compile__(_env) do
     quote do
       def injected_fun() do
@@ -44,6 +46,7 @@ defmodule Prometheus.MetricTest do
     end
 
     assert 1 == ModuleWithMetrics.injected_fun()
+
     assert false == Counter.declare(name: :custom_counter, labels: [], help: "qwe")
     assert false == Counter.declare(name: :test_counter3, labels: [], help: "qwe")
 
