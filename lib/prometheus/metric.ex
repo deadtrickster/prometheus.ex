@@ -47,18 +47,22 @@ defmodule Prometheus.Metric do
   defmacro __before_compile__(env) do
     quote do
       def __declare_prometheus_metrics__() do
-        unquote_splicing(
-          for metric <- @metrics do
-            declarations = Module.get_attribute(env.module, metric)
-            Module.delete_attribute(env.module, metric)
-            quote do
-              unquote_splicing(
-                for params <- declarations do
-                  emit_create_metric(metric, params)
-                end)
-              :ok
-            end
-          end)
+        if List.keymember?(Application.started_applications(), :prometheus, 0) do
+          unquote_splicing(
+            for metric <- @metrics do
+              declarations = Module.get_attribute(env.module, metric)
+              Module.delete_attribute(env.module, metric)
+              quote do
+                unquote_splicing(
+                  for params <- declarations do
+                    emit_create_metric(metric, params)
+                  end)
+                :ok
+              end
+            end)
+        else
+          :ok
+        end
       end
 
       unquote(
