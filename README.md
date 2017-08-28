@@ -75,7 +75,7 @@ you don't have to call setup manually.
 
     ```elixir
     def deps do
-      [{:prometheus_ex, "~> 1.3"}]
+      [{:prometheus_ex, "~> 1.4"}]
     end
     ```
 
