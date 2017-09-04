@@ -42,7 +42,6 @@ defmodule Prometheus do
    - [Phoenix Instrumenter](https://hex.pm/packages/prometheus_phoenix);
    - [RabbitMQ Exporter](https://github.com/deadtrickster/prometheus_rabbitmq_exporter).
 
-
   ## Erlang VM Collectors
    - [Memory Collector](vm-memory-collector.html);
    - [Statistics Collector](vm-statistics-collector.html);
@@ -102,7 +101,6 @@ defmodule Prometheus do
    - `Prometheus.Collector` - exports macros for managing/creating collectors;
    - `Prometheus.Model` - provides API for working with underlying Prometheus models.
    You'll use that if you want to create custom collector.
-
 
   """
 

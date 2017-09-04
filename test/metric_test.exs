@@ -62,7 +62,9 @@ defmodule Prometheus.MetricTest do
     assert false == Summary.declare(name: :test_summary1, labels: [], help: "qwe")
     assert false == Summary.declare(name: :test_summary2, labels: [:tag], help: "qwa")
 
-    assert false == Histogram.declare(name: :test_histogram1, labels: [], buckets: [1, 2], help: "qwe")
-    assert false == Histogram.declare(name: :test_histogram2, labels: [:tag], buckets: [1, 2], help: "qwa")
+    assert false ==
+      Histogram.declare(name: :test_histogram1, labels: [], buckets: [1, 2], help: "")
+    assert false ==
+      Histogram.declare(name: :test_histogram2, labels: [:tag], buckets: [1, 2], help: "")
   end
 end

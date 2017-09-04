@@ -30,14 +30,17 @@ defmodule Prometheus.Metric do
     module_name = __CALLER__.module
 
     quote do
+      # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
       alias Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
+      # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
       require Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
       require Prometheus.Error
 
       unquote_splicing(
         for metric <- @metrics do
           quote do
-            Module.register_attribute unquote(module_name), unquote(metric), accumulate: true
+            Module.register_attribute(unquote(module_name), unquote(metric),
+              accumulate: true)
           end
         end)
 
@@ -66,24 +69,27 @@ defmodule Prometheus.Metric do
         end
       end
 
-      unquote(
-        case get_on_load_attribute(env.module) do
-          nil ->
-            quote do
-              @on_load :__declare_prometheus_metrics__
+      unquote(gen_on_load(env))
+    end
+  end
+
+  defp gen_on_load(env) do
+    case get_on_load_attribute(env.module) do
+      nil ->
+        quote do
+          @on_load :__declare_prometheus_metrics__
+        end
+      on_load ->
+        Module.delete_attribute(env.module, :on_load)
+        Module.put_attribute(env.module, :on_load, :__prometheus_on_load_override__)
+        quote do
+          def __prometheus_on_load_override__() do
+            case unquote(on_load)() do
+              :ok -> __declare_prometheus_metrics__()
+              result -> result
             end
-          on_load ->
-            Module.delete_attribute(env.module, :on_load)
-            Module.put_attribute(env.module, :on_load, :__prometheus_on_load_override__)
-            quote do
-              def __prometheus_on_load_override__() do
-                case unquote(on_load)() do
-                  :ok -> __declare_prometheus_metrics__()
-                  result -> result
-                end
-              end
-            end
-        end)
+          end
+        end
     end
   end
 

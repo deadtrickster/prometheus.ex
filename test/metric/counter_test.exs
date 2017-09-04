@@ -244,12 +244,12 @@ defmodule Prometheus.CounterTest do
     Counter.count_no_exceptions [name: :no_exceptions_total] do
       Counter.count_exceptions [name: :exceptions_total], ArithmeticError do
         def sometimes_raise(arg) do
-          5/arg
+          5 / arg
         end
       end
 
       def sometimes_raise1(arg) when is_list(arg) do
-          5/arg
+        5 / arg
       end
     end
 
@@ -262,7 +262,7 @@ defmodule Prometheus.CounterTest do
 
     Counter.count_exceptions [name: :exceptions_total] do
       def sometimes_raise_any(arg) do
-        5/arg
+        5 / arg
       end
     end
   end

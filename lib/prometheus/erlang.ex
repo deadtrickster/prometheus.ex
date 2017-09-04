@@ -76,7 +76,7 @@ defmodule Prometheus.Erlang do
   defp parse_metric_call_args(mf_or_spec, spec, arguments) do
     case mf_or_spec do
       ## Erlang.metric_call({:prometheus_counter, :dinc}, spec, [value])
-      {_,_} -> {mf_or_spec, spec, arguments}
+      {_, _} -> {mf_or_spec, spec, arguments}
       ## Erlang.metric_call(:inc, spec, [value])
       _ when is_atom(mf_or_spec) -> {mf_or_spec, spec, arguments}
       _ ->
@@ -108,7 +108,7 @@ defmodule Prometheus.Erlang do
                            _ when is_list(mf) ->
                              {f, _arity} = __CALLER__.function
                              {Module.get_attribute(__CALLER__.module, :erlang_module), f}
-                           {_,_} ->
+                           {_, _} ->
                              mf
                            _ when is_atom(mf) ->
                              {Module.get_attribute(__CALLER__.module, :erlang_module), mf}

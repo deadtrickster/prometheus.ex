@@ -31,6 +31,7 @@
         {Credo.Check.Readability.PredicateFunctionNames},
         {Credo.Check.Readability.TrailingBlankLine},
         {Credo.Check.Readability.TrailingWhiteSpace},
+        {Credo.Check.Readability.ParenthesesOnZeroArityDefs, false},
         {Credo.Check.Readability.VariableNames},
 
         {Credo.Check.Refactor.ABCSize},
@@ -41,7 +42,7 @@
         {Credo.Check.Refactor.CyclomaticComplexity},
         {Credo.Check.Refactor.NegatedConditionsInUnless},
         {Credo.Check.Refactor.NegatedConditionsWithElse},
-        {Credo.Check.Refactor.Nesting},
+        {Credo.Check.Refactor.Nesting, max_nesting: 3},
         {Credo.Check.Refactor.UnlessWithElse},
 
         {Credo.Check.Warning.IExPry},

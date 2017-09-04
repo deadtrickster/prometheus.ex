@@ -1,3 +1,4 @@
+# credo:disable-for-this-file Credo.Check.Readability.SpaceAfterCommas
 defmodule Prometheus.Format.ProtobufTest do
   use Prometheus.Case
 

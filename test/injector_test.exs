@@ -128,7 +128,7 @@ defmodule Prometheus.InjectorTest do
       QweInjector.inject_ do
         IO.puts("Doing dangerous work #{x}")
       rescue
-        _-> IO.puts("Died")
+        _ -> IO.puts("Died")
       after
         IO.puts("Done anyway")
       end

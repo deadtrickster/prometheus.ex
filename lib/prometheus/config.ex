@@ -59,13 +59,12 @@ defmodule Prometheus.Config do
         end
 
         defp config(key, option) do
-          try do
-            key
-            |> config()
-            |> Keyword.fetch!(option)
-          rescue
-            e in KeyError -> raise %KeyNotFoundError{key: key, option: option}
-          end
+          key
+          |> config()
+          |> Keyword.fetch!(option)
+        rescue
+          # credo:disable-for-next-line Credo.Check.Warning.RaiseInsideRescue
+          e in KeyError -> raise %KeyNotFoundError{key: key, option: option}
         end
 
         unquote do

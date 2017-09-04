@@ -302,7 +302,7 @@ defmodule Prometheus.GaugeTest do
 
     Gauge.dec(spec)
     Gauge.dec(spec, 3)
-    assert -4 == Gauge.value(spec)
+    assert (-4 == Gauge.value(spec))
 
     Gauge.reset(spec)
 
@@ -319,7 +319,7 @@ defmodule Prometheus.GaugeTest do
 
     ## ddec is async. let's make sure gen_server processed our request
     Process.sleep(10)
-    assert -4.5 == Gauge.value(spec)
+    assert (-4.5 == Gauge.value(spec))
 
     Gauge.reset(spec)
 
@@ -363,7 +363,6 @@ defmodule Prometheus.GaugeTest do
     Gauge.new(spec)
 
     assert 1 == Gauge.track_inprogress(spec, do: Gauge.value(spec))
-
 
     assert_raise ErlangError, fn ->
       Gauge.track_inprogress spec do

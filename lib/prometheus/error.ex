@@ -59,7 +59,6 @@ end
 defmodule Prometheus.UnknownMetricError do
   defexception [:registry, :name]
 
-
   def message(%{registry: registry, name: name}) do
     "Unknown metric {registry: #{registry}, name: #{name}}."
   end
@@ -155,8 +154,8 @@ end
 defmodule Prometheus.Error do
   @moduledoc false
 
-  @lint [{Credo.Check.Refactor.ABCSize, false},
-         {Credo.Check.Refactor.CyclomaticComplexity, false}]
+  # credo:disable-for-this-file Credo.Check.Refactor.ABCSize
+  # credo:disable-for-this-file Credo.Check.Refactor.CyclomaticComplexity
   def normalize(erlang_error) do
     case erlang_error do
       %ErlangError{original: original} ->

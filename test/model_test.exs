@@ -11,10 +11,10 @@ defmodule Prometheus.ModelTest do
   end
 
   test "create_mf" do
-    assert {:MetricFamily,<<"pool_size">>,<<"help">>,:UNTYPED,
-            [{:Metric,[],:undefined,:undefined,:undefined,
-              {:Untyped,365},
-              :undefined,:undefined}]} ==
+    assert {:MetricFamily, <<"pool_size">>, <<"help">>, :UNTYPED,
+            [{:Metric, [], :undefined, :undefined, :undefined,
+              {:Untyped, 365},
+              :undefined, :undefined}]} ==
       Prometheus.Model.create_mf(
         :pool_size, "help", :untyped, Prometheus.ModelTest, :undefined)
   end
