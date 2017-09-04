@@ -169,6 +169,12 @@ defmodule Prometheus.Metric.Gauge do
     Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
   end
 
+  defmacro track_inprogress(spec) do
+    quote do
+      @instrument {unquote(__MODULE__), :track_inprogress, unquote(spec)}
+    end
+  end
+
   @doc """
   Tracks the amount of time spent executing `fun`.
 

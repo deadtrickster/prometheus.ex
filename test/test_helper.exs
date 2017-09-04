@@ -5,8 +5,8 @@ defmodule Prometheus.Case do
     quote do
 
       use ExUnit.Case
-
       use Prometheus
+      import ExUnit.CaptureIO
 
       setup do
         collectors = Prometheus.Registry.collectors()

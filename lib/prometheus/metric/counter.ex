@@ -98,6 +98,80 @@ defmodule Prometheus.Metric.Counter do
   end
 
   @doc """
+  Increments the counter identified by `spec` by 1 when `body` executed.
+
+  Read more about bodies: `Prometheus.Injector`.
+
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
+  defmacro count(spec, body) do
+    env = __CALLER__
+    Prometheus.Injector.inject(fn(block) ->
+      quote do
+        Prometheus.Metric.Counter.inc(unquote(spec), 1)
+        unquote(block)
+      end
+    end, env, body)
+  end
+
+  @doc """
+  Increments the counter identified by `spec` by 1 when `body` raises `exception`.
+
+  Read more about bodies: `Prometheus.Injector`.
+
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
+  defmacro count_exceptions(spec, exception \\ :_, body) do
+    env = __CALLER__
+    Prometheus.Injector.inject(fn(block) ->
+      quote do
+        require Prometheus.Error
+        Prometheus.Error.with_prometheus_error(
+          try do
+            unquote(block)
+          rescue
+            e in unquote(exception) ->
+              stacktrace = System.stacktrace()
+            {registry, name, labels} = Prometheus.Metric.parse_spec(unquote(spec))
+            :prometheus_counter.inc(registry, name, labels, 1)
+            reraise(e, stacktrace)
+          end)
+      end
+    end, env, body)
+  end
+
+  @doc """
+  Increments the counter identified by `spec` by 1 when `body` raises no exceptions.
+
+  Read more about bodies: `Prometheus.Injector`.
+
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a positive integer.<br>
+  Raises `Prometheus.UnknownMetricError` exception if a counter
+  for `spec` can't be found.<br>
+  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
+  """
+  defmacro count_no_exceptions(spec, body) do
+    env = __CALLER__
+    Prometheus.Injector.inject(fn(block) ->
+      quote do
+        try do
+          unquote(block)
+        else
+          value ->
+            Prometheus.Metric.Counter.inc(unquote(spec), 1)
+            value
+        end
+      end
+    end, env, body)
+  end
+
+  @doc """
   Increments the counter identified by `spec` by `value`.
   If `value` happened to be a float number even one time(!) you
   shouldn't use `inc/2` after dinc.

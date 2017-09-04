@@ -213,4 +213,100 @@ defmodule Prometheus.CounterTest do
     assert 0 == Counter.value(spec)
   end
 
+  defmodule CounterInjectorsTest do
+
+    use Prometheus.Metric
+
+    @counter name: :calls_total, help: ""
+    @counter name: :sometimes_total, help: ""
+    @counter name: :exceptions_total, help: ""
+    @counter name: :no_exceptions_total, help: ""
+
+    Counter.count name: :calls_total do
+      def decorated_fun() do
+        IO.puts("I'm decorated fun")
+      end
+
+      def decorated_fun1() do
+        IO.puts("I'm decorated fun1")
+        IO.puts("I'm decorated fun1")
+      end
+    end
+
+    def sometimes_count(arg) do
+      if arg do
+        Counter.count [name: :sometimes_total], do: IO.puts "Called indeed!"
+      else
+        IO.puts("Not this time")
+      end
+    end
+
+    Counter.count_no_exceptions [name: :no_exceptions_total] do
+      Counter.count_exceptions [name: :exceptions_total], ArithmeticError do
+        def sometimes_raise(arg) do
+          5/arg
+        end
+      end
+
+      def sometimes_raise1(arg) when is_list(arg) do
+          5/arg
+      end
+    end
+
+    def qwe () do
+      Counter.count_no_exceptions [name: :no_exceptions_total], fn () ->
+        IO.puts 1
+        IO.puts 2
+      end
+    end
+
+    Counter.count_exceptions [name: :exceptions_total] do
+      def sometimes_raise_any(arg) do
+        5/arg
+      end
+    end
+  end
+
+  test "decorators test" do
+
+    CounterInjectorsTest.__declare_prometheus_metrics__()
+
+    assert 0 == Counter.value name: :calls_total
+    assert capture_io(fn -> CounterInjectorsTest.decorated_fun() end) ==
+      "I'm decorated fun\n"
+    assert 1 == Counter.value name: :calls_total
+    assert capture_io(fn -> CounterInjectorsTest.decorated_fun1() end) ==
+      "I'm decorated fun1\nI'm decorated fun1\n"
+    assert 2 == Counter.value name: :calls_total
+
+    assert 0 == Counter.value name: :sometimes_total
+    assert capture_io(fn -> CounterInjectorsTest.sometimes_count(true) end) ==
+      "Called indeed!\n"
+    assert capture_io(fn -> CounterInjectorsTest.sometimes_count(false) end) ==
+      "Not this time\n"
+    assert 1 == Counter.value name: :sometimes_total
+
+    assert 0 == Counter.value name: :exceptions_total
+    assert 0 == Counter.value name: :no_exceptions_total
+    assert 1 == CounterInjectorsTest.sometimes_raise(5)
+    assert 0 == Counter.value name: :exceptions_total
+    assert 1 == Counter.value name: :no_exceptions_total
+    assert_raise ArithmeticError,
+    fn ->
+      CounterInjectorsTest.sometimes_raise(0)
+    end
+    assert 1 == Counter.value name: :exceptions_total
+    assert 1 == Counter.value name: :no_exceptions_total
+
+    assert 1 == Counter.value name: :exceptions_total
+    assert 1 == CounterInjectorsTest.sometimes_raise(5)
+    assert 1 == Counter.value name: :exceptions_total
+    assert_raise ArithmeticError,
+    fn ->
+      CounterInjectorsTest.sometimes_raise(0)
+    end
+    assert 2 == Counter.value name: :exceptions_total
+
+  end
+
 end
