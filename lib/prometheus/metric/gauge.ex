@@ -158,33 +158,48 @@ defmodule Prometheus.Metric.Gauge do
   end
 
   @doc """
-  Sets the gauge identified by `spec` to the number of currently executing `fun`s.
+  Sets the gauge identified by `spec` to the number of currently executing `body`s.
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   Raises `Prometheus.InvalidValueError` exception if fun isn't a function or block.
   """
-  defmacro track_inprogress(spec, fun) do
-    Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
-  end
-
-  defmacro track_inprogress(spec) do
-    quote do
-      @instrument {unquote(__MODULE__), :track_inprogress, unquote(spec)}
-    end
+  defmacro track_inprogress(spec, body) do
+    env = __CALLER__
+    Prometheus.Injector.inject(fn(block) ->
+      quote do
+        Prometheus.Metric.Gauge.inc(unquote(spec))
+        try do
+          unquote(block)
+        after
+          Prometheus.Metric.Gauge.dec(unquote(spec))
+        end
+      end
+    end, env, body)
   end
 
   @doc """
-  Tracks the amount of time spent executing `fun`.
+  Tracks the amount of time spent executing `body`.
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   Raises `Prometheus.InvalidValueError` exception if `fun` isn't a function or block.
   """
-  defmacro set_duration(spec, fun) do
-    Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
+  defmacro set_duration(spec, body) do
+    env = __CALLER__
+    Prometheus.Injector.inject(fn(block) ->
+      quote do
+        start_time = :erlang.monotonic_time()
+        try do
+          unquote(block)
+        after
+          end_time = :erlang.monotonic_time()
+          Prometheus.Metric.Gauge.set(unquote(spec), end_time - start_time)
+        end
+      end
+    end, env, body)
   end
 
   @doc """
@@ -223,4 +238,3 @@ defmodule Prometheus.Metric.Gauge do
     Erlang.metric_call(spec)
   end
 end
-

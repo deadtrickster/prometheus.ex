@@ -91,13 +91,6 @@ defmodule Prometheus.HistogramTest do
     fn ->
       Histogram.dobserve(spec, "qwe")
     end
-
-    ## observe_duration
-    assert_raise Prometheus.InvalidValueError,
-      "Invalid value: \"qwe\" (observe_duration accepts only functions).",
-    fn ->
-      Histogram.observe_duration(spec, "qwe")
-    end
   end
 
   test "mf/arity errors" do
@@ -177,6 +170,15 @@ defmodule Prometheus.HistogramTest do
       "Invalid metric arity: got 2, expected 1.",
     fn ->
       Histogram.value([name: :metric_with_label, labels: [:l1, :l2]])
+    end
+
+    ## observe_duration
+    assert_raise Prometheus.InvalidBlockArityError,
+      "Fn with arity 2 (args: :x, :y) passed as block.",
+    fn ->
+      Macro.expand(quote do
+        Histogram.observe_duration(spec, fn(x, y) -> 1 + x + y end)
+      end, __ENV__)
     end
   end
 

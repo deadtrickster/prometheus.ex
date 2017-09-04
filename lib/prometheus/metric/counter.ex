@@ -160,6 +160,7 @@ defmodule Prometheus.Metric.Counter do
     env = __CALLER__
     Prometheus.Injector.inject(fn(block) ->
       quote do
+        require Prometheus.Error
         try do
           unquote(block)
         else

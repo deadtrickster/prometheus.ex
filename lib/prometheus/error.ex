@@ -140,6 +140,18 @@ defmodule Prometheus.MissingMetricSpecKeyError do
   end
 end
 
+defmodule Prometheus.InvalidBlockArityError do
+  @moduledoc """
+  Raised when fn passed as block has more then 0 arguments
+  """
+  defexception [:args]
+
+  def message(%{args: args}) do
+    insp = Enum.map_join(args, ", ", &inspect/1)
+    "Fn with arity #{length(args)} (args: #{insp}) passed as block."
+  end
+end
+
 defmodule Prometheus.Error do
   @moduledoc false
 

@@ -14,7 +14,18 @@ defmodule Prometheus.Injector do
 
   # lambda
   def inject_({:fn, fn_meta, [{:->, arrow_meta, [args, do_block]}]}, callback) do
-    {:fn, fn_meta, [{:->, arrow_meta, [args, callback.(do_block)]}]}
+    case args do
+      [] ->
+        callback.({{:., [],
+                    [{:fn, fn_meta,
+                       [{:->, arrow_meta,
+                        [[], do_block]}]}]}, [],
+                   []})
+      _ ->
+        names = args
+        |> Enum.map(fn({name, _, _}) -> name end)
+        raise Prometheus.InvalidBlockArityError, args: names
+    end
   end
 
   # do_blocks can be simple calls or defs
@@ -23,7 +34,7 @@ defmodule Prometheus.Injector do
     if have_defs(do_blocks) do
       Enum.map(do_blocks, &inject_to_def(&1, callback))
     else
-      [{:do, callback.({:__block__, [], do_blocks})}]
+       callback.({:__block__, [], do_blocks})
     end
   end
 
@@ -44,7 +55,7 @@ defmodule Prometheus.Injector do
     end
   end
 
-  # single dos, or other non-block stuff like function calls
+  # single do, or other non-block stuff like function calls
   def inject_(thing, callback) do
     inject_([{:do, {:__block__, [], [thing]}}], callback)
   end
@@ -74,10 +85,10 @@ defmodule Prometheus.Injector do
   defp inject_to_def({:def, def_meta, [head, [do: body]]}, callback) do
     {:def, def_meta, [head, [do: callback.(body)]]}
   end
-  defp inject_to_def({:def, def_meta, [head, [{:do, _do_block} | rest] = all]}, callback) do
+  defp inject_to_def({:def, def_meta, [head, [{:do, _do_block} | _rest] = all]}, callback) do
     {:def, def_meta, [head, [do: callback.(
                                    quote do
                                      try unquote(all)
-                                 end)]]}
+                                   end)]]}
   end
 end

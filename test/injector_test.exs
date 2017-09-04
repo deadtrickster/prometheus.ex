@@ -29,7 +29,6 @@ defmodule Prometheus.InjectorTest do
       IO.puts("fun2")
     end
 
-
     Injector.test do
       def fun3() do
         IO.puts("fun3")
@@ -51,7 +50,9 @@ defmodule Prometheus.InjectorTest do
   end
 
   test "fn" do
-    assert capture_io(Injector.test(fn () -> IO.puts("qwe") end)) ==
+    assert capture_io(fn ->
+      Injector.test(fn () -> IO.puts("qwe") end)
+    end) ==
       "before block\nqwe\nafter block\n"
   end
 

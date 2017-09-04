@@ -67,10 +67,12 @@ defmodule Prometheus.SummaryTest do
     end
 
     ## observe_duration
-    assert_raise Prometheus.InvalidValueError,
-      "Invalid value: \"qwe\" (observe_duration accepts only functions).",
+    assert_raise Prometheus.InvalidBlockArityError,
+      "Fn with arity 2 (args: :x, :y) passed as block.",
     fn ->
-      Summary.observe_duration(spec, "qwe")
+      Macro.expand(quote do
+        Summary.observe_duration(spec, fn(x, y) -> 1 + x + y end)
+      end, __ENV__)
     end
   end
 

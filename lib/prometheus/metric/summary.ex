@@ -108,8 +108,19 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   Raises `Prometheus.InvalidValueError` exception if `fun` isn't a function or block.
   """
-  defmacro observe_duration(spec, fun) do
-    Erlang.metric_call(spec, [Erlang.ensure_fn(fun)])
+  defmacro observe_duration(spec, body) do
+    env = __CALLER__
+    Prometheus.Injector.inject(fn(block) ->
+      quote do
+        start_time = :erlang.monotonic_time()
+        try do
+          unquote(block)
+        after
+          end_time = :erlang.monotonic_time()
+          Prometheus.Metric.Summary.observe(unquote(spec), end_time - start_time)
+        end
+      end
+    end, env, body)
   end
 
   @doc """
