@@ -1,12 +1,17 @@
 language: elixir
-matrix:
-  include:
-    - otp_release: 18.3
-      elixir: 1.3.2
-    - otp_release: 19.0
-      elixir: 1.3.2
 sudo: false
+elixir:
+  - 1.3
+  - 1.4
+otp_release:
+  - 18.2
+  - 19.1
+  - 20.0
+matrix:
+  exclude:
+    - elixir: 1.3
+      otp_release: 20.0
 before_script:
   - mix deps.get --only test
 script:
-  - "MIX_ENV=test mix coveralls.travis"
+  - ./bin/checks.sh
