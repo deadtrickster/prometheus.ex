@@ -53,6 +53,8 @@ end
 Here histogram will be declared in auto-generated `@on_load` callback, i.e.
 you don't have to call setup manually.
 
+Please read how to [measure durations correctly with prometheus.ex](https://hexdocs.pm/prometheus_ex/time.html#content).
+
 ## Integrations / Collectors / Instrumenters
  - [Ecto collector](https://github.com/deadtrickster/prometheus-ecto)
  - [Elli middleware](https://github.com/elli-lib/elli_prometheus)
