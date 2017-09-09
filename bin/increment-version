@@ -7,13 +7,14 @@
 # Parse command line options.
 
 
-while getopts ":Mmp" Option
+while getopts ":Mmpa:" Option
 do
-  case $Option in
-    M ) major=true;;
-    m ) minor=true;;
-    p ) patch=true;;
-  esac
+    case $Option in
+        M ) major=true;;
+        m ) minor=true;;
+        p ) patch=true;;
+        a ) alpha=${OPTARG};;
+    esac
 done
 
 shift $(($OPTIND - 1))
@@ -44,31 +45,36 @@ a=( ${version//./ } )
 
 if [ ${#a[@]} -ne 3 ]
 then
-  echo "usage: $(basename $0) [-Mmp] TAG_MESSAGE(optional)"
-  exit 1
+    echo "usage: $(basename $0) [-Mmp] TAG_MESSAGE(optional)"
+    exit 1
 fi
 
 # Increment version numbers as requested.
 
 if [ ! -z $major ]
 then
-  ((a[0]++))
-  a[1]=0
-  a[2]=0
+    ((a[0]++))
+    a[1]=0
+    a[2]=0
 fi
 
 if [ ! -z $minor ]
 then
-  ((a[1]++))
-  a[2]=0
+    ((a[1]++))
+    a[2]=0
 fi
 
 if [ ! -z $patch ]
 then
-  ((a[2]++))
+    ((a[2]++))
 fi
 
-new_version="${a[0]}.${a[1]}.${a[2]}"
+if [ -z ${alpha+x} ];
+then
+    new_version="${a[0]}.${a[1]}.${a[2]}";
+else
+    new_version="${a[0]}.${a[1]}.${a[2]}.alpha-$alpha";
+fi
 
 echo "New version: ${new_version}"
 
