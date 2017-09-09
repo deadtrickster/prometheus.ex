@@ -177,7 +177,7 @@ defmodule Prometheus.HistogramTest do
       "Fn with arity 2 (args: :x, :y) passed as block.",
     fn ->
       Macro.expand(quote do
-        Histogram.observe_duration(spec, fn(x, y) -> 1 + x + y end)
+                    Histogram.observe_duration(spec, fn(x, y) -> 1 + x + y end)
       end, __ENV__)
     end
   end

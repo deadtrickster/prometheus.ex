@@ -122,7 +122,7 @@ defmodule Prometheus.Metric.Histogram do
   end
 
   @doc """
-  Observes the amount of seconds spent executing `fun`.
+  Observes the amount of time spent executing `body`.
 
   Raises `Prometheus.UnknownMetricError` exception if a histogram for `spec`
   can't be found.<br>

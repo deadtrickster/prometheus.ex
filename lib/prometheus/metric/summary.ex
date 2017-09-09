@@ -101,7 +101,7 @@ defmodule Prometheus.Metric.Summary do
   end
 
   @doc """
-  Observes the amount of seconds spent executing `fun`.
+  Observes the amount of time spent executing `body`.
 
   Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
   can't be found.<br>

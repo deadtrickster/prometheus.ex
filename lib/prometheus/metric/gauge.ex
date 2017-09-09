@@ -38,7 +38,14 @@ defmodule Prometheus.Metric.Gauge do
     end
 
     def track_checked_out_sockets(checkout_fun) do
-      Gauge.track_inprogress([name: :my_pool_checked_out], checkout_fun)
+      Gauge.track_inprogress([name: :my_pool_checked_out], checkout_fun.())
+    end
+
+    def track_checked_out_sockets_block(socket) do
+      Gauge.track_inprogress([name: :my_pool_checked_out]) do
+        # checkout code
+        socket
+      end
     end
 
   end

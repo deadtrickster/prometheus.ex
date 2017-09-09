@@ -92,7 +92,7 @@ defmodule Prometheus.GaugeTest do
       "Fn with arity 2 (args: :x, :y) passed as block.",
     fn ->
       Macro.expand(quote do
-        Gauge.track_inprogress(spec, fn(x, y) -> 1 + x + y end)
+                    Gauge.track_inprogress(spec, fn(x, y) -> 1 + x + y end)
       end, __ENV__)
     end
 
@@ -101,7 +101,7 @@ defmodule Prometheus.GaugeTest do
       "Fn with arity 2 (args: :x, :y) passed as block.",
     fn ->
       Macro.expand(quote do
-        Gauge.set_duration(spec, fn(x, y) -> 1 + x + y end)
+                    Gauge.set_duration(spec, fn(x, y) -> 1 + x + y end)
       end, __ENV__)
     end
   end

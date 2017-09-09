@@ -66,12 +66,12 @@ defmodule Prometheus.SummaryTest do
       Summary.dobserve(spec, "qwe")
     end
 
-    ## observe_duration
+    ## observe_duration TODO: assert_compile_time_raise
     assert_raise Prometheus.InvalidBlockArityError,
       "Fn with arity 2 (args: :x, :y) passed as block.",
     fn ->
       Macro.expand(quote do
-        Summary.observe_duration(spec, fn(x, y) -> 1 + x + y end)
+                    Summary.observe_duration(spec, fn(x, y) -> 1 + x + y end)
       end, __ENV__)
     end
   end
