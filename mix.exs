@@ -1,7 +1,7 @@
 defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
-  @version "1.4.1"
+  @version "2.0.0"
 
   def project do
     [app: :prometheus_ex,

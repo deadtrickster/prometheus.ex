@@ -77,7 +77,7 @@ Please read how to [measure durations correctly with prometheus.ex](https://hexd
 
     ```elixir
     def deps do
-      [{:prometheus_ex, "~> 1.4"}]
+      [{:prometheus_ex, "~> 2.0"}]
     end
     ```
 
