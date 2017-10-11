@@ -55,8 +55,8 @@ defmodule Prometheus do
 
    - `Prometheus.Metric.Counter` - counter metric, to track counts of events or running
    totals;
-   - `Prometheus.Metric.Gauge` - histogram metric, to track distributions of events;
-   - `Prometheus.Metric.Histogram` - gauge metric, to report instantaneous values;
+   - `Prometheus.Metric.Gauge` - gauge metric, to report instantaneous values;
+   - `Prometheus.Metric.Histogram` - histogram metric, to track distributions of events;
    - `Prometheus.Metric.Summary` - summary metric, to track the size of events;
    - `Prometheus.Registry` - working with Prometheus registries.
 
