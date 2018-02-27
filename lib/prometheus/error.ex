@@ -6,7 +6,7 @@ defmodule Prometheus.InvalidValueError do
   defexception [:value, :orig_message]
 
   def message(%{value: value, orig_message: message}) do
-    "Invalid value: #{inspect value} (#{message})."
+    "Invalid value: #{inspect(value)} (#{message})."
   end
 end
 
@@ -89,7 +89,7 @@ defmodule Prometheus.MFAlreadyExistsError do
   end
 end
 
-defmodule Prometheus.HistogramNoBucketsError do
+defmodule Prometheus.NoBucketsError do
   @moduledoc """
   Raised by histogram constructors when buckets can't be found in spec, or
   found value is empty list.
@@ -101,7 +101,7 @@ defmodule Prometheus.HistogramNoBucketsError do
   end
 end
 
-defmodule Prometheus.HistogramInvalidBucketsError do
+defmodule Prometheus.InvalidBucketsError do
   @moduledoc """
   Raised by histogram constructors when buckets are invalid i.e. not sorted in increasing
   order or generator spec is unknown.
@@ -114,7 +114,7 @@ defmodule Prometheus.HistogramInvalidBucketsError do
   end
 end
 
-defmodule Prometheus.HistogramInvalidBoundError do
+defmodule Prometheus.InvalidBoundError do
   @moduledoc """
   Raised by histogram constructors when bucket bound isn't a number.
   """
@@ -162,32 +162,47 @@ defmodule Prometheus.Error do
         case original do
           {:invalid_value, value, message} ->
             %Prometheus.InvalidValueError{value: value, orig_message: message}
+
           {:invalid_metric_name, name, _message} ->
             %Prometheus.InvalidMetricNameError{name: name}
+
           {:invalid_metric_help, help, _message} ->
             %Prometheus.InvalidMetricHelpError{help: help}
+
           {:invalid_metric_arity, present, expected} ->
             %Prometheus.InvalidMetricArityError{present: present, expected: expected}
+
           {:unknown_metric, registry, name} ->
             %Prometheus.UnknownMetricError{registry: registry, name: name}
+
           {:invalid_metric_labels, labels, _message} ->
             %Prometheus.InvalidMetricLabelsError{labels: labels}
+
           {:invalid_metric_label_name, name, message} ->
             %Prometheus.InvalidLabelNameError{name: name, orig_message: message}
+
           {:mf_already_exists, {registry, name}, _message} ->
             %Prometheus.MFAlreadyExistsError{registry: registry, name: name}
-          {:histogram_no_buckets, buckets} ->
-            %Prometheus.HistogramNoBucketsError{buckets: buckets}
-          {:histogram_invalid_buckets, buckets, message} ->
-            %Prometheus.HistogramInvalidBucketsError{buckets: buckets,
-                                                     orig_message: message}
-          {:histogram_invalid_bound, bound} ->
-            %Prometheus.HistogramInvalidBoundError{bound: bound}
+
+          {:no_buckets, buckets} ->
+            %Prometheus.NoBucketsError{buckets: buckets}
+
+          {:invalid_buckets, buckets, message} ->
+            %Prometheus.InvalidBucketsError{
+              buckets: buckets,
+              orig_message: message
+            }
+
+          {:invalid_bound, bound} ->
+            %Prometheus.InvalidBoundError{bound: bound}
+
           {:missing_metric_spec_key, key, spec} ->
             %Prometheus.MissingMetricSpecKeyError{key: key, spec: spec}
+
           _ ->
             erlang_error
         end
+
       _ ->
         erlang_error
     end
@@ -198,9 +213,8 @@ defmodule Prometheus.Error do
       try do
         unquote(block)
       rescue
-        e in ErlangError -> reraise Prometheus.Error.normalize(e), System.stacktrace
+        e in ErlangError -> reraise Prometheus.Error.normalize(e), System.stacktrace()
       end
     end
   end
-
 end

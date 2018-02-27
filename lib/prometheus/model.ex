@@ -147,5 +147,4 @@ defmodule Prometheus.Model do
   defmacro histogram_metric(labels \\ [], buckets, count, sum) do
     Erlang.call([labels, buckets, count, sum])
   end
-
 end

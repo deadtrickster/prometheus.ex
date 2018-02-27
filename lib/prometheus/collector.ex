@@ -65,7 +65,6 @@ defmodule Prometheus.Collector do
   """
 
   defmacro __using__(_opts) do
-
     quote location: :keep do
       @behaviour :prometheus_collector
 
@@ -76,10 +75,8 @@ defmodule Prometheus.Collector do
         :ok
       end
 
-      defoverridable [deregister_cleanup: 1]
-
+      defoverridable deregister_cleanup: 1
     end
-
   end
 
   use Prometheus.Erlang, :prometheus_collector
@@ -90,5 +87,4 @@ defmodule Prometheus.Collector do
   defmacro collect_mf(registry \\ :default, collector, callback) do
     Erlang.call([registry, collector, callback])
   end
-
 end

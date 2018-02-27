@@ -3,7 +3,6 @@ ExUnit.start()
 defmodule Prometheus.Case do
   defmacro __using__(_opts) do
     quote do
-
       use ExUnit.Case
       use Prometheus
       import ExUnit.CaptureIO
@@ -13,13 +12,12 @@ defmodule Prometheus.Case do
         Prometheus.Registry.clear()
         Prometheus.Registry.clear(:qwe)
 
-        on_exit fn ->
+        on_exit(fn ->
           Prometheus.Registry.clear()
           Prometheus.Registry.clear(:qwe)
           Prometheus.Registry.register_collectors(collectors)
-        end
+        end)
       end
-
     end
   end
 end

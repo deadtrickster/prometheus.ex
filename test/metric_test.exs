@@ -28,7 +28,7 @@ defmodule Prometheus.MetricTest do
       @summary name: :test_summary1, labels: [], help: "qwe"
       @summary name: :test_summary2, labels: [:tag], help: "qwa"
 
-      @histogram name: :test_histogram1, labels: [], buckets: [1, 2],  help: "qwe"
+      @histogram name: :test_histogram1, labels: [], buckets: [1, 2], help: "qwe"
       @histogram name: :test_histogram2, labels: [:tag], buckets: [1, 2], help: "qwa"
 
       @on_load :custom_on_load_fun
@@ -63,8 +63,19 @@ defmodule Prometheus.MetricTest do
     assert false == Summary.declare(name: :test_summary2, labels: [:tag], help: "qwa")
 
     assert false ==
-      Histogram.declare(name: :test_histogram1, labels: [], buckets: [1, 2], help: "")
+             Histogram.declare(
+               name: :test_histogram1,
+               labels: [],
+               buckets: [1, 2],
+               help: ""
+             )
+
     assert false ==
-      Histogram.declare(name: :test_histogram2, labels: [:tag], buckets: [1, 2], help: "")
+             Histogram.declare(
+               name: :test_histogram2,
+               labels: [:tag],
+               buckets: [1, 2],
+               help: ""
+             )
   end
 end

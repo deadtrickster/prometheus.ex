@@ -1,29 +1,35 @@
 defmodule Prometheus.Injector do
-
   def inject(callback, env, ast) do
     ast
-    |> Macro.prewalk(fn (thing) ->
+    |> Macro.prewalk(fn thing ->
       case thing do
-        {:def, _, _} = defun -> defun
-        {:in, _, _} = arrow -> arrow #otherwise e in RuntimeError will be rewritten
-        _ -> Macro.expand(thing, env)
+        {:def, _, _} = defun ->
+          defun
+
+        # otherwise e in RuntimeError will be rewritten
+        {:in, _, _} = arrow ->
+          arrow
+
+        _ ->
+          Macro.expand(thing, env)
       end
     end)
-    |>  inject_(callback)
+    |> inject_(callback)
   end
 
   # lambda
   def inject_({:fn, fn_meta, [{:->, arrow_meta, [args, do_block]}]}, callback) do
     case args do
       [] ->
-        callback.({{:., [],
-                    [{:fn, fn_meta,
-                       [{:->, arrow_meta,
-                        [[], do_block]}]}]}, [],
-                   []})
+        callback.(
+          {{:., [], [{:fn, fn_meta, [{:->, arrow_meta, [[], do_block]}]}]}, [], []}
+        )
+
       _ ->
-        names = args
-        |> Enum.map(fn({name, _, _}) -> name end)
+        names =
+          args
+          |> Enum.map(fn {name, _, _} -> name end)
+
         raise Prometheus.InvalidBlockArityError, args: names
     end
   end
@@ -31,10 +37,11 @@ defmodule Prometheus.Injector do
   # do_blocks can be simple calls or defs
   def inject_([{:do, {:__block__, [], do_blocks}}], callback) do
     do_blocks = List.flatten(do_blocks)
+
     if have_defs(do_blocks) do
       Enum.map(do_blocks, &inject_to_def(&1, callback))
     else
-       callback.({:__block__, [], do_blocks})
+      callback.({:__block__, [], do_blocks})
     end
   end
 
@@ -49,9 +56,10 @@ defmodule Prometheus.Injector do
       callback.(
         quote do
           try unquote(all)
-        end)
+        end
+      )
     else
-      raise "Unexpected do block #{inspect rest}"
+      raise "Unexpected do block #{inspect(rest)}"
     end
   end
 
@@ -61,17 +69,16 @@ defmodule Prometheus.Injector do
   end
 
   defp is_try_unwrapped(block) do
-    Keyword.has_key?(block, :catch)
-    || Keyword.has_key?(block, :rescue)
-    || Keyword.has_key?(block, :after)
-    || Keyword.has_key?(block, :else)
+    Keyword.has_key?(block, :catch) || Keyword.has_key?(block, :rescue) ||
+      Keyword.has_key?(block, :after) || Keyword.has_key?(block, :else)
   end
 
   defp have_defs(blocks) do
-    defs_count = Enum.count(blocks, fn
-      ({:def, _, _}) -> true
-      (_) -> false
-    end)
+    defs_count =
+      Enum.count(blocks, fn
+        {:def, _, _} -> true
+        _ -> false
+      end)
 
     blocks_count = Enum.count(blocks)
 
@@ -85,10 +92,19 @@ defmodule Prometheus.Injector do
   defp inject_to_def({:def, def_meta, [head, [do: body]]}, callback) do
     {:def, def_meta, [head, [do: callback.(body)]]}
   end
+
   defp inject_to_def({:def, def_meta, [head, [{:do, _do_block} | _rest] = all]}, callback) do
-    {:def, def_meta, [head, [do: callback.(
-                                   quote do
-                                     try unquote(all)
-                                   end)]]}
+    {:def, def_meta,
+     [
+       head,
+       [
+         do:
+           callback.(
+             quote do
+               try unquote(all)
+             end
+           )
+       ]
+     ]}
   end
 end

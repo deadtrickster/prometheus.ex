@@ -78,7 +78,7 @@ fi
 
 echo "New version: ${new_version}"
 
-sed -i s/\"${oa[0]}\.${oa[1]}\.${oa[2]}\"/\"${a[0]}\.${a[1]}\.${a[2]}\"/g mix.exs
+sed -i s/\"${oa[0]}\.${oa[1]}\.${oa[2]}\"/\"$new_version\"/g mix.exs
 sed -i s/\~\>\ ${oa[0]}\.${oa[1]}/\~\>\ ${a[0]}\.${a[1]}/g README.md
 
 git add mix.exs

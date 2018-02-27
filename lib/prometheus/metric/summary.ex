@@ -77,26 +77,12 @@ defmodule Prometheus.Metric.Summary do
   @doc """
   Observes the given amount.
 
-  Raises `Prometheus.InvalidValueError` exception if `amount` isn't an integer.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
-  can't be found.<br>
-  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
-  """
-  defmacro observe(spec, amount \\ 1) do
-    Erlang.metric_call(spec, [amount])
-  end
-
-  @doc """
-  Observes the given amount.
-  If `amount` happened to be a float number even one time(!) you shouldn't use `observe/2`
-  after dobserve.
-
   Raises `Prometheus.InvalidValueError` exception if `amount` isn't a number.<br>
   Raises `Prometheus.UnknownMetricError` exception if a summary for `spec`
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro dobserve(spec, amount \\ 1) do
+  defmacro observe(spec, amount \\ 1) do
     Erlang.metric_call(spec, [amount])
   end
 
@@ -110,17 +96,23 @@ defmodule Prometheus.Metric.Summary do
   """
   defmacro observe_duration(spec, body) do
     env = __CALLER__
-    Prometheus.Injector.inject(fn(block) ->
-      quote do
-        start_time = :erlang.monotonic_time()
-        try do
-          unquote(block)
-        after
-          end_time = :erlang.monotonic_time()
-          Prometheus.Metric.Summary.observe(unquote(spec), end_time - start_time)
+
+    Prometheus.Injector.inject(
+      fn block ->
+        quote do
+          start_time = :erlang.monotonic_time()
+
+          try do
+            unquote(block)
+          after
+            end_time = :erlang.monotonic_time()
+            Prometheus.Metric.Summary.observe(unquote(spec), end_time - start_time)
+          end
         end
-      end
-    end, env, body)
+      end,
+      env,
+      body
+    )
   end
 
   @doc """

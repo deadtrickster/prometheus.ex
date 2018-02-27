@@ -1,5 +1,4 @@
 defmodule Prometheus.ErrorTest do
-
   use Prometheus.Case
   require Prometheus.Error
 
@@ -8,14 +7,12 @@ defmodule Prometheus.ErrorTest do
   end
 
   test "properly proxies unknown exceptions" do
-    assert_raise ArgumentError,
-    fn ->
-      Prometheus.Error.with_prometheus_error :ets.tab2list(:qweqweqwe)
+    assert_raise ArgumentError, fn ->
+      Prometheus.Error.with_prometheus_error(:ets.tab2list(:qweqweqwe))
     end
 
-    assert_raise ErlangError,
-    fn ->
-      Prometheus.Error.with_prometheus_error erlang_error()
+    assert_raise ErlangError, fn ->
+      Prometheus.Error.with_prometheus_error(erlang_error())
     end
   end
 end

@@ -31,18 +31,22 @@ defmodule Prometheus.Metric do
 
     quote do
       # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
-      alias Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
+      alias Prometheus.Metric.{Counter, Gauge, Histogram, Summary, Boolean}
       # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
-      require Prometheus.Metric.{Counter,Gauge,Histogram,Summary,Boolean}
+      require Prometheus.Metric.{Counter, Gauge, Histogram, Summary, Boolean}
       require Prometheus.Error
 
       unquote_splicing(
         for metric <- @metrics do
           quote do
-            Module.register_attribute(unquote(module_name), unquote(metric),
-              accumulate: true)
+            Module.register_attribute(
+              unquote(module_name),
+              unquote(metric),
+              accumulate: true
+            )
           end
-        end)
+        end
+      )
 
       @before_compile unquote(__MODULE__)
     end
@@ -52,18 +56,22 @@ defmodule Prometheus.Metric do
     quote do
       def __declare_prometheus_metrics__() do
         if List.keymember?(Application.started_applications(), :prometheus, 0) do
-          unquote_splicing(
-            for metric <- @metrics do
-              declarations = Module.get_attribute(env.module, metric)
-              Module.delete_attribute(env.module, metric)
-              quote do
-                unquote_splicing(
-                  for params <- declarations do
-                    emit_create_metric(metric, params)
-                  end)
-                :ok
-              end
-            end)
+          (unquote_splicing(
+             for metric <- @metrics do
+               declarations = Module.get_attribute(env.module, metric)
+               Module.delete_attribute(env.module, metric)
+
+               quote do
+                 unquote_splicing(
+                   for params <- declarations do
+                     emit_create_metric(metric, params)
+                   end
+                 )
+
+                 :ok
+               end
+             end
+           ))
         else
           :ok
         end
@@ -79,9 +87,11 @@ defmodule Prometheus.Metric do
         quote do
           @on_load :__declare_prometheus_metrics__
         end
+
       on_load ->
         Module.delete_attribute(env.module, :on_load)
         Module.put_attribute(env.module, :on_load, :__prometheus_on_load_override__)
+
         quote do
           def __prometheus_on_load_override__() do
             case unquote(on_load)() do
@@ -97,18 +107,23 @@ defmodule Prometheus.Metric do
     case Module.get_attribute(module, :on_load) do
       [] ->
         nil
+
       nil ->
         nil
+
       atom when is_atom(atom) ->
         atom
+
       {atom, 0} when is_atom(atom) ->
         atom
+
       [{atom, 0}] when is_atom(atom) ->
         atom
+
       other ->
         raise ArgumentError,
-          "expected the @on_load attribute to be an atom or a " <>
-          "{atom, 0} tuple, got: #{inspect(other)}"
+              "expected the @on_load attribute to be an atom or a " <>
+                "{atom, 0} tuple, got: #{inspect(other)}"
     end
   end
 
@@ -117,21 +132,25 @@ defmodule Prometheus.Metric do
       Prometheus.Metric.Counter.declare(unquote(params))
     end
   end
+
   defp emit_create_metric(:gauge, params) do
     quote do
       Prometheus.Metric.Gauge.declare(unquote(params))
     end
   end
+
   defp emit_create_metric(:boolean, params) do
     quote do
       Prometheus.Metric.Boolean.declare(unquote(params))
     end
   end
+
   defp emit_create_metric(:summary, params) do
     quote do
       Prometheus.Metric.Summary.declare(unquote(params))
     end
   end
+
   defp emit_create_metric(:histogram, params) do
     quote do
       Prometheus.Metric.Histogram.declare(unquote(params))
@@ -150,8 +169,8 @@ defmodule Prometheus.Metric do
     labels = Keyword.get(spec, :labels, [])
     {registry, name, labels}
   end
+
   def parse_spec(spec) when is_atom(spec) do
     {:default, spec, []}
   end
-
 end

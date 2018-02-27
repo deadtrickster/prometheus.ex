@@ -1,5 +1,4 @@
 defmodule Prometheus.Config do
-
   @moduledoc """
 
   Configuration templates for custom collectors/exporters.
@@ -30,19 +29,20 @@ defmodule Prometheus.Config do
 
     def message(%{option: option, key: key}) do
       friendly_key_name = String.replace_leading("#{key}", "Elixir.", "")
+
       "mandatory option :#{option} not found" <>
         " in #{friendly_key_name} instrumenter/collector config"
     end
   end
 
   defmacro __using__(default_config) do
-
-    keyword_default_config = Enum.reject(default_config, fn(option) ->
-      case option do
-        {_, _} -> false
-        _ -> true
-      end
-    end)
+    keyword_default_config =
+      Enum.reject(default_config, fn option ->
+        case option do
+          {_, _} -> false
+          _ -> true
+        end
+      end)
 
     quote do
       defmodule Config do
@@ -63,8 +63,9 @@ defmodule Prometheus.Config do
           |> config()
           |> Keyword.fetch!(option)
         rescue
-          # credo:disable-for-next-line Credo.Check.Warning.RaiseInsideRescue
-          e in KeyError -> raise %KeyNotFoundError{key: key, option: option}
+          e in KeyError ->
+            # credo:disable-for-next-line Credo.Check.Warning.RaiseInsideRescue
+            raise %KeyNotFoundError{key: key, option: option}
         end
 
         unquote do
@@ -76,6 +77,7 @@ defmodule Prometheus.Config do
                     config(key, unquote(option), unquote(default))
                   end
                 end
+
               option ->
                 quote do
                   def unquote(:"#{option}!")(key) do

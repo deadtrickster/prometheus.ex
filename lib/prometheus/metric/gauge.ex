@@ -104,7 +104,7 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Increments the gauge identified by `spec` by `value`.
 
-  Raises `Prometheus.InvalidValueError` exception if `value` isn't an integer.<br>
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec`
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
@@ -116,40 +116,12 @@ defmodule Prometheus.Metric.Gauge do
   @doc """
   Decrements the gauge identified by `spec` by `value`.
 
-  Raises `Prometheus.InvalidValueError` exception if `value` isn't an integer.<br>
+  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
   Raises `Prometheus.UnknownMetricError` exception if a gauge for `spec`
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
   defmacro dec(spec, value \\ 1) do
-    Erlang.metric_call(spec, [value])
-  end
-
-  @doc """
-  Increments the gauge identified by `spec` by `value`.
-  If `value` happened to be a float number even one time(!) you shouldn't
-  use `inc/2` or `dec/2` after dinc.
-
-  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a gauge
-  for `spec` can't be found.<br>
-  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
-  """
-  defmacro dinc(spec, value \\ 1) do
-    Erlang.metric_call(spec, [value])
-  end
-
-  @doc """
-  Decrements the gauge identified by `spec` by `value`.
-  If `value` happened to be a float number even one time(!) you shouldn't
-  use `inc/2` or `dec/2` after ddec.
-
-  Raises `Prometheus.InvalidValueError` exception if `value` isn't a number.<br>
-  Raises `Prometheus.UnknownMetricError` exception if a gauge
-  for `spec` can't be found.<br>
-  Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
-  """
-  defmacro ddec(spec, value \\ 1) do
     Erlang.metric_call(spec, [value])
   end
 
@@ -174,16 +146,22 @@ defmodule Prometheus.Metric.Gauge do
   """
   defmacro track_inprogress(spec, body) do
     env = __CALLER__
-    Prometheus.Injector.inject(fn(block) ->
-      quote do
-        Prometheus.Metric.Gauge.inc(unquote(spec))
-        try do
-          unquote(block)
-        after
-          Prometheus.Metric.Gauge.dec(unquote(spec))
+
+    Prometheus.Injector.inject(
+      fn block ->
+        quote do
+          Prometheus.Metric.Gauge.inc(unquote(spec))
+
+          try do
+            unquote(block)
+          after
+            Prometheus.Metric.Gauge.dec(unquote(spec))
+          end
         end
-      end
-    end, env, body)
+      end,
+      env,
+      body
+    )
   end
 
   @doc """
@@ -196,17 +174,23 @@ defmodule Prometheus.Metric.Gauge do
   """
   defmacro set_duration(spec, body) do
     env = __CALLER__
-    Prometheus.Injector.inject(fn(block) ->
-      quote do
-        start_time = :erlang.monotonic_time()
-        try do
-          unquote(block)
-        after
-          end_time = :erlang.monotonic_time()
-          Prometheus.Metric.Gauge.set(unquote(spec), end_time - start_time)
+
+    Prometheus.Injector.inject(
+      fn block ->
+        quote do
+          start_time = :erlang.monotonic_time()
+
+          try do
+            unquote(block)
+          after
+            end_time = :erlang.monotonic_time()
+            Prometheus.Metric.Gauge.set(unquote(spec), end_time - start_time)
+          end
         end
-      end
-    end, env, body)
+      end,
+      env,
+      body
+    )
   end
 
   @doc """

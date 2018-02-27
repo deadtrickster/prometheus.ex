@@ -1,5 +1,4 @@
 defmodule Prometheus.RegistryTest do
-
   use Prometheus.Case
   alias Prometheus.Registry
   alias Prometheus.RegistryTest
@@ -49,21 +48,24 @@ defmodule Prometheus.RegistryTest do
     ## register_collectors && collect; default registry
     assert :ok == Registry.register_collectors([RegistryTest])
     assert [RegistryTest] == Registry.collectors()
+
     assert capture_io(fn ->
-      Registry.collect(fn (:default, collector) ->
-        :io.format("~p", [collector])
-      end) ==
-        "Elixir.RegistryTest"
-    end)
+             Registry.collect(fn :default, collector ->
+               :io.format("~p", [collector])
+             end) == "Elixir.RegistryTest"
+           end)
 
     ## register_collectors && collect; custom registry
     assert :ok == Registry.register_collectors(:custom_collector, [RegistryTest])
     assert [RegistryTest] == Registry.collectors(:custom_collector)
+
     assert capture_io(fn ->
-      Registry.collect(fn (:custom_collector, collector) ->
-        :io.format("~p", [collector])
-      end, :custom_collector) ==
-        "Elixir.RegistryTest"
-    end)
+             Registry.collect(
+               fn :custom_collector, collector ->
+                 :io.format("~p", [collector])
+               end,
+               :custom_collector
+             ) == "Elixir.RegistryTest"
+           end)
   end
 end

@@ -30,5 +30,4 @@ defmodule Prometheus.Contrib.MnesiaTest do
     ArgumentError ->
       :application.set_env(:mnesia, :dir, dir)
   end
-
 end

@@ -1,5 +1,5 @@
 defmodule Prometheus do
-  @moduledoc"""
+  @moduledoc """
 
   [Prometheus.io](https://prometheus.io) client library powered by
   [prometheus.erl](https://hexdocs.pm/prometheus)
@@ -105,7 +105,6 @@ defmodule Prometheus do
   """
 
   defmacro __using__(_opts) do
-
     quote do
       require Prometheus.Collector
       require Prometheus.Registry
@@ -115,5 +114,4 @@ defmodule Prometheus do
       require Prometheus.Contrib.Mnesia
     end
   end
-
 end
