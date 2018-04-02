@@ -7,20 +7,22 @@ defmodule Prometheus.Metric do
   accessible without `Prometheus.Metric` prefix.
 
   Allows to automatically setup metrics with
-  `@<type`> attributes. Metrics will be declared in
+  `@<type>` attributes. Metrics will be declared in
   the `@on_load` callback. If the module already
-  has `@on_laod` callback, metrics will be declared
+  has `@on_load` callback, metrics will be declared
   iff the callback returns `:ok`.
 
-     iex(1)> defmodule MyCoolModule do
-     ...(1)>   use Prometheus.Metric
-     ...(1)>
-     ...(1)>   @counter name: :test_counter3, labels: [], help: "qwe"
-     ...(1)> end
-     iex(2)> require Prometheus.Metric.Counter
-     Prometheus.Metric.Counter
-     iex(3)> Prometheus.Metric.Counter.value(:test_counter3)
-     0
+  Example:
+
+      iex(1)> defmodule MyCoolModule do
+      ...(1)>   use Prometheus.Metric
+      ...(1)>
+      ...(1)>   @counter name: :test_counter3, labels: [], help: "qwe"
+      ...(1)> end
+      iex(2)> require Prometheus.Metric.Counter
+      Prometheus.Metric.Counter
+      iex(3)> Prometheus.Metric.Counter.value(:test_counter3)
+      0
 
   """
 
