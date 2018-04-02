@@ -10,9 +10,9 @@ defmodule Prometheus.Metric.Histogram do
   Histogram expects `buckets` key in a metric spec. Buckets can be:
    - a list of numbers in increasing order;
    - one of the generate specs (shortcuts for `Prometheus.Buckets` macros)
-       - :default;
-       - {:linear, start, step, count};
-       - {:exponential, start, step, count}.
+       - `:default`;
+       - `{:linear, start, step, count}`;
+       - `{:exponential, start, step, count}`.
 
   Example:
 
