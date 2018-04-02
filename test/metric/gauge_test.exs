@@ -247,7 +247,7 @@ defmodule Prometheus.GaugeTest do
     Gauge.dec(spec)
     Gauge.dec(spec, 3.5)
 
-    assert -8.5 == Gauge.value(spec)
+    assert (-8.5 == Gauge.value(spec))
 
     Gauge.reset(spec)
 
