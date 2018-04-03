@@ -7,7 +7,7 @@
 
 Elixir [Prometheus.io](https://prometheus.io) client based on [Prometheus.erl](https://github.com/deadtrickster/prometheus.erl).
 
-Works with Elixir 1.6 and Erlang 20.
+Starting from v3.0.0 works with Elixir >=1.6 and Erlang >=20. For older verions, please use older tags.
 
 ![@skosch dashboard](http://aldusleaf.org/content/images/2016/09/grafana.jpg)
 
