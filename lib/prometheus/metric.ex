@@ -62,19 +62,15 @@ defmodule Prometheus.Metric do
         {metric, params}
       end
 
-    declare_metrics = Enum.map(declarations, &emit_create_metric/1)
-
-    default_metrics = Enum.map(declarations, &emit_metric_tuple/1)
-
     quote do
       def __declare_prometheus_metrics__() do
         if List.keymember?(Application.started_applications(), :prometheus, 0) do
-          unquote_splicing(declare_metrics)
+          unquote_splicing(Enum.map(declarations, &emit_create_metric/1))
           :ok
         else
           existing_metrics = Application.get_env(:prometheus, :default_metrics, [])
 
-          defined_metrics = unquote(default_metrics)
+          defined_metrics = unquote(Enum.map(declarations, &emit_metric_tuple/1))
 
           Application.put_env(
             :prometheus,
