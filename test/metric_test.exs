@@ -78,4 +78,26 @@ defmodule Prometheus.MetricTest do
                help: ""
              )
   end
+
+  test "@metric attributes loaded before prometheus app leads to metric declaration" do
+    _ = Application.stop(:prometheus_ex)
+    _ = Application.stop(:prometheus)
+    Application.put_env(:prometheus, :default_metrics, [])
+
+    defmodule ModuleLoadedBeforeStart do
+      use Prometheus.Metric
+
+      @counter name: :test_counter4, labels: [], help: "qwe"
+      @gauge name: :test_gauge3, help: "qwe"
+    end
+
+    assert [
+             counter: [name: :test_counter4, labels: [], help: "qwe"],
+             gauge: [name: :test_gauge3, help: "qwe"]
+           ] == Application.get_env(:prometheus, :default_metrics)
+
+    _ = Application.ensure_all_started(:prometheus_ex)
+    assert false == Counter.declare(name: :test_counter4, labels: [], help: "qwe")
+    assert false == Gauge.declare(name: :test_gauge3, help: "qwe")
+  end
 end

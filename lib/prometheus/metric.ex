@@ -55,26 +55,33 @@ defmodule Prometheus.Metric do
   end
 
   defmacro __before_compile__(env) do
+    mod = env.module
+
+    declarations =
+      for metric <- @metrics, params <- Module.delete_attribute(mod, metric) do
+        {metric, params}
+      end
+
+    declare_metrics = Enum.map(declarations, &emit_create_metric/1)
+
+    default_metrics = Enum.map(declarations, &emit_metric_tuple/1)
+
     quote do
       def __declare_prometheus_metrics__() do
         if List.keymember?(Application.started_applications(), :prometheus, 0) do
-          (unquote_splicing(
-             for metric <- @metrics do
-               declarations = Module.get_attribute(env.module, metric)
-               Module.delete_attribute(env.module, metric)
-
-               quote do
-                 unquote_splicing(
-                   for params <- declarations do
-                     emit_create_metric(metric, params)
-                   end
-                 )
-
-                 :ok
-               end
-             end
-           ))
+          unquote_splicing(declare_metrics)
+          :ok
         else
+          existing_metrics = Application.get_env(:prometheus, :default_metrics, [])
+
+          defined_metrics = unquote(default_metrics)
+
+          Application.put_env(
+            :prometheus,
+            :default_metrics,
+            defined_metrics ++ existing_metrics
+          )
+
           :ok
         end
       end
@@ -127,6 +134,16 @@ defmodule Prometheus.Metric do
               "expected the @on_load attribute to be an atom or a " <>
                 "{atom, 0} tuple, got: #{inspect(other)}"
     end
+  end
+
+  defp emit_metric_tuple({metric, params}) do
+    quote do
+      {unquote(metric), unquote(params)}
+    end
+  end
+
+  defp emit_create_metric({metric, params}) do
+    emit_create_metric(metric, params)
   end
 
   defp emit_create_metric(:counter, params) do
