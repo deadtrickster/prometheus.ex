@@ -104,7 +104,7 @@ defmodule Prometheus.Erlang do
     end
   end
 
-  defp parse_mfa(__CALLER__, mf, arguments) do
+  defp parse_mfa(caller, mf, arguments) do
     arguments =
       case mf do
         _ when is_list(mf) ->
@@ -118,18 +118,18 @@ defmodule Prometheus.Erlang do
     {module, function} =
       case mf do
         false ->
-          {f, _arity} = __CALLER__.function
-          {Module.get_attribute(__CALLER__.module, :erlang_module), f}
+          {f, _arity} = caller.function
+          {Module.get_attribute(caller.module, :erlang_module), f}
 
         _ when is_list(mf) ->
-          {f, _arity} = __CALLER__.function
-          {Module.get_attribute(__CALLER__.module, :erlang_module), f}
+          {f, _arity} = caller.function
+          {Module.get_attribute(caller.module, :erlang_module), f}
 
         {_, _} ->
           mf
 
         _ when is_atom(mf) ->
-          {Module.get_attribute(__CALLER__.module, :erlang_module), mf}
+          {Module.get_attribute(caller.module, :erlang_module), mf}
       end
 
     {module, function, arguments}
