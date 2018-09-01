@@ -33,7 +33,7 @@ if [ $UNSTAGED_COUNT -ne "0" ]; then
     exit 1
 fi
 
-version="$(mix run --no-compile --no-start -e ":io.format('~s', [PrometheusEx.Mixfile.project()[:version]])") | tail -1"
+version="$(mix run --no-compile --no-start -e ":io.format('~s', [PrometheusEx.Mixfile.project()[:version]])" | tail -1)"
 
 echo "Old version: ${version}"
 
