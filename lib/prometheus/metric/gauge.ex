@@ -68,9 +68,7 @@ defmodule Prometheus.Metric.Gauge do
   doesn't match metric name.<br>
   Raises `Prometheus.MFAlreadyExistsError` if a gauge with the same `spec` exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a gauge using `spec`.
@@ -84,9 +82,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or
   doesn't match metric name.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Sets the gauge identified by `spec` to `value`.
@@ -97,9 +93,7 @@ defmodule Prometheus.Metric.Gauge do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro set(spec, value) do
-    Erlang.metric_call(spec, [value])
-  end
+  delegate_metric set(spec, value)
 
   @doc """
   Increments the gauge identified by `spec` by `value`.
@@ -109,9 +103,7 @@ defmodule Prometheus.Metric.Gauge do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro inc(spec, value \\ 1) do
-    Erlang.metric_call(spec, [value])
-  end
+  delegate_metric inc(spec, value \\ 1)
 
   @doc """
   Decrements the gauge identified by `spec` by `value`.
@@ -121,9 +113,7 @@ defmodule Prometheus.Metric.Gauge do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro dec(spec, value \\ 1) do
-    Erlang.metric_call(spec, [value])
-  end
+  delegate_metric dec(spec, value \\ 1)
 
   @doc """
   Sets the gauge identified by `spec` to the current unixtime.
@@ -132,9 +122,7 @@ defmodule Prometheus.Metric.Gauge do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro set_to_current_time(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric set_to_current_time(spec)
 
   @doc """
   Sets the gauge identified by `spec` to the number of currently executing `body`s.
@@ -200,9 +188,7 @@ defmodule Prometheus.Metric.Gauge do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro remove(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric remove(spec)
 
   @doc """
   Resets the value of the gauge identified by `spec`.
@@ -211,9 +197,7 @@ defmodule Prometheus.Metric.Gauge do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro reset(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric reset(spec)
 
   @doc """
   Returns the value of the gauge identified by `spec`.
@@ -225,7 +209,5 @@ defmodule Prometheus.Metric.Gauge do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro value(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric value(spec)
 end

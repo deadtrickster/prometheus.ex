@@ -18,56 +18,40 @@ defmodule Prometheus.Registry do
   If `Name` is an iolist performs safe search (to avoid interning
   atoms) and returns atom or false. This operation is O(n).
   """
-  defmacro exists(name) do
-    Erlang.call([name])
-  end
+  delegate exists(name)
 
   @doc """
   Calls `callback` for each collector with two arguments: `registry` and `collector`.
   """
-  defmacro collect(callback, registry \\ :default) do
-    Erlang.call([registry, callback])
-  end
+  delegate collect(callback, registry \\ :default)
 
   @doc """
   Returns collectors registered in `registry`.
   """
-  defmacro collectors(registry \\ :default) do
-    Erlang.call([registry])
-  end
+  delegate collectors(registry \\ :default)
 
   @doc """
   Registers a collector.
   """
-  defmacro register_collector(registry \\ :default, collector) do
-    Erlang.call([registry, collector])
-  end
+  delegate register_collector(registry \\ :default, collector)
 
   @doc """
   Registers collectors list.
   """
-  defmacro register_collectors(registry \\ :default, collectors) do
-    Erlang.call([registry, collectors])
-  end
+  delegate register_collectors(registry \\ :default, collectors)
 
   @doc """
   Unregisters a collector.
   """
-  defmacro deregister_collector(registry \\ :default, collector) do
-    Erlang.call([registry, collector])
-  end
+  delegate deregister_collector(registry \\ :default, collector)
 
   @doc """
   Unregisters all collectors.
   """
-  defmacro clear(registry \\ :default) do
-    Erlang.call([registry])
-  end
+  delegate clear(registry \\ :default)
 
   @doc """
   Checks whether `collector` is registered.
   """
-  defmacro collector_registered?(registry \\ :default, collector) do
-    Erlang.call(:collector_registeredp, [registry, collector])
-  end
+  delegate collector_registered?(registry \\ :default, collector), as: :collector_registeredp
 end

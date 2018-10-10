@@ -40,9 +40,7 @@ defmodule Prometheus.Metric.Boolean do
   Raises `Prometheus.MFAlreadyExistsError` if a boolean with
   the same `spec` already exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a boolean using `spec`.
@@ -54,9 +52,7 @@ defmodule Prometheus.Metric.Boolean do
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
   Raises `Prometheus.InvalidLabelNameError` if label name is invalid.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Sets the boolean identified by `spec` to `value`.
@@ -78,9 +74,7 @@ defmodule Prometheus.Metric.Boolean do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro set(spec, value) do
-    Erlang.metric_call(spec, [value])
-  end
+  delegate_metric set(spec, value)
 
   @doc """
   Toggles the boolean identified by `spec` to `value`.
@@ -90,9 +84,7 @@ defmodule Prometheus.Metric.Boolean do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro toggle(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric toggle(spec)
 
   @doc """
   Removes boolean series identified by spec.
@@ -101,9 +93,7 @@ defmodule Prometheus.Metric.Boolean do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro remove(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric remove(spec)
 
   @doc """
   Resets the value of the boolean identified by `spec`.
@@ -112,9 +102,7 @@ defmodule Prometheus.Metric.Boolean do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro reset(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric reset(spec)
 
   @doc """
   Returns the value of the boolean identified by `spec`. If there is no boolean for
@@ -124,7 +112,5 @@ defmodule Prometheus.Metric.Boolean do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro value(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric value(spec)
 end

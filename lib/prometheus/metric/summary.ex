@@ -52,9 +52,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.MFAlreadyExistsError` if a summary with the same `spec`
   already exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a summary using `spec`.
@@ -70,9 +68,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or
   doesn't match metric name.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Observes the given amount.
@@ -82,9 +78,7 @@ defmodule Prometheus.Metric.Summary do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro observe(spec, amount \\ 1) do
-    Erlang.metric_call(spec, [amount])
-  end
+  delegate_metric observe(spec, amount \\ 1)
 
   @doc """
   Observes the amount of time spent executing `body`.
@@ -122,9 +116,7 @@ defmodule Prometheus.Metric.Summary do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro remove(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric remove(spec)
 
   @doc """
   Resets the value of the summary identified by `spec`.
@@ -133,9 +125,7 @@ defmodule Prometheus.Metric.Summary do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro reset(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric reset(spec)
 
   @doc """
   Returns the value of the summary identified by `spec`. If there is no summary for
@@ -148,7 +138,5 @@ defmodule Prometheus.Metric.Summary do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro value(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric value(spec)
 end
