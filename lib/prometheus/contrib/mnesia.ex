@@ -19,14 +19,7 @@ defmodule Prometheus.Contrib.Mnesia do
   Mnesia System Information chapter
   </a> of Mnesia User's Guide
   """
-  defmacro table_disk_size(
-             dir \\ quote do
-               :mnesia.system_info(:directory)
-             end,
-             table
-           ) do
-    Erlang.call([dir, table])
-  end
+  delegate table_disk_size(dir \\ :mnesia.system_info(:directory), table)
 
   @doc """
   Returns {pcount, ccount} tuple, where
@@ -34,7 +27,5 @@ defmodule Prometheus.Contrib.Mnesia do
   ccount is a number of coordinator transactions.
   Can return {:undefined, :undefined} occasionally.
   """
-  defmacro tm_info() do
-    Erlang.call()
-  end
+  delegate tm_info()
 end

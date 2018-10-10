@@ -84,7 +84,5 @@ defmodule Prometheus.Collector do
   @doc """
   Calls `callback` for each MetricFamily of this collector.
   """
-  defmacro collect_mf(registry \\ :default, collector, callback) do
-    Erlang.call([registry, collector, callback])
-  end
+  delegate collect_mf(registry \\ :default, collector, callback)
 end

@@ -63,9 +63,7 @@ defmodule Prometheus.Metric.Histogram do
   in increasing order.<br>
   Raises `Prometheus.HistogramInvalidBoundError` if bucket bound isn't a number.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a histogram using `spec`.
@@ -89,9 +87,7 @@ defmodule Prometheus.Metric.Histogram do
   in increasing order.<br>
   Raises `Prometheus.HistogramInvalidBoundError` if bucket bound isn't a number.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Observes the given amount.

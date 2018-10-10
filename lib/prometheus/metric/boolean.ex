@@ -40,9 +40,7 @@ defmodule Prometheus.Metric.Boolean do
   Raises `Prometheus.MFAlreadyExistsError` if a boolean with
   the same `spec` already exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a boolean using `spec`.
@@ -54,9 +52,7 @@ defmodule Prometheus.Metric.Boolean do
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
   Raises `Prometheus.InvalidLabelNameError` if label name is invalid.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Sets the boolean identified by `spec` to `value`.

@@ -67,9 +67,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.MFAlreadyExistsError` if a counter with
   the same `spec` already exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a counter using `spec`.
@@ -81,9 +79,7 @@ defmodule Prometheus.Metric.Counter do
   Raises `Prometheus.InvalidMetricLabelsError` if labels isn't a list.<br>
   Raises `Prometheus.InvalidLabelNameError` if label name is invalid.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Increments the counter identified by `spec` by `value`.

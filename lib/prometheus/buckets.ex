@@ -15,7 +15,5 @@ defmodule Prometheus.Buckets do
       iex(2)> Prometheus.Buckets.new({:linear, 10, 5, 6})
       [10, 15, 20, 25, 30, 35, :infinity]
   """
-  defmacro new(arg) do
-    Erlang.call([arg])
-  end
+  delegate new(arg)
 end

@@ -12,9 +12,7 @@ defmodule Prometheus.Model do
   `collector.collect_metrics/2` callback will be called and expected to
   return individual metrics list.
   """
-  defmacro create_mf(name, help, type, collector, collector_data) do
-    Erlang.call([name, help, type, collector, collector_data])
-  end
+  delegate create_mf(name, help, type, collector, collector_data)
 
   @doc """
   Creates gauge metrics from `mdata` {label, value} tuple list.
@@ -24,9 +22,7 @@ defmodule Prometheus.Model do
       :undefined, :undefined, :undefined, :undefined}]
 
   """
-  defmacro gauge_metrics(mdata) do
-    Erlang.call([mdata])
-  end
+  delegate gauge_metrics(mdata)
 
   @doc """
   Creates gauge metric with `labels` and `value`.
@@ -36,9 +32,7 @@ defmodule Prometheus.Model do
        :undefined, :undefined, :undefined, :undefined}
 
   """
-  defmacro gauge_metric(labels \\ [], value) do
-    Erlang.call([labels, value])
-  end
+  delegate gauge_metric(labels \\ [], value)
 
   @doc """
   Creates untyped metrics from `mdata` {label, value} tuple list.
@@ -48,9 +42,7 @@ defmodule Prometheus.Model do
       :undefined, :undefined, {:Untyped, 100}, :undefined, :undefined}]
 
   """
-  defmacro untyped_metrics(mdata) do
-    Erlang.call([mdata])
-  end
+  delegate untyped_metrics(mdata)
 
   @doc """
   Creates untyped metric with `labels` and `value`.
@@ -60,9 +52,7 @@ defmodule Prometheus.Model do
        :undefined, :undefined, {:Untyped, 100}, :undefined, :undefined}
 
   """
-  defmacro untyped_metric(labels \\ [], value) do
-    Erlang.call([labels, value])
-  end
+  delegate untyped_metric(labels \\ [], value)
 
   @doc """
   Creates counter metrics from `mdata` {labels, value} tuple list.
@@ -72,9 +62,7 @@ defmodule Prometheus.Model do
       :undefined, :undefined, :undefined, :undefined}]
 
   """
-  defmacro counter_metrics(mdata) do
-    Erlang.call([mdata])
-  end
+  delegate counter_metrics(mdata)
 
   @doc """
   Creates counter metric with `labels` and `value`.
@@ -84,9 +72,7 @@ defmodule Prometheus.Model do
       :undefined, :undefined, :undefined, :undefined}
 
   """
-  defmacro counter_metric(labels \\ [], value) do
-    Erlang.call([labels, value])
-  end
+  delegate counter_metric(labels \\ [], value)
 
   @doc """
   Creates summary metrics from `mdata` {labels, count, sum} tuple list.
@@ -96,9 +82,7 @@ defmodule Prometheus.Model do
         {:Summary, 2, 10.5, []}, :undefined, :undefined, :undefined}]
 
   """
-  defmacro summary_metrics(mdata) do
-    Erlang.call([mdata])
-  end
+  delegate summary_metrics(mdata)
 
   @doc """
   Creates summary metric with `labels`, `count`, and `sum`.
@@ -108,9 +92,7 @@ defmodule Prometheus.Model do
         {:Summary, 2, 10.5, []}, :undefined, :undefined, :undefined}
 
   """
-  defmacro summary_metric(labels \\ [], count, sum) do
-    Erlang.call([labels, count, sum])
-  end
+  delegate summary_metric(labels \\ [], count, sum)
 
   @doc """
   Creates histogram metrics from `mdata` {labels, buckets, count, sum} tuple list.
@@ -124,9 +106,7 @@ defmodule Prometheus.Model do
          [{:Bucket, 1, 2}, {:Bucket, 1, 5}, {:Bucket, 2, :infinity}]}, :undefined}]
 
   """
-  defmacro histogram_metrics(mdata) do
-    Erlang.call([mdata])
-  end
+  delegate histogram_metrics(mdata)
 
   @doc """
   Creates histogram metric with `labels`, `buckets`, `count`, and `sum`.
@@ -144,7 +124,5 @@ defmodule Prometheus.Model do
   current bucket.
 
   """
-  defmacro histogram_metric(labels \\ [], buckets, count, sum) do
-    Erlang.call([labels, buckets, count, sum])
-  end
+  delegate histogram_metric(labels \\ [], buckets, count, sum)
 end

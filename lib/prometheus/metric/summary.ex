@@ -52,9 +52,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.MFAlreadyExistsError` if a summary with the same `spec`
   already exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a summary using `spec`.
@@ -70,9 +68,7 @@ defmodule Prometheus.Metric.Summary do
   Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or
   doesn't match metric name.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Observes the given amount.

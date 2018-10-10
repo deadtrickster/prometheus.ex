@@ -68,9 +68,7 @@ defmodule Prometheus.Metric.Gauge do
   doesn't match metric name.<br>
   Raises `Prometheus.MFAlreadyExistsError` if a gauge with the same `spec` exists.
   """
-  defmacro new(spec) do
-    Erlang.call([spec])
-  end
+  delegate new(spec)
 
   @doc """
   Creates a gauge using `spec`.
@@ -84,9 +82,7 @@ defmodule Prometheus.Metric.Gauge do
   Raises `Prometheus.InvalidValueError` exception if duration_unit is unknown or
   doesn't match metric name.
   """
-  defmacro declare(spec) do
-    Erlang.call([spec])
-  end
+  delegate declare(spec)
 
   @doc """
   Sets the gauge identified by `spec` to `value`.

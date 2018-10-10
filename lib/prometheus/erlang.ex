@@ -8,24 +8,28 @@ defmodule Prometheus.Erlang do
     quote do
       @erlang_module unquote(erlang_module)
       alias Prometheus.Erlang
-    end
-  end
 
-  defmacro call(mf \\ false, arguments \\ []) do
-    {module, function, arguments} = parse_mfa(__CALLER__, mf, arguments)
-
-    quote do
-      Prometheus.Erlang.call_body(unquote(module), unquote(function), unquote(arguments))
-    end
-  end
-
-  def call_body(module, function, arguments) do
-    quote do
       require Prometheus.Error
 
-      Prometheus.Error.with_prometheus_error(
-        unquote(module).unquote(function)(unquote_splicing(arguments))
-      )
+      import unquote(__MODULE__), only: [delegate: 1, delegate: 2]
+    end
+  end
+
+  defmacro delegate(fun, opts \\ []) do
+    fun = Macro.escape(fun, unquote: true)
+
+    quote bind_quoted: [fun: fun, opts: opts] do
+      target = Keyword.get(opts, :to, @erlang_module)
+
+      %{file: file, line: line} = __ENV__
+
+      {name, args, as, as_args} = Kernel.Utils.defdelegate(fun, opts)
+
+      def unquote(name)(unquote_splicing(args)) do
+        Prometheus.Error.with_prometheus_error(
+          unquote(target).unquote(as)(unquote_splicing(as_args))
+        )
+      end
     end
   end
 
