@@ -98,9 +98,7 @@ defmodule Prometheus.Metric.Histogram do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro observe(spec, amount \\ 1) do
-    Erlang.metric_call(spec, [amount])
-  end
+  delegate_metric observe(spec, amount \\ 1)
 
   @doc """
   Observes the amount of time spent executing `body`.
@@ -138,9 +136,7 @@ defmodule Prometheus.Metric.Histogram do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro remove(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric remove(spec)
 
   @doc """
   Resets the value of the histogram identified by `spec`.
@@ -149,9 +145,7 @@ defmodule Prometheus.Metric.Histogram do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro reset(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric reset(spec)
 
   @doc """
   Returns the value of the histogram identified by `spec`. If there is no histogram for
@@ -161,7 +155,5 @@ defmodule Prometheus.Metric.Histogram do
   can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro value(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric value(spec)
 end

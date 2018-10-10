@@ -89,9 +89,7 @@ defmodule Prometheus.Metric.Counter do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro inc(spec, value \\ 1) do
-    Erlang.metric_call(:inc, spec, [value])
-  end
+  delegate_metric inc(spec, value \\ 1)
 
   @doc """
   Increments the counter identified by `spec` by 1 when `body` executed.
@@ -198,9 +196,7 @@ defmodule Prometheus.Metric.Counter do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro remove(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric remove(spec)
 
   @doc """
   Resets the value of the counter identified by `spec`.
@@ -209,9 +205,7 @@ defmodule Prometheus.Metric.Counter do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro reset(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric reset(spec)
 
   @doc """
   Returns the value of the counter identified by `spec`. If there is no counter for
@@ -221,7 +215,5 @@ defmodule Prometheus.Metric.Counter do
   for `spec` can't be found.<br>
   Raises `Prometheus.InvalidMetricArityError` exception if labels count mismatch.
   """
-  defmacro value(spec) do
-    Erlang.metric_call(spec)
-  end
+  delegate_metric value(spec)
 end
