@@ -172,12 +172,6 @@ defmodule Prometheus.Metric do
     end
   end
 
-  defmacro ct_parsable_spec?(spec) do
-    quote do
-      is_list(unquote(spec)) or is_atom(unquote(spec))
-    end
-  end
-
   def parse_spec(spec) when is_list(spec) do
     registry = Keyword.get(spec, :registry, :default)
     name = Keyword.fetch!(spec, :name)
