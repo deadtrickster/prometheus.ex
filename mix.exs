@@ -62,11 +62,11 @@ defmodule PrometheusEx.Mixfile do
       {:prometheus, "~> 4.0"},
 
       ## test
-      {:credo, "~> 0.8", only: [:dev, :test]},
+      {:credo, "~> 1.0", only: [:dev, :test]},
       {:dialyxir, "~> 0.5", only: [:dev]},
-      {:earmark, "~> 1.2", only: [:dev]},
-      {:ex_doc, "~> 0.18", only: [:dev]},
-      {:excoveralls, "~> 0.8", only: [:test]},
+      {:earmark, "~> 1.3", only: [:dev]},
+      {:ex_doc, "~> 0.19", only: [:dev]},
+      {:excoveralls, "~> 0.10", only: [:test]},
     ]
   end
 end

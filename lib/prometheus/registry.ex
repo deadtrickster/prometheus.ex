@@ -53,5 +53,6 @@ defmodule Prometheus.Registry do
   @doc """
   Checks whether `collector` is registered.
   """
-  delegate collector_registered?(registry \\ :default, collector), as: :collector_registeredp
+  delegate collector_registered?(registry \\ :default, collector),
+    as: :collector_registeredp
 end

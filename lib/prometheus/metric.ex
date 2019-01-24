@@ -33,9 +33,9 @@ defmodule Prometheus.Metric do
 
     quote do
       # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
-      alias Prometheus.Metric.{Counter, Gauge, Histogram, Summary, Boolean}
+      alias Prometheus.Metric.{Boolean, Counter, Gauge, Histogram, Summary}
       # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
-      require Prometheus.Metric.{Counter, Gauge, Histogram, Summary, Boolean}
+      require Prometheus.Metric.{Boolean, Counter, Gauge, Histogram, Summary}
       require Prometheus.Error
 
       unquote_splicing(
