@@ -1,11 +1,43 @@
 language: elixir
 sudo: false
-elixir:
-  - 1.6.6
-  - 1.7.2
-otp_release:
-  - 20.3
-  - 21.0
+
+# see https://hexdocs.pm/elixir/master/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
+# and https://docs.travis-ci.com/user/languages/erlang/
+jobs:
+  include:
+    - elixir: 1.6.6
+      otp_release: 20.3.8
+    - elixir: 1.6.6
+      otp_release: 21.2
+
+    - elixir: 1.7.4
+      otp_release: 20.3.8
+    - elixir: 1.7.4
+      otp_release: 21.2
+    - elixir: 1.7.4
+      otp_release: 22.3.4
+
+    - elixir: 1.8.2
+      otp_release: 20.3.8
+    - elixir: 1.8.2
+      otp_release: 21.2
+    - elixir: 1.8.2
+      otp_release: 22.3.4
+
+    - elixir: 1.9.4
+      otp_release: 20.3.8
+    - elixir: 1.9.4
+      otp_release: 21.2
+    - elixir: 1.9.4
+      otp_release: 22.3.4
+
+    - elixir: 1.10.3
+      otp_release: 21.2
+    - elixir: 1.10.3
+      otp_release: 22.3.4
+    - elixir: 1.10.3
+      otp_release: 23.0.2
+
 before_script:
   - mix deps.get --only test
 script:
