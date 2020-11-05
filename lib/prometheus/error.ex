@@ -216,13 +216,7 @@ defmodule Prometheus.Error do
         e in ErlangError ->
           reraise(
             Prometheus.Error.normalize(e),
-            unquote(
-              if macro_exported?(Kernel.SpecialForms, :__STACKTRACE__, 0) do
-                quote(do: __STACKTRACE__)
-              else
-                quote(do: System.stacktrace())
-              end
-            )
+            unquote(quote(do: __STACKTRACE__))
           )
       end
     end

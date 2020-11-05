@@ -7,7 +7,7 @@ defmodule PrometheusEx.Mixfile do
     [
       app: :prometheus_ex,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       description: description(),
@@ -32,7 +32,7 @@ defmodule PrometheusEx.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :prometheus]]
+    [applications: [:logger, :mnesia, :prometheus]]
   end
 
   defp description do
