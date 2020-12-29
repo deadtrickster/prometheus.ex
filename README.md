@@ -7,7 +7,7 @@
 
 Elixir [Prometheus.io](https://prometheus.io) client based on [Prometheus.erl](https://github.com/deadtrickster/prometheus.erl).
 
-Starting from v3.0.0 works with Elixir >=1.6 and Erlang >=20. For older verions, please use older tags.
+Starting from v3.0.0 works with Elixir >=1.6 and Erlang >=20. For older versions, please use older tags.
 
 ![@skosch dashboard](https://aldusleaf.org/assets/images/2016/09/grafana.jpg)
 
@@ -63,7 +63,7 @@ Please read how to [measure durations correctly with prometheus.ex](https://hexd
  - [Extatus - App to report metrics to Prometheus from Elixir GenServers](https://github.com/gmtprime/extatus)
  - [Plugs Instrumenter/Exporter](https://github.com/deadtrickster/prometheus-plugs)
  - [Fuse plugin](https://github.com/jlouis/fuse#fuse_stats_prometheus)
- - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector) (linux-only)
+ - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector) (Linux-only)
  - [Phoenix instrumenter](https://github.com/deadtrickster/prometheus-phoenix)
  - [RabbitMQ Exporter](https://github.com/deadtrickster/prometheus_rabbitmq_exporter)
 

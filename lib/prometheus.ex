@@ -38,7 +38,7 @@ defmodule Prometheus do
    - [Elixir plugs Instrumenters and Exporter](https://hex.pm/packages/prometheus_plugs);
    - [Fuse plugin](https://github.com/jlouis/fuse#fuse_stats_prometheus)
    - [OS process info Collector](https://hex.pm/packages/prometheus_process_collector)
-   (linux-only);
+   (Linux-only);
    - [Phoenix Instrumenter](https://hex.pm/packages/prometheus_phoenix);
    - [RabbitMQ Exporter](https://github.com/deadtrickster/prometheus_rabbitmq_exporter).
 

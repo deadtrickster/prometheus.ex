@@ -10,7 +10,7 @@ defmodule Prometheus.Metric do
   `@<type>` attributes. Metrics will be declared in
   the `@on_load` callback. If the module already
   has `@on_load` callback, metrics will be declared
-  iff the callback returns `:ok`.
+  if the callback returns `:ok`.
 
   Example:
 
