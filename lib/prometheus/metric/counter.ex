@@ -137,14 +137,7 @@ defmodule Prometheus.Metric.Counter do
               unquote(block)
             rescue
               e in unquote(exception) ->
-                stacktrace =
-                  unquote(
-                    if macro_exported?(Kernel.SpecialForms, :__STACKTRACE__, 0) do
-                      quote(do: __STACKTRACE__)
-                    else
-                      quote(do: System.stacktrace())
-                    end
-                  )
+                stacktrace = unquote(quote(do: __STACKTRACE__))
 
                 {registry, name, labels} = Prometheus.Metric.parse_spec(unquote(spec))
                 :prometheus_counter.inc(registry, name, labels, 1)
