@@ -10,7 +10,7 @@ defmodule Prometheus.Metric.Gauge do
   running processes.
 
   Example use cases for Gauges:
-    - Inprogress requests;
+    - In progress requests;
     - Number of items in a queue;
     - Free memory;
     - Total memory;
@@ -116,7 +116,7 @@ defmodule Prometheus.Metric.Gauge do
   delegate_metric dec(spec, value \\ 1)
 
   @doc """
-  Sets the gauge identified by `spec` to the current unixtime.
+  Sets the gauge identified by `spec` to the current unix time.
 
   Raises `Prometheus.UnknownMetricError` exception if a gauge
   for `spec` can't be found.<br>

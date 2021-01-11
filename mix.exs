@@ -1,6 +1,7 @@
 defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/deadtrickster/prometheus.ex"
   @version "3.0.5"
 
   def project do
@@ -19,7 +20,7 @@ defmodule PrometheusEx.Mixfile do
       docs: [
         main: Prometheus,
         source_ref: "v#{@version}",
-        source_url: "https://github.com/deadtrickster/prometheus.ex",
+        source_url: @source_url,
         extras: [
           "pages/Mnesia Collector.md",
           "pages/VM Memory Collector.md",
@@ -46,7 +47,7 @@ defmodule PrometheusEx.Mixfile do
       maintainers: ["Ilya Khaprov"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/deadtrickster/prometheus.ex",
+        "GitHub" => @source_url,
         "Prometheus.erl" => "https://hex.pm/packages/prometheus",
         "Inets HTTPD Exporter" => "https://hex.pm/packages/prometheus_httpd",
         "Ecto Instrumenter" => "https://hex.pm/packages/prometheus_ecto",

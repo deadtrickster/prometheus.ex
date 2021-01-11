@@ -1,7 +1,7 @@
 defmodule Prometheus.Metric.Histogram do
   @moduledoc """
   A Histogram tracks the size and number of events in buckets.
-  You can use Histograms for aggregatable calculation of quantiles.
+  You can use Histograms for aggregating calculation of quantiles.
 
   Example use cases for Histograms:
     - Response latency;
