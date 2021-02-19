@@ -25,7 +25,7 @@ defmodule Prometheus.Contrib.MnesiaTest do
 
   defp set_custom_mnesia_dir(dir) do
     :ets.lookup_element(:mnesia_gvar, :dir, 2)
-    :ets.update_element(:mnesia_gvar, :dir, dir)
+    :ets.update_element(:mnesia_gvar, :dir, {2, dir})
   rescue
     ArgumentError ->
       :application.set_env(:mnesia, :dir, dir)
