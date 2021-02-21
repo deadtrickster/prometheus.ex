@@ -1,0 +1,63 @@
+name: build
+
+on:
+  push:
+    branches: [master, "gh-actions"]
+  pull_request:
+    branches: [master]
+
+jobs:
+
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir_version: ['1.7.4', '1.8.2', '1.9.4', '1.10.3', '1.11.3']
+        otp_version: ['20.3.8', '21.2', '23.0.2', '22.3.4']
+        exclude:
+          # Unsupported
+          - elixir_version: '1.11.3'
+            otp_version: '20.3.8'
+          # Unsupported
+          - elixir_version: '1.10.3'
+            otp_version: '20.3.8'
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir ${{ matrix.elixir_version }} on OTP ${{ matrix.otp_version }}
+      uses: actions/setup-elixir@v1
+      with:
+        elixir-version: ${{ matrix.elixir_version }}
+        otp-version: ${{ matrix.otp_version }}
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mix-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-
+    - name: Install dependencies
+      run: mix deps.get --only test
+    - name: Run mix test
+      run: MIX_ENV=test mix test
+
+  credo:
+    name: Credo
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir ${{ matrix.elixir_version }} on OTP ${{ matrix.otp_version }}
+      uses: actions/setup-elixir@v1
+      with:
+        elixir-version: '1.10.3'
+        otp-version: '22.3.4'
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-mixcredo-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mixcredo-
+    - name: Install dependencies
+      run: mix deps.get --only test
+    - name: Run credo
+      run: MIX_ENV=test mix credo --strict
