@@ -33,9 +33,25 @@ defmodule Prometheus.Metric do
 
     quote do
       # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
-      alias Prometheus.Metric.{Boolean, Counter, Gauge, Histogram, Summary}
+      alias Prometheus.Metric.{
+        Boolean,
+        Counter,
+        Gauge,
+        Histogram,
+        QuantileSummary,
+        Summary
+      }
+
       # credo:disable-for-next-line Credo.Check.Readability.SpaceAfterCommas
-      require Prometheus.Metric.{Boolean, Counter, Gauge, Histogram, Summary}
+      require Prometheus.Metric.{
+        Boolean,
+        Counter,
+        Gauge,
+        Histogram,
+        QuantileSummary,
+        Summary
+      }
+
       require Prometheus.Error
 
       unquote_splicing(
@@ -169,6 +185,12 @@ defmodule Prometheus.Metric do
   defp emit_create_metric(:histogram, params) do
     quote do
       Prometheus.Metric.Histogram.declare(unquote(params))
+    end
+  end
+
+  defp emit_create_metric(:quantile_summary, params) do
+    quote do
+      Prometheus.Metric.QuantileSummary.declare(unquote(params))
     end
   end
 
