@@ -187,7 +187,7 @@ defmodule Prometheus.QuantileSummaryTest do
   end
 
   test "observe_duration block" do
-    spec = [name: :duration_seconds, labels: [:method], help: ""]
+    spec = [name: :duration, duration_unit: :milliseconds, labels: [:method], help: ""]
     QuantileSummary.new(spec)
 
     assert :ok == QuantileSummary.observe_duration(spec, do: Process.sleep(1000))
@@ -196,10 +196,10 @@ defmodule Prometheus.QuantileSummaryTest do
     Process.sleep(10)
     {count, sum, quantiles} = QuantileSummary.value(spec)
     assert 1 == count
-    assert 1 < sum and sum < 1.2
+    assert 1000.0 < sum and sum < 1200.0
 
     {_, median} = List.keyfind(quantiles, 0.5, 0)
-    assert 1_000_000_000 < median and median < 1_200_000_000
+    assert 1000.0 < median and median < 1200.0
 
     assert_raise ErlangError, fn ->
       QuantileSummary.observe_duration spec do
@@ -211,7 +211,7 @@ defmodule Prometheus.QuantileSummaryTest do
     Process.sleep(10)
     {count, sum, quantiles} = QuantileSummary.value(spec)
     assert 2 == count
-    assert 1 < sum and sum < 1.2
+    assert 1000.0 < sum and sum < 1200.0
   end
 
   test "remove" do

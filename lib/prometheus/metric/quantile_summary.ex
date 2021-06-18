@@ -17,19 +17,20 @@ defmodule Prometheus.Metric.QuantileSummary do
     ## to be called at app/supervisor startup.
     ## to tolerate restarts use declare.
     def setup() do
-      QuantileSummary.declare([name: :request_size_bytes,
-                       help: "Request size in bytes."])
-
       QuantileSummary.declare([name: :response_size_bytes,
                        help: "Response size in bytes."])
-    end
 
-    def observe_request(size) do
-      QuantileSummary.observe([name: :request_size_bytes], size)
+      QuantileSummary.declare([name: :response_time,
+                       duration_unit: :milliseconds,
+                       help: "Response time in milliseconds."])
     end
 
     def observe_response(size) do
       QuantileSummary.observe([name: :response_size_bytes], size)
+    end
+
+    def observe_response(handler) do
+      QuantileSummary.observe_duration([name: :response_time], fn -> handler.() end)
     end
   end
   ```
