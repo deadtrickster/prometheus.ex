@@ -60,14 +60,15 @@ defmodule PrometheusEx.Mixfile do
 
   defp deps do
     [
-      {:prometheus, "~> 4.0"},
+      # {:prometheus, "~> 4.0"},
+      {:prometheus, "~> 4.0", github: "jonasrichard/prometheus.erl"},
 
       ## test
       {:credo, "~> 1.0", only: [:dev, :test]},
       {:dialyxir, "~> 0.5", only: [:dev]},
       {:earmark, "~> 1.3", only: [:dev]},
       {:ex_doc, "~> 0.19", only: [:dev]},
-      {:excoveralls, "~> 0.10", only: [:test]},
+      {:excoveralls, "~> 0.10", only: [:test]}
     ]
   end
 end
