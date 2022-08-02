@@ -14,13 +14,19 @@ defmodule Prometheus.Erlang do
     end
   end
 
+  if Version.match?(System.version(), "< 1.14.0-rc.0") do
+    def defdelegate_each(fun, opts), do: Kernel.Utils.defdelegate(fun, opts)
+  else
+    def defdelegate_each(fun, opts), do: Kernel.Utils.defdelegate_each(fun, opts)
+  end
+
   defmacro delegate(fun, opts \\ []) do
     fun = Macro.escape(fun, unquote: true)
 
     quote bind_quoted: [fun: fun, opts: opts] do
       target = Keyword.get(opts, :to, @erlang_module)
 
-      {name, args, as, as_args} = Kernel.Utils.defdelegate(fun, opts)
+      {name, args, as, as_args} = defdelegate_each(fun, opts)
 
       def unquote(name)(unquote_splicing(args)) do
         Prometheus.Error.with_prometheus_error(
@@ -36,7 +42,7 @@ defmodule Prometheus.Erlang do
     quote bind_quoted: [fun: fun, opts: opts] do
       target = Keyword.get(opts, :to, @erlang_module)
 
-      {name, args, as, [spec | as_args]} = Kernel.Utils.defdelegate(fun, opts)
+      {name, args, as, [spec | as_args]} = defdelegate_each(fun, opts)
 
       def unquote(name)(unquote_splicing(args)) do
         {registry, name, labels} = Metric.parse_spec(unquote(spec))
