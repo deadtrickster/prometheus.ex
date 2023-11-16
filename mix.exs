@@ -2,7 +2,7 @@ defmodule PrometheusEx.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/deadtrickster/prometheus.ex"
-  @version "3.0.5"
+  @version "3.1.0"
 
   def project do
     [
